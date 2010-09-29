@@ -1,0 +1,7 @@
+#!/bin/sh
+
+#cp /tmp/main.tex /tmp/mainold.tex
+#cp /sfl/thesis/name:main/parts/main.tex /tmp/main.tex
+#diff /tmp/main.tex /tmp/mainold.tex
+
+

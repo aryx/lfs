@@ -1,0 +1,26 @@
+// -*- wikipedia -*-
+===== LFS users =====
+
+==== Yoann Padioleau(<yoann.padioleau@gmail.com>) ====
+
+Using LFS, I mean really using LFS for my whole homedir (the big jump), since February 2005. Using previous version of LFS, just for music, since 2003.
+
+Use LFS now for my homedir, code, mp3s, pictures, emails, etc and gentoo root. 
+
+Favourite queries:
+   
+    $ cd ~/lfs/project-lfs/ext:<ml/.ext; emacs
+    $ mpg123 -z ~/lfs/type:Music/genre:Disco|genre:Electro/.ext/*
+
+==== Diego Barrios (Eldruin) (<eldruin@gmail.com>) ====
+
+I use it for my homedir, mainly to programming exercises of the university.
+
+Favourite queries:
+
+    $ cd ~/svn/uni/ed2/ext:c|ext:h/.ext
+
+==== Your name here ====
+
+// dont forget to another: 
+// ===== Your name here ===== for the next user (yes we may have multiple users of LFS)

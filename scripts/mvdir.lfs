@@ -1,0 +1,6 @@
+#!/usr/bin/perl
+
+my $src = $ARGV[0];
+my $dest = $ARGV[1];
+
+`mv $src noprop_$dest `

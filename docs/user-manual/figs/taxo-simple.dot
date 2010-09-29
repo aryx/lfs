@@ -1,0 +1,44 @@
+digraph misc {
+#rotate=90;
+size="5,5";
+
+slash [label="/"];
+type [label="type:"];
+year [label="year:"];
+year2000 [label="year:2000"];
+yearsup2000 [label="year:>2000"];
+year2001 [label="year:2001"];
+year2002 [label="year:2002"];
+
+typepict [label="type:picture"];
+typeprog  [label="type:program"];
+
+
+
+
+slash -> type   [dir=back];
+slash -> art   [dir=back];
+slash -> geography   [dir=back];
+slash -> plugins [dir=back];
+slash -> year [dir=back];
+
+plugins -> "logic:" [dir=back];
+"logic:" -> "logic:year" [dir=back];
+
+art -> movie   [dir=back];
+art -> music   [dir=back];
+
+type -> typepict   [dir=back];
+type -> typeprog   [dir=back];
+ 
+geography -> seaside   [dir=back];
+geography -> port   [dir=back];
+geography -> USA   [dir=back];
+geography -> capital   [dir=back];
+
+year -> year2000     [dir=back];
+year -> yearsup2000  [dir=back];
+yearsup2000 -> year2001 [dir=back];
+yearsup2000 -> year2002 [dir=back];
+
+}

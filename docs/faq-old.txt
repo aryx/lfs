@@ -1,0 +1,307 @@
+-*- org -*- 
+
+* Misc 
+
+** cd toto:>45 need quote => cd 'toto:>45'.  No pb when use a tool
+such as an explorer. Only a pb with shells, cos shells interpret symbols.
+
+** How do I rename a property ? 
+
+ use noprop_  prefix.
+ ex: mv toto  noprop_tata
+ (if tata does not exist, then mv toto tata should work too, 
+  but with valued attribute it doesnt work, cos when you try
+  mv toto:titi toto:tata,  then toto:tata exist already =>
+  do mv toto:titi  noprop_toto:tata
+
+
+** Cannot write: Permission denied
+
+Because the file lack the w attribute.
+Before importing file under LFS, ensure that all files have the w with
+ find -type f -exec chmod u+w {}
+
+Note that it is a limitation/problem of fuse.
+
+** Cannot change mode to rwxrwxr-x: Unknown error 127
+
+When detarring you can get such a message for some directories because
+when detarring tar try to change the property of some directories, which is not
+yet supported.
+
+
+** transducer pb
+ first test it standalone
+
+then if update transducer, to retransduce files,  
+  touch * 
+
+
+** Cant put the meta-data on an NFS directory. 
+
+
+** launching an application on a file under LFS is slow
+ => avoid to put . in your LD_LIBRARY_PATH
+
+** I get a Stack_Overflow
+ => use ulimit -s 30000  before mounting LFS
+
+
+
+** pb des fois peut pas creer obj,
+ - paske un attr a le meme nom => put .obj a la fin
+
+dont save a file in a directory where he will not reside anymore,
+ in fact can, but will have strange behaviour for emacs cos after the 
+ save the file is no more in dir and he make a symlink like .#xxxx 
+ orphan
+
+
+** backuping LFS 
+
+ sudo cp * backup/
+ copy last files/xxx directory
+ => that make some checkpoint to recover from a mistake (still sux, cos have to redo but better than nothing)
+ use Diff, but check only the "b not in a"
+ if crash, just find files/xxx and find backup-files/xxx  to see what files were last created to know what to redo
+
+.compat/.ca/props-misc^|props-classic^ is good to import existing stuff
+
+
+** migrating to LFS 
+
+  reput a plat (pas grave si moins de categ qu'avant, car elles servent moins, put info in filename)
+   just need as directory real important name
+  put info in filename, agrep will do the rest :)
+  cd .compat can help, .ca too, and good view too
+ 
+ import a tar (homedir, package, ...):
+ detar under ext2
+ find -exec gzip -d
+ look at find -type d and infere some recurring props to put in props-classic
+ look with find -type d  if there is some doubling rep such as  xxx/xxx in which case rename the second xxx in xxx2
+ ensure that all files have the w attribute (chmod a+w *,  cf above for explanation)
+ cd .compat/props-misc^
+ detar
+ glimpseindex
+
+
+
+* LFS and applications
+
+Some applications assume not that much documented stuff on the
+underlying filesystem (cos there is no clear specification of what
+should implement a filesystem and what are the invariant properties)
+which are no more true (or not yet implemented) under LFS.
+As a consequence, some applications behave differently (wrongly) under LFS 
+than they do on classical hierarchical filesystems.
+Nevertheless for some of those applications, there are some escapes:
+
+
+** LFS, cd parts  and editors
+
+*** Emacs 
+
+emacs may not work as intended,
+emacs fix when use pof:
+ (global-set-key "" (lambda () (interactive)
+			(basic-save-buffer)	
+			(revert-buffer t t)))	
+(global-set-key "^X^S" (ilam
+                        (unwind-protect
+                            (basic-save-buffer)
+                          (message "Here")
+                          )
+                        (unwind-protect
+                            (revert-buffer t t t)
+                          (message "Here2")
+                          )
+                        (revert-buffer t t t)
+                        (message "Here")
+                        (auto-save-mode -1)
+                        (save-excursion
+                          (if font-lock-mode
+                              (font-lock-fontify-region (max (point-min) (- (point) 2000)) (min (point-max) (+ (point) 2000)))
+                            ))
+                        (message "Here3")
+                        ))                    
+
+*** kate/kedit/... 
+
+may not work as intended when modifying a view.
+type F5 to refresh the contents. editor are not used to the
+fact that the file after the save is not the same than before.
+
+
+
+
+** LFS and gnus
+
+Gnus under emacs may return an error message when getting new mail such as
+ "nnml-save-mail: Adding new name: no such file or directory, /home/pad/emails/irisa/3860, /home/pad/emails/caml/5075"
+Indeed gnus try to create hard links between two mails when a mail satisfy multiple mail box.
+The doc of gnus is helping: 
+     `nnmh' and `nnml' makes crossposts by creating hard links to the
+      crossposted articles.  However, not all file systems support hard
+     links.  If that's the case for you, set
+     `nnmail-crosspost-link-function' to `copy-file'.  (This variable is
+     `add-name-to-file' by default.)
+As LFS does not (want to) support hard links, the solution is to put in your .emacs
+ => (setq nnmail-crosspost-link-function 'copy-file)
+
+
+
+** LFS and NFS
+
+to export LFS over NFS, you have, with the kernel-lever nfs server, as indicated in fuse-mailing list, to
+add a fsid=NNN in the option in /etc/exports.
+example:
+ /tmp/lfs/src	131.254.50.45(rw,fsid=111)
+ /tmp/lfs/home	131.254.50.45(rw,fsid=112)
+
+Note that it seems that the filesystem has to be mounted before exporting it, so if you
+have done a modification, kill the nfs server, mount your LFS mountpoint, relaunch nfs server.
+
+Note: if you want export it to a MACOSX NFS client, add 'insecure' as an option.
+
+In previous version of LFS, with perlfs, you could export LFS over NFS
+by adding a --re-rexport when launching nfsd, the nfs user-lever server,
+but it seems that it dont work anymore with fuse, so use the kernel-level
+NFS server.
+
+
+** LFS and find
+
+
+find can return strange result (in fact very rare, or not anymore the case in recent LFS versions)
+ => use Option: -noleaf
+   from the doc of find (and pointed out by the fuse faq)
+     Do not optimize by assuming that directories contain 2 fewer
+     subdirectories than their hard link count.  This option is needed
+     when searching filesystems that do not follow the Unix
+     directory-link convention, such as CD-ROM or MS-DOS filesystems or
+     AFS volume mount points.  Each directory on a normal Unix
+     filesystem has at least 2 hard links: its name and its `.'  entry.
+     Additionally, its subdirectories (if any) each have a `..'  entry
+     linked to that directory.  When `find' is examining a directory,
+     after it has statted 2 fewer subdirectories than the directory's
+     link count, it knows that the rest of the entries in the directory
+     are non-directories ("leaf" files in the directory tree).  If only
+     the files' names need to be examined, there is no need to stat
+     them; this gives a significant increase in search speed.
+
+** LFS and tar:
+
+
+>
+> Comme je n'ai toujours pas trouvÃ© le temps de tester la version
+> actuelle, je me permets de poser une question, est-ce que les donnÃ©es du
+> LFS peuvent Ãªtre archivÃ©e via TAR ?
+
+Bien sur. Toutes les applis marchent de la meme maniere sous LFS
+que sous EXT3. Par contre le comportement n'est pas forcemement le meme :)
+
+> Par exemple, pour Ãªtre plus clair, car j'avoue avoir du mal Ã  mettre
+> cette question par Ã©crit::
+>
+> Je fais un tar d'une arborescence et je la dÃ©sarchive dans un systÃ¨me
+> de fichier, ext3 par exemple. Est-ce je perds des informations ? Ou
+> est-ce que je me retrouve tout simplement avec des informations qui ne
+> sont pas exploitÃ©es (genre les .ext, .int), mais prÃ©sentes tout de
+> mÃªme ?
+
+Tu ne perds pas d'information, mais par contre tu risques d'avoir
+des duplications dans ton tar.
+
+Je m'explique.
+En imaginant que tu es creé sous LFS des fichier f1.txt f2.txt avec
+pour le premier les propriétés a et b,  et pour le deuxieme a et c, par
+exemple avec la suite de commandes suivantes:
+ cd /lfs
+  mkdir a
+  mkdir b
+  mkdir c
+ echo "f1" > a/b/f1.txt
+ echo "f2" > a/c/f2.txt
+
+normalement si tu fais desormais ls a la racine, LFS repondra la reponse
+suivante:
+ a/ b/ c/
+car les propriétés 'a' 'b' et 'c'  sont des sous-repertoires possibles
+du coup, si tu fais un tar,  a partir de la racine, ton tar contiendra
+
+ a/b/f1.txt
+ a/c/f2.txt
+ b/f1.txt
+ c/a/f1.txt
+ c/b/f2.txt
+
+en fait ca sera
+
+a/b/f1.txt
+a/c/f2.txt
+b/f1.txt
+c/f2.txt
+
+(et ca en mode .relaxed.  en .strict  tu vois pas a/ de la racine )
+
+
+Donc tu as de la duplication.
+
+
+Dans les faits on peut utiliser certaines commandes speciales
+qui permettent de faire des tar avec moins de duplications.
+Dans beaucoup de cas les fichiers n'ont pas vraiment bcp de propriétés
+assignés manuellement par l'utilisateur mais ont par
+contre des propriétés assignés automatiquement par les "transducteurs".
+Par exemple, a partir d'un mp3 on extrait automatiquement du fichier
+la propriété "artist:BeeGees" ou "genre:Disco" et ces propriétés
+font parties du fichier.
+Lorsque tu copies de LFS un fichier mp3 vers ext3,
+ce fichier meme sous EXT3 conserver ses propriétés.
+
+
+Pour ce qui est des .ext, .int, ... ce ne sont pas des propriétés.
+Ce sont des commandes speciales,  donc tu ne verras pas
+dans un repertoire si tu fais un ls   un sous-repertoire .ext/
+par contre, tu peux rentrer dans un tel repertoire.
+
+** LFS and unison:
+
+After a synchronisation of my LFS meta-dir, I can get on of the mounted
+LFS replica a message such as "demo.o   NO such file or directory" after a ls.
+Why ?
+
+Don't forget to allow unison to copy .o, .obj, ... files. Edit your .unison/default.prf
+and remove all the rule about special files.
+
+
+** LFS and ocamldebug
+
+We cant launch ocamldebug under LFS because ocamldebug creates a pipe/socket 
+in the current directory I think. LFS does not support pipe/socket so tweak ocamldebug
+to create its pipe/socket a a place where it is supported
+  => ocamldebug <command>  
+      become
+    ocamldebug -cd /tmp    <command>
+     or
+    ocamldebug -s /tmp/myocamldebug.socket    <command>
+
+Update: It seems that in recent version of ocaml, there is no more the problem
+(it certainly now creates automatically his pipe/socket in /tmp).
+
+
+
+** LFS and make
+
+Sometimes you have some targets that dont produce file, such as 'install:', 'clean:', and so on.
+So, when you type for example 'make clean', the make program first try to find a file named 'clean', and
+as there is no such file, it executes the body of the target. The problem is that with LFS,
+there may be a property named 'clean', or 'install', and as LFS allow the user to cd
+anywhere from anywhere, when you type 'make clean', then make can succed in finding
+a file named clean, and so it does not execute the body of your target.
+
+=> the solution is to tell make to not look for a file corresponding to such a target
+with the .PHONY make command. For instance put this for the clean target in your makefile:
+
+.PHONY: clean

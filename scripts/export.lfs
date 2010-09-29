@@ -1,0 +1,50 @@
+#!/usr/bin/perl
+
+my $dest = pop @ARGV;
+my @files = @ARGV;
+
+sub usage { "usage: export.lfs <files> <destination_directory>\n" }
+
+print "destination = $dest, files = @files\n";
+
+# do some checks ?
+die ("destination is not a directory\n" . usage()) unless (-d $dest);
+
+#todo?: do a cd .ext
+#check?: that same file were not processed two times (same inode number)
+
+map {
+    print "processing $_\n";
+    my $file = $_;
+    my ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size, 
+	$atime, $mtime, $ctime, $blksize, $blocks) = 
+	  stat $_;
+    my $o = $nlink;
+    #print "inode = $o\n";
+    #chdir "inode:$o/.int";
+    #my @lines = `ls -l`;
+    #print "@lines";
+    #chdir "../../";
+    opendir(DIR, "inode:$o/.int/") or die "cant opendir $!";
+    my @dirs = grep { ! /^\./ } readdir(DIR);
+    print "props = @dirs\n";
+
+    my $name = ($_ =~ /^(.*)\<\d+\>(.*)$/) ? "$1$2" : $_;
+    #print "name = $name\n";
+
+    my $newname = 
+      "__" .
+      (join ("_._",@dirs)) .
+      "__" .
+      "inode:$o" .
+      "__" .
+      "$name";
+    #print "newname = $newname\n";
+    die "too long filename to be correctly exported" if (length($newname) > 255);
+
+    #todo, add in @actions, so no error in middle of a set of copy
+    `cp "$file" "$dest/$newname"`;
+
+# check that file created effectively exist (name was not truncated)
+
+} @files;

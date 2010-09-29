@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ $# -ne 0 ]
+    then echo "Usage: $0 "
+    exit
+fi
+
+if [ ! -r lfs_secu ]
+    then echo "There is no 'lfs_secu' file in this directory. 
+You must be in the LFS meta-data directory to launch this command.
+";
+    exit
+fi
+
+#cp *.dir *.pag counter* undorestore/
+cp * undorestore/
+cp backup1/* .
+#old: cp -a files/$1 files-backup/   with fsck.lfs

@@ -1,0 +1,360 @@
+ 
+ open Unix
+ 
+-let hook_action_umount =    ref [fun p  -> log3 "hook"]
++(************************************************************************************)
++
++(* TODO?
++   the cache strategy is not correct. <
++   use ver for File too ? but that means that when detar, there would be a lots of
++       ls :(
++
++  cant erase all the entry, because whatif a file is currently in use ?
++  morover with emacs, the file is closed each time :( so how keep it 
++  in the cache ?                                                        
++
++*)
++    
+ 
+ 
+ (************************************************************************************)
++let hook_action_umount =    ref [fun p  -> log3 "hook"]
++
++(************************************************************************************)
+ type path = string
+ type pathfile = string
+ type pathdir  = string
+ type pathview  = string
+ 
+ type unix_world = { 
+-    (* note_opti:  *)
+-    (*  peut pas se permettre d'appeler ls (via ls_id_of_name) *)
+-    (*   pour savoir quel est l'id d'un filename, (ou pour dire que ce filename n'existe pas) *)
+-    (*   pour pouvoir ensuite recuperer les infos sur ce file *)
+-    (*  de meme apres un ls, l'appli (ou linux) appelle getattr sur tous les elements du ls => better to  *)
+-    (*   save info when do first ls that avoid then redo stuff *)
+-    cache_path: (path, pathinfo) oassoc;
+-    
+-    (*  each dir has his view, and must remember it, otherwise *)
+-    (*   I think user would have to do revert sans arret (even if no modif on other views) *)
+-    (*  how pof works ? tools I think look at the date of the file (mtime) => *)
+-    (*   when modif a view, augment the dirty => the next getattr for a view *)
+-    (*   will generate a new view => with a more recent date => tools will propose *)
+-    (*   the revert                       *)
++   (* note_opti:  
++      peut pas se permettre d'appeler ls (via ls_id_of_name) 
++       pour savoir quel est l'id d'un filename, (ou pour dire que ce filename n'existe pas) 
++       pour pouvoir ensuite recuperer les infos sur ce file 
++      de meme apres un ls, l'appli (ou linux) appelle getattr sur tous les elements du ls => better to  
++       save info when do first ls that avoid then redo stuff 
++      old: cache_path: (path, pathinfo) oassoc
++       mais marche pas, (cf rix beck bug entre autre).
++    *)
++    cache_path2: (pathdir, (path, pathinfo) oassoc) oassoc;
++
++    (* each dir has his view, and must remember it, otherwise 
++       I think user would have to do revert sans arret (even if no modif on other views) 
++      how pof works ? tools I think look at the date of the file (mtime) => 
++       when modif a view, augment the dirty => the next getattr for a view 
++       will generate a new view => with a more recent date => tools will propose 
++       the revert                       
++     *)
+     cache_view: (pathview, (idview * int)) oassoc;
+   
+     (* note_opti: to avoid retransduce something (file or view) which dont need to *)
+     dirty_files: pathfile oset; 
+   } 
++  (* timestamp for Dir, cos when there was an rmdir, the lookup on a path can
++     fail because perhaps this Dir involved the property that was removed.
++     todo: robust: a better solution would be to record for each property the set of
++      path that involves this property, so when rmdir this prop, can just invalidate
++      all those paths in the cache.
++   *)
+   and pathinfo = 
+   | Dir of (int * timestamp)
+   | File of idfile
+@@ -117,7 +142,7 @@ let launch_fuse path_meta mountpoint tra
+         Thread.delay 10.0; (* enough time to let fuse started *)
+         while true do
+           command2 ("cd " ^ mountpoint ^ "/__for_idle");
+-          Thread.delay 60.0; (* CONFIG *)
++          Thread.delay Flag.delay_idle;
+         done
+       end
+   in
+@@ -190,10 +215,67 @@ let launch_fuse path_meta mountpoint tra
+ 
+   (* unix world *)
+   let unixw = ref { 
+-    cache_path  = (new oassocb []);
++    (* CONFIG? could use some oassoch ? *)
++    cache_path2  = (new oassocb []);
+     cache_view  = (new oassocb []);
+     dirty_files = (new osetb Setb.empty);
+   }  in
++
++  (* XXX1, and search too all the code using now this function. may have to do a few changes. 
++     should do different stuff when the item is a dir ?
++   *)
++  let add_cache_path_item (path, item) = 
++    let cache = !unixw.cache_path2 in
++
++      let (dir, base) = (dirname path, basename path) in
++
++      let cache' = cache#apply_with_default dir 
++                       (fun e -> e#add (base, item))
++                       (fun () -> new oassocb [])
++      in
++
++    unixw := {!unixw with cache_path2 = cache'}
++  in
++
++  let del_cache_path_item path = 
++    let cache = !unixw.cache_path2 in
++
++      let (dir,base) = (dirname path, basename path) in
++      let cache' = cache#apply_with_default dir 
++                       (fun e -> e#delkey base)
++                       (fun () -> new oassocb [])
++      in
++      (* XXX1 add also if it is a dir ?*)
++
++    unixw := {!unixw with cache_path2 = cache'}
++  in
++
++  let update_cache_dir_entry path = 
++    let cache = !unixw.cache_path2 in
++
++      (* let cache = cache#replkey path (new oassocb []) in *)
++      
++    unixw := {!unixw with cache_path2 = cache}
++  in
++
++  let have_cache_entry path = 
++    let cache = !unixw.cache_path2 in
++    let (dir,base) = (dirname path, basename path) in
++    cache#haskey dir &&  (cache#assoc dir)#haskey base
++  in
++
++  (* try first as is and then try basename  ?
++     no because would have less precise info for the sizedir. better to start
++     by basename.
++   *)
++  let typeof path = optionise (fun () -> 
++    let cache = !unixw.cache_path2 in
++    let (dir,base) = (dirname path, basename path) in
++    (cache#assoc dir)#assoc base
++    ) in
++
++
++
+   let _dirtyrmdir = ref 0 in
+   let _dirtyview = ref 0 in
+   let _counterview = ref 2000000 in
+@@ -210,7 +294,6 @@ let launch_fuse path_meta mountpoint tra
+     end 
+   in
+ 
+-  let typeof path = optionise (fun () -> !unixw.cache_path#assoc path) in
+ 
+ 
+       let rec getdir_func nested_call = 
+@@ -227,45 +310,62 @@ let launch_fuse path_meta mountpoint tra
+ 
+ (*             let _ = ps +> iter (fun (Prop p,_) -> log ("dirs:" ^ p)) in *)
+ (*             let _ = fs +> iter (fun id ->         log ("files:" ^ (wrap_file id !w).filename)) in *)
+-             unixw := {!unixw with cache_path = !unixw.cache_path#add (Filename.concat path  "_dircomputed", (Dir (0,!_dirtyrmdir)))};
++             update_cache_dir_entry path;
++             (* XXX1 dircomputed was here to disambiguate stuff. When found
++                an entry for instance for /a in the cache, don't know
++                if here cos there was a ls done from / or that because
++                there was a ls done from /a. So we don't know if there
++                was a ls from /a. Then when lookup for a/xxx and a/xxx does not exist
++                in the cache, we should call ls. But if xxx really does not exist,
++                we don't want to call ls. We would like to answer no.
++                Indeed when launch for instance a command such as ls, there is
++                many lookup involved, for glibc, for path, ... and we
++                would like to answer fastly no  to all those lookup.
++                Hence this dircomputed.
++             *)
++             add_cache_path_item (Filename.concat path  "_dircomputed", (Dir (0,!_dirtyrmdir)));
+ 
++            (* XXX1 obsolete now ? *)
+ 	     fs +> iter (fun id -> 
+-               let s = (wrap_file id) in
+-               (unixw := {!unixw with cache_path = !unixw.cache_path#delkey (Filename.concat path s)})
++               let s = (id_to_filename id) in
++               del_cache_path_item (Filename.concat path s)
+                );
+ 
+-             ([".";".."]) 
++             ([".";".."])  (* no need to add in cache ? I think that Linux handle that internally, so never get call
++                              on a getattr "." or ".." I think.
++                            *)
+                ++
+ 	     (ps +> map (fun ((Prop p),i) -> 
+-               unixw := {!unixw with cache_path = !unixw.cache_path#add (Filename.concat path p, (Dir (i,!_dirtyrmdir)))};
++               add_cache_path_item (Filename.concat path p, (Dir (i,!_dirtyrmdir)));
+                p)  )
+ 	      ++
+ 	     (fs +> map (fun id -> 
+-               let s = (wrap_file id) in
++               let s = (id_to_filename id) in
+                let s =
+                (if Lfs.lfs_mode !w = Files
+                then 
+                  let s = 
+-                   if !unixw.cache_path#haskey (Filename.concat path s)
++                   if have_cache_entry (Filename.concat path s)
+                    then  encode_ambiguate s id
+                    else  s
+                  in
+-                 (unixw := {!unixw with cache_path = !unixw.cache_path#add (Filename.concat path s, (File id))};
++                 begin
++                   add_cache_path_item (Filename.concat path s, (File id));
+                  s
+-                 )
++                 end
+                else 
+                 let valu = 
+-                 (match optionise (fun () -> !unixw.cache_view#assoc (path ^ "/" ^ s)) with
++                 (match optionise (fun () -> !unixw.cache_view#assoc (Filename.concat path s)) with
+                  | Some (id, ver) when ver = !_dirtyview -> View (id, ver)
+                  | _ -> 
+                      begin
+                        let (id, ver) = generate_view path s in
+-                       unixw := {!unixw with cache_view = !unixw.cache_view#add (path ^ "/" ^ s , (id, ver))};
++                       unixw := {!unixw with cache_view = !unixw.cache_view#add (Filename.concat path s , (id, ver))};
+                        (View (id, ver))
+                      end
+                  ) in
+                 (
+-                unixw := {!unixw with cache_path = !unixw.cache_path#add (Filename.concat path s, valu)};
++                add_cache_path_item (Filename.concat path s, valu);
+                 s
+                 )
+                ) in
+@@ -302,18 +402,19 @@ let launch_fuse path_meta mountpoint tra
+                 begin
+                   let (id, ver) = generate_view (dirname path) (basename path) in
+                   unixw := {!unixw with cache_view = !unixw.cache_view#add (path , (id, ver))};
+-                  unixw := {!unixw with cache_path = !unixw.cache_path#add (path, View (id, ver))};
++                  add_cache_path_item (path, View (id, ver));
+                   simple_stats (View (id, ver))
+                 end
+           | Some (Dir (i,ver)) when ver = !_dirtyrmdir -> simple_stats (Dir (i,ver))
+           | Some (File o) -> (simple_stats (File o))
+ 	  | _ -> 
+               try Path.cd_ path; 
+-                  unixw := {!unixw with cache_path = !unixw.cache_path#add (path, Dir (0,!_dirtyrmdir))};
++                  add_cache_path_item (path, Dir (0,!_dirtyrmdir));
+                   simple_stats (Dir (0,!_dirtyrmdir))
+               with 
+                 Timeout -> raise Timeout
+               | e -> 
++                (* XXX1 *)                                                                     
+                 (match typeof ((dirname path) ^ "/_dircomputed") with
+                 | Some _ -> 
+                     let _ = log ("error getattr = " ^ Printexc.to_string e) in
+@@ -386,7 +487,7 @@ let launch_fuse path_meta mountpoint tra
+             ()
+               (* CONFIG *)
+               (* Unix.close (Unix.openfile (obj_to_filename o) flags 0) *)
+-              (* XXX1 cos pb with tar, with links *)
++              (* XXX2 cos pb with tar, with links *)
+ 	| Some (View (o,_)) -> Unix.close (Unix.openfile (obj_to_filename o) flags 0)
+         | _ -> raise Impossible
+         )
+@@ -470,7 +571,7 @@ let launch_fuse path_meta mountpoint tra
+           (*  with perlfs we didnt have such a pb cos mkfile was returning an inode and read_inode worked *)
+           (*  so no pb, but here no more the case *)
+           (* todo: dirty something *)
+-          unixw := {!unixw with cache_path = !unixw.cache_path#add (path, (File o))};
++          add_cache_path_item (path, (File o));
+ 
+ 	  log ("mknod-ending:" ^ path);
+           Gc.full_major (); (* zarb: otherwise get segfault when detarring usr.tar *)
+@@ -498,16 +598,20 @@ let launch_fuse path_meta mountpoint tra
+ 	      (* old: let o = Lfs.rm (Left (basename path)) in *)
+               let _obis = Lfs.rm (Right o) in
+               
+-
+-              (* CONFIG *)
+-              ignore(Unix.system ("mv " ^ (obj_to_path o) ^ " " ^ path_meta ^ "/lost+found/"));
++              if Flag.really_delete_not_mv
++              then 
++                begin
+               (*  or really rm *)
+-              (* ignore(Sys.command ("rm -f " ^ (obj_to_path o) ^ "/*")); *)
+-              (* ignore(Sys.command ("rm -f " ^ (obj_to_path o) ^ "/.*")); *)
+-              (* ignore(Sys.command ("rmdir " ^ (obj_to_path o))); *)
++                  (* todo?: erase the RCS/ too ? *)
++                  ignore(Sys.command ("rm -f " ^ (obj_to_path o) ^ "/*")); 
++                  ignore(Sys.command ("rm -f " ^ (obj_to_path o) ^ "/.*"));
++                  ignore(Sys.command ("rmdir " ^ (obj_to_path o))); 
++                end
++              else 
++                ignore(Unix.system ("mv " ^ (obj_to_path o) ^ " " ^ path_meta ^ "/lost+found/"));
+ 
+-              (* todo: should invalidate other path, or make a dirty_something *)
+-              unixw := {!unixw with cache_path = !unixw.cache_path#delkey path};
++              (* XXX1 todo: should invalidate other path, or make a dirty_something *)
++              del_cache_path_item path;
+           | _ -> raise (Unix.Unix_error (Unix.ENOENT, "stat", path))
+           )
+ 
+@@ -520,7 +624,8 @@ let launch_fuse path_meta mountpoint tra
+ 	  Lfs.rmdir (basename path);
+ 
+           incr _dirtyrmdir;
+-          unixw := {!unixw with cache_path = !unixw.cache_path#delkey path};
++          (* XXX1 *)
++          del_cache_path_item path;
+         )
+ 	  );
+ 
+@@ -543,6 +648,7 @@ let launch_fuse path_meta mountpoint tra
+ 	let oldname = (basename oldpath) in
+ 	let newname = (basename newpath) in
+ 	Path.cd_ (dirname oldpath);
++        log ("ic1:");
+ 	(match typeof oldpath with
+ 	| Some (File o1) -> 
+             begin
+@@ -552,7 +658,9 @@ let launch_fuse path_meta mountpoint tra
+                  begin
+                    (* coupling: copy paste of unlink *)
+ 	           Path.cd_ (dirname newpath);
++                   log ("ic2:");
+ 	           let o = Lfs.rm (Left (basename newpath)) in
++                   log ("ic3:");
+                    Path.cd_ (dirname oldpath); (*  go back to good dir *)
+                    ignore(Sys.command ("rm " ^ (obj_to_path o) ^ "/*"));
+                    ignore(Sys.command ("rm " ^ (obj_to_path o) ^ "/.*"));
+@@ -570,12 +678,12 @@ let launch_fuse path_meta mountpoint tra
+ 
+ 
+               Lfs.mv (Right o1) (Path.parse_path (dirname newpath)) newname;
+-              (* todo: dirty something *)
+-              unixw := {!unixw with cache_path = !unixw.cache_path#delkey oldpath};
++              (* XXX1 todo: dirty something *)
++              del_cache_path_item oldpath;
+               (* todo: bug ? if dir with mutliple file, the file mv in lfs may not be o1 *)
+-              unixw := {!unixw with cache_path = !unixw.cache_path#add (newpath, (File o1))};
++              add_cache_path_item (newpath, (File o1));
+             end
+-	| Some (Dir _) -> (*  BUG with dirty_rmdir ? *)
++	| Some (Dir _) -> (* XXX BUG with dirty_rmdir ? *)
+             begin
+ 	    Lfs.mvdir oldname (Path.parse_path (dirname newpath))
+ 	          (* note: noprop tricks cos shell tools are not used to lfs *)
+@@ -636,7 +744,7 @@ let launch_fuse path_meta mountpoint tra
+           (*  could do just a ln (would be faster), but -s is better, clearer. *)
+           ignore(Sys.command ("cd " ^ (obj_to_path o) ^ "; ln -s \"" ^ (basename destpath) ^ "\"  data")); 
+ 
+-          (* todo: dirty *)
+-          unixw := {!unixw with cache_path = !unixw.cache_path#add (destpath, (File o))};
++          (* todo: dirty XXX1 *)
++          add_cache_path_item (destpath, (File o));
+           )
+           );

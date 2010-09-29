@@ -1,0 +1,11 @@
+there is on the web already some kind of transducers, 
+sometimes called filters, summarizer, ...
+
+get inspiration or borrow the code from the plugins of
+ - swish-e
+ - harvest
+ - other search engine tools
+there exists even a library called libextractor, used by a tool called
+ doodle
+
+

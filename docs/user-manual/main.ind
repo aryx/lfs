@@ -1,0 +1,246 @@
+\begin{theindex}
+
+{\bfseries\hfil Symbols\hfil}\nopagebreak
+
+  \item $\cal L$\dotfill 35, 39
+  \item $\cal O$\dotfill 35, 39
+  \item $\cal P$\dotfill 35, 39
+  \item $\models$\dotfill 39, 49
+  \item $\neg$\dotfill 11
+  \item $\vee$\dotfill 11
+  \item $\wedge$\dotfill 11
+  \item \sh{..}\dotfill 41
+  \item \sh{/}
+    \subitem advanced transducer output interface\dotfill 17
+    \subitem conjonction LFS\dotfill 11
+    \subitem root\dotfill 41
+    \subitem transducer output interface\dotfill 17
+  \item \sh{:}\dotfill 14, 38
+  \item \sh{\&}\dotfill 11, 13
+  \item \sh{\symbol{124}}\dotfill 11, 19
+  \item \sh{\symbol{33}}\dotfill 11, 19
+
+  \indexspace
+{\bfseries\hfil A\hfil}\nopagebreak
+
+  \item absence\dotfill \see{marks of absence}{19}
+  \item \sh{adv\_transducer:}\dotfill \see{special property}{15}
+  \item advanced transducer\dotfill 17, 36, 51
+    \subitem interface\dotfill \see{interface}{17}
+  \item attribute\dotfill \see{property}{14}
+  \item axiom\dotfill 39
+
+  \indexspace
+{\bfseries\hfil C\hfil}\nopagebreak
+
+  \item \sh{cd}\dotfill \see{commands}{2}
+  \item classification
+    \subitem multiple\dotfill 13
+  \item coherency\dotfill 17
+  \item commands
+    \subitem \sh{cd}\dotfill 10, 11, 42
+    \subitem \sh{cd parts}\dotfill 18, 42
+    \subitem \sh{ls}\dotfill 10, 11, 42
+    \subitem \sh{mkdir}\dotfill 9, 12, 43
+    \subitem \sh{mkfile (touch)}\dotfill 10, 43
+    \subitem \sh{mkfs}\dotfill 9
+    \subitem \sh{mount}\dotfill 9
+    \subitem \sh{mv}\dotfill 12, 14, 44, 45
+    \subitem \sh{pwd}\dotfill 11, 41
+    \subitem \sh{read (cat)}\dotfill 19, 46
+    \subitem \sh{rm}\dotfill 11, 44
+    \subitem \sh{rmdir}\dotfill 12, 45
+    \subitem \sh{write (sed)}\dotfill 21, 46
+  \item conjonction\dotfill 11, 35
+  \item context\dotfill 10, 35, 37
+    \subitem of a file\dotfill 18
+    \subitem of file\dotfill 18
+  \item core LFS\dotfill 16
+  \item \sh{cp}\dotfill \see{commands}{2}
+  \item current query\dotfill 11
+
+  \indexspace
+{\bfseries\hfil D\hfil}\nopagebreak
+
+  \item description\dotfill 10
+  \item $\textit{Dirs}$\dotfill 35
+  \item disjonction\dotfill 11, 35
+
+  \indexspace
+{\bfseries\hfil E\hfil}\nopagebreak
+
+  \item examples
+    \subitem musics (MP3)\dotfill 16
+    \subitem pictures\dotfill 10
+    \subitem programs (C)\dotfill 17
+  \item $\textit{ext}$\dotfill 35
+  \item extensibility\dotfill 15, 16
+  \item extension (suffix of a filename)\dotfill 16
+
+  \indexspace
+{\bfseries\hfil F\hfil}\nopagebreak
+
+  \item file\dotfill 36
+    \subitem original\dotfill 18
+    \subitem parts of file\dotfill 17, 18, 36
+  \item $\textit{Files}$\dotfill 35
+  \item filesystem
+    \subitem classical, hierarchical
+      \subsubitem limitations\dotfill 10
+  \item formula\dotfill 11, 35
+  \item \sh{fsck}\dotfill \see{commands}{2}
+
+  \indexspace
+{\bfseries\hfil G\hfil}\nopagebreak
+
+  \item genericity\dotfill 15
+
+  \indexspace
+{\bfseries\hfil H\hfil}\nopagebreak
+
+  \item hierarchy
+    \subitem limitations\dotfill 10
+
+  \indexspace
+{\bfseries\hfil I\hfil}\nopagebreak
+
+  \item increments\dotfill 11
+  \item indexing (property extraction)\dotfill 18
+  \item interface
+    \subitem advanced transducer\dotfill 17, 36, 51
+    \subitem logic deduction engine\dotfill 15, 35, 49
+    \subitem transducer\dotfill 17, 36, 50
+
+  \indexspace
+{\bfseries\hfil L\hfil}\nopagebreak
+
+  \item $\cal L$\dotfill 35, 39
+  \item \sh{ln}\dotfill \see{commands}{2}
+  \item logic\dotfill 35
+    \subitem boolean\dotfill 11, 15
+    \subitem integer (interval)\dotfill 49
+    \subitem integers (interval)\dotfill 15
+    \subitem string (regexp)\dotfill 15
+  \item \sh{logic:}\dotfill \see{special property}{15}
+  \item logic deduction engine\dotfill 15, 38, 49
+    \subitem interface\dotfill \see{interface}{17}
+  \item logical query\dotfill 11
+  \item \sh{ls}\dotfill \see{commands}{2}
+
+  \indexspace
+{\bfseries\hfil M\hfil}\nopagebreak
+
+  \item mark of absence\dotfill 46
+  \item marks of absence\dotfill 19
+  \item matrix
+    \subitem $\textit{file}\times\textit{property}$\dotfill 10--12
+    \subitem $\textit{line}\times\textit{property}$\dotfill 18
+  \item \sh{mkdir}\dotfill \see{commands}{2}
+  \item \sh{mkfile}\dotfill \see{commands}{2}
+  \item \sh{mkfs}\dotfill \see{commands}{2}
+  \item \sh{mount}\dotfill \see{commands}{2}
+  \item mounting\dotfill 9
+  \item mountpoint\dotfill 9
+  \item MP3\dotfill 16, 50
+  \item \sh{mv}\dotfill \see{commands}{2}
+
+  \indexspace
+{\bfseries\hfil N\hfil}\nopagebreak
+
+  \item navigation\dotfill 11, 15
+  \item negation\dotfill 11, 35
+
+  \indexspace
+{\bfseries\hfil O\hfil}\nopagebreak
+
+  \item $\cal O$\dotfill 35, 39
+  \item object\dotfill 35
+    \subitem file\dotfill 18
+    \subitem parts of file\dotfill 18
+  \item order\dotfill 13
+  \item original (original file)\dotfill \see{ficle}{18}
+
+  \indexspace
+{\bfseries\hfil P\hfil}\nopagebreak
+
+  \item $\cal P$\dotfill 35, 39
+  \item \sh{parts}\dotfill \see{commands}{18}
+  \item parts (of file)\dotfill 17, 18, 36
+  \item path\dotfill 41
+  \item plugins\dotfill 15
+    \subitem advanced transducer\dotfill \see{advanced transducer}{15}
+    \subitem logic deduction engine\dotfill 
+		\see{logic deduction engine}{15}
+    \subitem transducer\dotfill \see{transducer}{15}
+  \item propagation (of modifications)\dotfill 19
+  \item property\dotfill 9, 35
+    \subitem attribute\dotfill 14, 38
+    \subitem extraction (automatic)\dotfill 16
+    \subitem extrinsic\dotfill 36
+    \subitem general\dotfill 12
+    \subitem intrinsic\dotfill 36
+    \subitem special
+      \subsubitem \sh{adv\_transducer:}\dotfill 18, 40
+      \subsubitem \sh{logic:}\dotfill 15, 38
+      \subsubitem \sh{transducer:}\dotfill 16, 40
+    \subitem specific\dotfill 12
+    \subitem sub-property\dotfill 12--14
+    \subitem system\dotfill 16, 40
+    \subitem valued attribute\dotfill 14, 38
+  \item PWD\dotfill 11, 37
+  \item \sh{pwd}\dotfill \see{commands}{2}
+
+  \indexspace
+{\bfseries\hfil Q\hfil}\nopagebreak
+
+  \item query\dotfill 11, 15
+  \item query refinment\dotfill 11, 12
+
+  \indexspace
+{\bfseries\hfil R\hfil}\nopagebreak
+
+  \item refinment\dotfill 11, 19
+  \item relevant hints\dotfill 11
+  \item request
+    \subitem logic\dotfill 13
+  \item \sh{rm}\dotfill \see{commands}{2}
+  \item \sh{rmdir}\dotfill \see{commands}{2}
+  \item root\dotfill 37
+
+  \indexspace
+{\bfseries\hfil S\hfil}\nopagebreak
+
+  \item satisfaction\dotfill 11
+  \item shell\dotfill 41
+  \item slash\dotfill 10, 11, 41
+  \item special property\dotfill \see{property}{38}
+  \item standard output\dotfill 17
+  \item sub-property\dotfill \see{property}{12}
+  \item \sh{synchro}\dotfill \see{special property}{15}
+  \item syntax\dotfill 14
+    \subitem valued attribute\dotfill 14
+
+  \indexspace
+{\bfseries\hfil T\hfil}\nopagebreak
+
+  \item taxonomy\dotfill 13, 15
+  \item \sh{touch}\dotfill \see{commands}{2}
+  \item transducer\dotfill 16, 36, 50
+    \subitem interface\dotfill \see{interface}{17}
+  \item \sh{transducer:}\dotfill \see{special property}{15}
+  \item $\textit{true}$\dotfill 37
+
+  \indexspace
+{\bfseries\hfil V\hfil}\nopagebreak
+
+  \item valued attribute\dotfill \see{property}{14}
+  \item view\dotfill 19, 46
+    \subitem creation\dotfill 19
+    \subitem modification\dotfill 21
+
+  \indexspace
+{\bfseries\hfil W\hfil}\nopagebreak
+
+  \item working directory\dotfill 11
+
+\end{theindex}

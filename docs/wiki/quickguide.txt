@@ -1,0 +1,42 @@
+====== Quick Guide to LFS ======
+
+=== Install ===
+
+    $ wget http://aryx.kicks-ass.org/~pad/software/project-lfs/lfs-0.5-bin-static.tgz
+    $ tar xvfz lfs-0.5.bin-static.tgz
+    $ cd lfs-0.5
+
+Then if you use bash do:
+    $ source env.sh
+
+If you use tcsh, do instead (note the .csh not .sh):
+
+    $ source env.csh
+
+
+=== Index === 
+
+    $ mkdir /tmp/meta-lfs
+    $ mkdir /tmp/lfs
+    $ ./build-db.opt -lfs_metapath /tmp/meta-lfs  <path_you_want_to_index>
+
+For instance to index your homedir do
+
+    $ ./build-db.opt -lfs_metapath /tmp/meta-lfs  /home/me/
+
+
+=== Explore ===
+
+    $ ./mount.lfs /tmp/meta-lfs /tmp/lfs
+    $ ls /tmp/lfs
+
+    $ ls '/tmp/lfs/ext:c|ext:h/.ext/'
+
+=== Umount === 
+
+    $ fusermount -u /tmp/lfs
+
+If you want to get rid of LFS data you can then do: 
+
+    $ rm -rf /tmp/meta-lfs
+

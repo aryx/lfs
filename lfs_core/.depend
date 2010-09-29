@@ -1,0 +1,5 @@
+lfs.cmi: ../commons/ofullcommon.cmo 
+lfs.cmo: ../commons/ocollection/osetb.cmo ../commons/ofullcommon.cmo \
+    ../commons/common.cmi lfs.cmi 
+lfs.cmx: ../commons/ocollection/osetb.cmx ../commons/ofullcommon.cmx \
+    ../commons/common.cmx lfs.cmi 

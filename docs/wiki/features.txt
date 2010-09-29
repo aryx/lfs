@@ -1,0 +1,32 @@
+====== LFS features =====
+
+===== Powerful queries ====
+
+===== Powerful navigation ====
+
+===== Extensible filesystem ====
+
+==== Logic plugins ===
+
+==== File (transducer) plugins ===
+
+Transducers take meta data from the files read while building the database with build.opt. There are several plugins included but you may create new ones for more file types. 
+Transducers are basically perl scripts that execute auxiliar programs like 'ogginfo' over input files and process the output to provide meta data.
+This is an example of transducer, it's a simplified version of the ogg_transducer inside p_transducer folder. It generates the information of artist, genre, title, date and album of a single ogg file.
+    #!/usr/bin/perl
+    my $path = $ARGV[0];
+    open(FILE, "ogginfo '$path' |") or die "$!";
+    my @aux = ();
+    while(<FILE>) {
+        if(/artist=(.*)/i) { push @aux, "artist:$1" }
+        if(/genre=(.*)/i) { 
+            my @genres = split /\//, $1;
+            map { push @aux, "genre:$_" } @genres;
+        }
+        if(/title=(.*)/i) { push @aux, "title:$1" }
+        if(/date=(.*)/i) { push @aux, "year:$1" }
+        if(/album=(.*)/i) { push @aux, "album:$1" }
+    }
+    print (join "/", @aux); print "\n";
+
+Having this information you can browse your hard disk, for example, to get all the songs of an artist from a date. (bye bye playlists)

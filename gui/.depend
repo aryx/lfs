@@ -1,0 +1,4 @@
+lfs-photos.cmo: ../commons/common.cmi 
+lfs-photos.cmx: ../commons/common.cmx 
+lfs-tunes.cmo: ../commons/common.cmi 
+lfs-tunes.cmx: ../commons/common.cmx 

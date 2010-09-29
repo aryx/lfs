@@ -1,0 +1,70 @@
+
+Add the following packages (for instance using the command 'apt-get
+install <packagename>) :
+
+ - ocaml
+ - camlidl
+
+ - libdb4.3
+ - libdb4.3-dev
+ - db4.3-util
+
+ - libfuse2
+ - fuse-utils. note: debconf ask to choose a group, the default is
+   fuse, it seems that you should not change this value otherwise then
+   fusermount is not made setuid and then LFS can not work.
+ - libfuse-dev
+
+
+You can compile the fuse kernel module, but nowadays the kernels of
+most distributions directly support fuse so the following step is
+optional. 
+
+So if you really want to compile yourself the fuse 
+kernel module install first:
+ - module-assistant
+ - kernel-headers-2.4.27 (or kernel-headers-2.4.27-2-386  or similar)
+
+then install: 
+ - fuse-source
+
+then issue as root the (cryptic) command:
+ m-a a-i  fuse
+
+You have to add yourself in the "fuse" group (edit /etc/group) to be
+able to access to fusermount program and you have to relog (check that
+you are indeed in the fuse group by running the "/usr/bin/groups"
+command)
+
+If you want other users on your machine to access your mounted fuse
+filesystem then you can optionaly create a file /etc/fuse.conf and add 
+the following line
+    user_allow_other
+You must then relaunch (or launch) fuse with  
+the command  "rmmod fuse; modprobe fuse".
+
+
+
+You can now detar the source of LFS and type the make command.
+
+
+
+To enable some LFS plugins, you can install:
+ - libmp3-info-perl
+ - libmp3-tag-perl
+ - vorbis-tools
+
+ - glimpse. there is no debian package for this. You have to install
+   it from source. Note that you don't need it absolutly, because
+   plugins, and this one in particular, are optional.
+
+ - gprolog
+
+To enable the GUI for mp3 and photos provided with LFS, install:
+ - lablgtk 
+   warning: the lablgtk package as some point conflicted with the berkeley db
+   development package (libdb4.3-dev) so then you needed to first compile 
+   the LFS source (requiring the libdb4.3-dev package), and then install 
+   the lablgtk package and compile the GUI (LFS binaries dont need the
+   libdb4.3-dev package to run (but need it to compile)) and then take care
+   then to reinstall libdb4.3-dev if you want to recompile LFS.

@@ -1,0 +1,518 @@
+/home/pad/packages/lib/python2.5/site-packages/mercurial/demandimport.py:46: RuntimeWarning: Python C API version mismatch for module mpatch: This Python has API version 1012, module mpatch has version 1013.
+  mod = _origimport(head, globals, locals)
+/home/pad/packages/lib/python2.5/site-packages/mercurial/demandimport.py:46: RuntimeWarning: Python C API version mismatch for module bdiff: This Python has API version 1012, module bdiff has version 1013.
+  mod = _origimport(head, globals, locals)
+diff -r 01f072760885 logfun/makefile
+--- a/logfun/makefile	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/makefile	Sat May 24 06:35:00 2008 +0000
+@@ -16,6 +16,8 @@ OCAMLFLAGS= -pp "camlp4o pa_op.cmo" $(IN
+ OCAMLFLAGS= -pp "camlp4o pa_op.cmo" $(INCLUDES)    # add other options for ocamlc here
+ OCAMLDOCFLAGS= $(OCAMLFLAGS) -d ocamldoc
+ 
++
++
+ # The list of object files
+ COMMON=common.$(CMO) token.$(CMO) src/lexer.$(CMO) syntax.$(CMO) lSet.$(CMO) cis.$(CMO) term.$(CMO) logic.$(CMO)
+ OLD = pair.$(CMO) opt.$(CMO) conj.$(CMO) interv.$(CMO)
+@@ -24,7 +26,7 @@ STRUCTURE = interval.$(CMO) multiset.$(C
+ STRUCTURE = interval.$(CMO) multiset.$(CMO)
+ LOGIC = iset.$(CMO) bottom.$(CMO) single.$(CMO) id.$(CMO) aik.$(CMO) prop.$(CMO) prop2.$(CMO) enum.$(CMO)
+ SYNTAX = prefix.$(CMO) suffix.$(CMO) bracket.$(CMO)
+-GEN2 = option.$(CMO) vector.$(CMO) openinterval.$(CMO) 
++GEN2 = option.$(CMO) vector.$(CMO)  openinterval.$(CMO) 
+ GEN3 = prelist.$(CMO) mltype.$(CMO) javatype.$(CMO) date_pattern.$(CMO)
+ GEN4 = segment.$(CMO) motif.$(CMO)
+ ALL = $(COMMON) $(OLD) $(ATOM) $(ALGEBRA) $(STRUCTURE) $(LOGIC) $(SYNTAX) $(GEN2) $(GEN3) $(GEN4)
+diff -r 01f072760885 logfun/src/aik.ml
+--- a/logfun/src/aik.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/aik.ml	Sat May 24 06:35:00 2008 +0000
+@@ -19,7 +19,7 @@ module Make (Param : PARAM) (L : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let l = L.props () in
+-	  {no_props "Aik" with
++	  {(no_props "Aik") with
+ 	   st' = isok;
+ 	   sg' = isok;
+ 	   po_entails = l.po_entails;
+diff -r 01f072760885 logfun/src/atom.ml
+--- a/logfun/src/atom.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/atom.ml	Sat May 24 06:35:00 2008 +0000
+@@ -12,7 +12,7 @@ module Make (Param : PARAM) : Logic.T =
+     include Default
+ 
+     let props () =
+-      {no_props "Atom" with
++      {(no_props "Atom") with
+        df = isok;
+        st' = isok;
+        sg' = isok;
+diff -r 01f072760885 logfun/src/attr.ml
+--- a/logfun/src/attr.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/attr.ml	Sat May 24 06:35:00 2008 +0000
+@@ -16,7 +16,7 @@ module Make (Param : PARAM) : Logic.T =
+     include Default
+ 
+     let props () =
+-      {no_props "Attr" with
++      {(no_props "Attr") with
+        st' = isok;
+        df = isok;
+        po_entails = isok;
+diff -r 01f072760885 logfun/src/bottom.ml
+--- a/logfun/src/bottom.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/bottom.ml	Sat May 24 06:35:00 2008 +0000
+@@ -15,7 +15,7 @@ module Make (Param : PARAM) (X : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let x = X.props () in
+-	  {no_props "Bottom" with
++	  {(no_props "Bottom") with
+ 	   df = x.df;
+ 	   st' = x.st';
+ 	   sg' = x.sg';
+diff -r 01f072760885 logfun/src/bracket.ml
+--- a/logfun/src/bracket.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/bracket.ml	Sat May 24 06:35:00 2008 +0000
+@@ -9,7 +9,7 @@ module type PARAM =
+ 
+ module Make (Param : PARAM) (L : T) =
+   struct
+-    module M = Id L
++    module M = Id(L)
+     include M
+ 
+     let parse = parser
+diff -r 01f072760885 logfun/src/card.ml
+--- a/logfun/src/card.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/card.ml	Sat May 24 06:35:00 2008 +0000
+@@ -8,7 +8,7 @@ module Make =
+     include Default
+ 
+     let props () =
+-      {no_props "Card" with
++      {(no_props "Card") with
+        df = isok;
+        st = isok;
+        st' = isok;
+diff -r 01f072760885 logfun/src/date.ml
+--- a/logfun/src/date.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/date.ml	Sat May 24 06:35:00 2008 +0000
+@@ -7,7 +7,7 @@ module Make =
+     include Default
+ 
+     let props () =
+-      {no_props "Date" with
++      {(no_props "Date") with
+        st = isok;
+        st' = isok;
+        po_entails = isok;
+diff -r 01f072760885 logfun/src/date_pattern.ml
+--- a/logfun/src/date_pattern.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/date_pattern.ml	Sat May 24 06:35:00 2008 +0000
+@@ -60,7 +60,7 @@ module Make (Param : PARAM) =
+     module Month = MyTop (MyEnum MyAtom)
+     module Year = MyTop (MyEnum (MyInterval MyInt))
+ 
+-    module Date = MyProd Day (MyProd Month Year)
++    module Date = MyProd(Day)(MyProd(Month)(Year))
+ 
+     include Date
+   end
+diff -r 01f072760885 logfun/src/enum.ml
+--- a/logfun/src/enum.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/enum.ml	Sat May 24 06:35:00 2008 +0000
+@@ -18,7 +18,7 @@ module Make (Param : PARAM) (E : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let e = E.props () in
+-	  {no_props "Enum" with
++	  {(no_props "Enum") with
+ 	   df = e.df;
+ 	   st' = e.st';
+ 	   sg' = e.sg';
+diff -r 01f072760885 logfun/src/float.ml
+--- a/logfun/src/float.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/float.ml	Sat May 24 06:35:00 2008 +0000
+@@ -7,7 +7,7 @@ module Make =
+     include Default
+ 
+     let props () =
+-      {no_props "Float" with
++      {(no_props "Float") with
+        df = isok;
+        st = isok;
+        st' = isok;
+diff -r 01f072760885 logfun/src/id.ml
+--- a/logfun/src/id.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/id.ml	Sat May 24 06:35:00 2008 +0000
+@@ -16,7 +16,7 @@ module Make (Param : PARAM) (L : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let l = L.props () in
+-	  {no_props "Id" with
++	  {(no_props "Id") with
+ 	   df = isok;
+ 	   st = l.st;
+ 	   st' = l.st';
+diff -r 01f072760885 logfun/src/int.ml
+--- a/logfun/src/int.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/int.ml	Sat May 24 06:35:00 2008 +0000
+@@ -7,7 +7,7 @@ module Make =
+     include Default
+ 
+     let props () =
+-      {no_props "Int" with
++      {(no_props "Int") with
+        df = isok;
+        st = isok;
+        st' = isok;
+diff -r 01f072760885 logfun/src/interv.ml
+--- a/logfun/src/interv.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/interv.ml	Sat May 24 06:35:00 2008 +0000
+@@ -17,7 +17,7 @@ module Make (Param : PARAM) (Val : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let v = Val.props () in
+-	  {no_props "Interv" with
++	  {(no_props "Interv") with
+ 	   st' = reqand [v.st'; v.cs_le_max];
+ 	   cs_entails = reqand [v.cs_le_min; v.cs_le_max];
+ 	   cp_entails = reqand [v.cp_le_min; v.cp_le_max];
+diff -r 01f072760885 logfun/src/interval.ml
+--- a/logfun/src/interval.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/interval.ml	Sat May 24 06:35:00 2008 +0000
+@@ -18,7 +18,7 @@ module Make (Param : PARAM) (Val : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let v = Val.props () in
+-	  {no_props "Interval" with
++	  {(no_props "Interval") with
+ 	   df = v.df;
+ 	   st = reqand [v.st; v.cs_le_min; v.cs_le_max];
+ 	   st' = reqand [v.st'; v.cs_le_min; v.cs_le_max];
+diff -r 01f072760885 logfun/src/iset.ml
+--- a/logfun/src/iset.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/iset.ml	Sat May 24 06:35:00 2008 +0000
+@@ -3,7 +3,7 @@ open Logic
+ 
+ module Make (E : T) =
+   struct
+-    module M = Id E
++    module M = Id(E)
+     include M
+ 
+     let props =
+diff -r 01f072760885 logfun/src/javatype.ml
+--- a/logfun/src/javatype.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/javatype.ml	Sat May 24 06:35:00 2008 +0000
+@@ -132,11 +132,11 @@ module Object =
+   MyBottom (SingleObject Class)
+ 
+ module Atom =
+-  TopAtom (MySum Primitive Object)
++  TopAtom (MySum(Primitive)(Object))
+ 
+ module Array =
+   MyProd
+-    Atom
++    (Atom)
+     (PrelistArray UnitArray)
+ 
+ module Kind =
+@@ -197,11 +197,11 @@ module Make =
+   MyTop (MySum
+     (MySum
+        (MySum
+-	  Kind
++	  (Kind)
+ 	  (PrefixName Name))
+        (MySum
+-	  Access
+-	  Modifier))
++	  (Access)
++	  (Modifier)))
+     (MySum
+        (MySum
+ 	  (PrefixIn (MultisetParam Array))
+diff -r 01f072760885 logfun/src/mltype.ml
+--- a/logfun/src/mltype.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/mltype.ml	Sat May 24 06:35:00 2008 +0000
+@@ -143,14 +143,14 @@ module TopDescr =
+ 
+ (* ---------- *)
+ 
+-module Var = TopVar MyAtom
++module Var = TopVar(MyAtom)
+ module Constr = MyAtom
+ 
+ module Val (Type : T) : T =
+   MySum
+     (PrefixVar Var)
+     (MySum
+-       (MyProd Constr (VectorArgs Type))
++       (MyProd(Constr)(VectorArgs Type))
+        (MyBracket Type))
+ 
+ module Tuple (Type : T) =
+diff -r 01f072760885 logfun/src/motif.ml
+--- a/logfun/src/motif.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/motif.ml	Sat May 24 06:35:00 2008 +0000
+@@ -23,8 +23,8 @@ include Logic.Default
+ 
+ module IntervParam = struct let verbose = true end
+ 
+-module Len = Openinterval.DotDot Intpow.Make
+-module Dist = Openinterval.DotDot Floatpow.Make
++module Len = Openinterval.DotDot(Intpow.Make)
++module Dist = Openinterval.DotDot(Floatpow.Make)
+ 
+ type e = int * int
+   (* interval for elastic segments *)
+diff -r 01f072760885 logfun/src/multiset.ml
+--- a/logfun/src/multiset.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/multiset.ml	Sat May 24 06:35:00 2008 +0000
+@@ -18,7 +18,7 @@ module Make (Param : PARAM) (E : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let e = E.props () in
+-	  {no_props "Multiset" with
++	  {(no_props "Multiset") with
+ 	   df = e.df;
+ 	   st' = e.st';
+ 	   po_entails = e.po_entails;
+diff -r 01f072760885 logfun/src/opt.ml
+--- a/logfun/src/opt.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/opt.ml	Sat May 24 06:35:00 2008 +0000
+@@ -17,7 +17,7 @@ module Make (Param : PARAM) (A : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let propsA = A.props () in
+-	  {no_props "Opt" with
++	  {(no_props "Opt") with
+ 	   st' = propsA.st';
+ 	   cs_entails = propsA.cs_entails;
+ 	   cp'_entails = propsA.cp'_entails;
+diff -r 01f072760885 logfun/src/prefix.ml
+--- a/logfun/src/prefix.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/prefix.ml	Sat May 24 06:35:00 2008 +0000
+@@ -8,7 +8,7 @@ module type PARAM =
+ 
+ module Make (Param : PARAM) (L : T) =
+   struct
+-    module M = Id L
++    module M = Id(L)
+     include M
+ 
+     let parse = parser
+diff -r 01f072760885 logfun/src/prelist.ml
+--- a/logfun/src/prelist.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/prelist.ml	Sat May 24 06:35:00 2008 +0000
+@@ -36,8 +36,8 @@ module Make (Param : PARAM) (X : T) =
+ 
+     module MyTopOption (X : T) =
+       struct
+-	module O = MyOption X
+-	module T = MyTop O
++	module O = MyOption(X)
++	module T = MyTop(O)
+ 
+ 	include T
+ 
+@@ -47,7 +47,7 @@ module Make (Param : PARAM) (X : T) =
+       end
+ 
+ 
+-    module rec Prelist : T = MyTopOption (MyProd X Prelist)
++    module rec Prelist : T = MyTopOption (MyProd(X)(Prelist))
+ 
+     include Prelist
+ 
+diff -r 01f072760885 logfun/src/prod.ml
+--- a/logfun/src/prod.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/prod.ml	Sat May 24 06:35:00 2008 +0000
+@@ -19,7 +19,7 @@ module Make (Param : PARAM) (L1 : T) (L2
+ 	(fun () ->
+ 	  let l1 = L1.props () in
+ 	  let l2 = L2.props () in
+-	  {no_props "Prod" with
++	  {(no_props "Prod") with
+ 	   df = reqand [l1.df; l2.df];
+ 	   st' = reqand [l1.st'; l2.st'];
+ 	   sg' = reqand [l1.sg'; l2.sg'];
+diff -r 01f072760885 logfun/src/prop.ml
+--- a/logfun/src/prop.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/prop.ml	Sat May 24 06:35:00 2008 +0000
+@@ -22,7 +22,7 @@ module Make (Param : PARAM) (A : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let a = A.props () in
+-	  {no_props "Prop" with
++	  {(no_props "Prop") with
+ 	   df = a.df;
+ 	   st' = if Param.desc_atom then a.st' else requires "Prop" "st'";
+ 	   sg' = if Param.desc_atom then a.sg' else requires "Prop" "sg'";
+diff -r 01f072760885 logfun/src/prop2.ml
+--- a/logfun/src/prop2.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/prop2.ml	Sat May 24 06:35:00 2008 +0000
+@@ -21,7 +21,7 @@ module Make (Param : PARAM) (A : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let a = A.props () in
+-	  {no_props "Prop" with
++	  {(no_props "Prop") with
+ 	   df = a.df;
+ 	   cs_entails = reqand [a.cs_entails; a.cp_conj; a.cs_disj; a.cp_top; a.cs_bot];
+ 	   cp_entails = reqand [a.cs_conj; a.cp_disj; a.reduced];
+diff -r 01f072760885 logfun/src/segment.ml
+--- a/logfun/src/segment.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/segment.ml	Sat May 24 06:35:00 2008 +0000
+@@ -14,8 +14,8 @@ module Make (A : LOG) =
+ 
+ (* private definitions *)
+ 
+-    module Pos = Openinterval.DotDot A  (* interval for Start and End of segments *)
+-    module Len = Openinterval.DotDot A.Diff  (* interval for length of segments *)
++    module Pos = Openinterval.DotDot(A)  (* interval for Start and End of segments *)
++    module Len = Openinterval.DotDot(A.Diff)  (* interval for length of segments *)
+ 
+     type bound = NegInf | PosInf | Val of A.t
+     type interv = bound * bound  (* invariant: in (a,b) one has (compare a b <= 0) *)
+diff -r 01f072760885 logfun/src/sentence.ml
+--- a/logfun/src/sentence.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/sentence.ml	Sat May 24 06:35:00 2008 +0000
+@@ -18,7 +18,7 @@ module Make (Param : PARAM) =
+     include Default
+ 
+     let props () =
+-      {no_props "Sentence" with
++      {(no_props "Sentence") with
+        st = isok;
+        st' = isok;
+        cs_entails = isok;
+diff -r 01f072760885 logfun/src/single.ml
+--- a/logfun/src/single.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/single.ml	Sat May 24 06:35:00 2008 +0000
+@@ -17,7 +17,7 @@ module Make (Param : PARAM) (L : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let l = L.props () in
+-	  {no_props "Single" with
++	  {(no_props "Single") with
+ 	   df = isok;
+ 	   st' = isok;
+ 	   sg' = isok;
+diff -r 01f072760885 logfun/src/single2.ml
+--- a/logfun/src/single2.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/single2.ml	Sat May 24 06:35:00 2008 +0000
+@@ -20,7 +20,7 @@ module Make (Param : PARAM) (L : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let l = L.props () in
+-	  {no_props "Single2" with
++	  {(no_props "Single2") with
+ 	   df = isok;
+ 	   st' = isok;
+ 	   sg' = isok;
+diff -r 01f072760885 logfun/src/substring.ml
+--- a/logfun/src/substring.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/substring.ml	Sat May 24 06:35:00 2008 +0000
+@@ -18,7 +18,7 @@ module Make (Param : PARAM) =
+     include Default
+ 
+     let props () =
+-      {no_props "Substring" with
++      {(no_props "Substring") with
+        df = isok;
+        st = isok;
+        st' = isok;
+@@ -147,7 +147,7 @@ module Make (Param : PARAM) =
+ 
+ module Verb (Param : PARAM) =
+   struct
+-    include Make Param
++    include Make(Param)
+ 
+     let parse =
+       let begins_with s s' = begins_with s s' in
+@@ -171,7 +171,7 @@ module Verb (Param : PARAM) =
+ 
+ module Star (Param : PARAM) =
+   struct
+-    include Make Param
++    include Make(Param)
+ 
+     let rec parse = parser
+       | [<'Star; f = parse_after_star>] -> f
+diff -r 01f072760885 logfun/src/sum.ml
+--- a/logfun/src/sum.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/sum.ml	Sat May 24 06:35:00 2008 +0000
+@@ -17,7 +17,7 @@ module Make (Param : PARAM) (A1 : T) (A2
+ 	(fun () ->
+ 	  let a1 = A1.props () in
+ 	  let a2 = A2.props () in
+-	  {no_props "Sum" with
++	  {(no_props "Sum") with
+ 	   df = reqand [a1.df; a2.df];
+ 	   st' = reqand [a1.st'; a2.st'];
+ 	   sg' = reqand [a1.sg'; a2.sg'];
+diff -r 01f072760885 logfun/src/taxo.ml
+--- a/logfun/src/taxo.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/taxo.ml	Sat May 24 06:35:00 2008 +0000
+@@ -82,7 +82,7 @@ module Make (Param : PARAM) =
+     include Default
+ 
+     let props () =
+-      {no_props "Taxo" with
++      {(no_props "Taxo") with
+        st' = isok;
+        sg' = isok;
+        df = isok;
+diff -r 01f072760885 logfun/src/time.ml
+--- a/logfun/src/time.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/time.ml	Sat May 24 06:35:00 2008 +0000
+@@ -7,7 +7,7 @@ module Make =
+     include Default
+ 
+     let props () =
+-      {no_props "Time" with
++      {(no_props "Time") with
+        st = isok;
+        st' = isok;
+        po_entails = isok;
+diff -r 01f072760885 logfun/src/top.ml
+--- a/logfun/src/top.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/top.ml	Sat May 24 06:35:00 2008 +0000
+@@ -16,7 +16,7 @@ module Make (Param : PARAM) (X : T) =
+       fixpoint
+ 	(fun () ->
+ 	  let x = X.props () in
+-	  {no_props "Top" with
++	  {(no_props "Top") with
+ 	   df = x.df;
+ 	   st = x.st;
+ 	   st' = x.st';
+diff -r 01f072760885 logfun/src/unit.ml
+--- a/logfun/src/unit.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/unit.ml	Sat May 24 06:35:00 2008 +0000
+@@ -12,7 +12,7 @@ module Make (Param : PARAM) =
+     include Default
+ 
+     let props () =
+-      {no_props "Unit" with
++      {(no_props "Unit") with
+        df = isok;
+        st = isok;
+        st' = isok;
+diff -r 01f072760885 logfun/src/vector.ml
+--- a/logfun/src/vector.ml	Sat May 24 04:24:09 2008 +0000
++++ b/logfun/src/vector.ml	Sat May 24 06:35:00 2008 +0000
+@@ -27,7 +27,7 @@ module Make (Param : PARAM) (X : T) =
+ 	  let toks_suf = []
+ 	  let toks_bot = Param.toks_bot
+ 	end)
+-    module rec Tuple : T = MyOption (MyProd X Tuple)
++    module rec Tuple : T = MyOption(MyProd(X)(Tuple))
+ 
+     include Tuple
+ 

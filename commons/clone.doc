@@ -1,0 +1,16 @@
+master: mobile/commons/commons-ocaml (main), (both darcs and hg)
+ also linked via ~/etc/commons
+
+comment/commons (symlink to comment/lfs_code/commons) (only hg)
+
+coccinelle/commons (only darcs)
+lfs/commons (only hg)
+
+
+yacfe/commons (only darcs)
+otimetracker/commons (only darcs)
+
+mobile/homepage/hg/c-commons (only hg)
+mobile/homepage/darcs/commons (only darcs)
+
+TODO: icfp

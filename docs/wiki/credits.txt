@@ -1,0 +1,27 @@
+A big thanks to Olivier Ridoux and Sebastien Ferré for all their work
+around LIS and LFS.
+
+Thanks to 
+  * Vincenzo Ciancia for the OCaml binding to the Fuse library, 
+  * Lex Stein for the OCaml binding to Berkeley DB, 
+  * Sebastien Ferré for his implementation in OCaml of a suffix tree library, and for his logic functors (logfun).
+
+  * Richard Jones for his dumper module, 
+  * Brian Hurt and Nicolas Cannasse for their dynArray module,
+  * Troestler Christophe for his ANSITerminal module,
+
+  * Xavier Leroy for his implementation in OCaml of the agrep utility (and of course for OCaml).
+
+
+Thanks to the teams behind Berkeley DB and Fuse.
+
+Thanks of course also to Stallman, Linus, Leroy, Knuth and their
+acolytes for respectively Emacs, Linux, OCaml, and (La)Tex.
+
+Thanks to the user of LFS
+  * Rix Beck for pointing out some bugs.
+  * Yoann Padioleau for all his amazing work; he is a great guy
+  * Diego Barrios (Eldruin) for beta-testing the semi_real_mode and writing the gentoo ebuild
+
+
+

@@ -1,0 +1,52 @@
+#!/usr/bin/perl
+
+use File::Basename;
+
+#check no <> in name part
+
+my @files = @ARGV;
+
+
+
+map {
+    print "processing $_\n";
+    my $fullfilename = $_;
+    my $file = basename($_);
+
+
+    #my $newname = 
+    #  "__" .
+    #  (join ("_._",@dirs)) .
+    #  "__" .
+    #  "inode:$o" .
+    #  "__" .
+    #  "$name";
+
+
+    if($file =~ /^__(.*)__inode:\d+__(.*)$/) {
+        my ($dirs, $name) = ($1, $2);
+        my @dirs = split(/_\._/, $dirs);
+        print "name = $name\n";
+        print "props = @dirs\n";
+        # see if a same file already here (same name, and then try see if is same md5sum)
+
+        map { 
+            if (!(-d $_)) { 
+                print "PB PROPERTY $_ does not exist, i create it in .compat\n";
+#CONFIG
+                `mkdir ".compat/$_"`;
+            }
+          } @dirs;
+
+        my $fullpath = join("/", @dirs) . "/" . $name;
+        print "fullpath = $fullpath\n";
+
+        if(-e $fullpath) {
+            print "PB FILE ALREADY EXIST, I don't handle this one: $file\n"
+        } else {
+#CONFIG
+            `cp "$fullfilename" "$fullpath" `;
+        }
+    }
+    else { die "not valid lfs import file" }
+} @files;

@@ -1,0 +1,30 @@
+====== Syntax of LFS queries =======
+
+===== Basic logic =====
+
+&, |, !
+
+===== Change internal readdir (ls) algorithm ====
+
+.ext
+.best
+.ca
+.int
+
+===== Views ^ ====
+
+===== Advanced logic ====
+
+==== string logic === 
+==== date logic ===
+==== int logic ===
+==== size logic ===
+
+===== Extensions ==== 
+
+==== stree: or all: extension ===
+
+==== agrep: extension ===
+
+==== glimpse: extension === 
+

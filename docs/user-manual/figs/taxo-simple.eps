@@ -1,0 +1,529 @@
+%!PS-Adobe-2.0
+%%Creator: dot version 1.4 (2-14-1999)
+%%For: (pad) pad
+%%Title: misc
+%%Pages: (atend)
+%%BoundingBox: 36 36 397 135
+%%EndComments
+%%BeginProlog
+save
+/DotDict 200 dict def
+DotDict begin
+
+%%BeginResource: procset
+/coord-font-family /Times-Roman def
+/default-font-family /Times-Roman def
+/coordfont coord-font-family findfont 8 scalefont def
+
+/InvScaleFactor 1.0 def
+/set_scale {
+	dup 1 exch div /InvScaleFactor exch def
+	dup scale
+} bind def
+
+% styles
+/solid { } bind def
+/dashed { [9 InvScaleFactor mul dup ] 0 setdash } bind def
+/dotted { [1 InvScaleFactor mul 6 InvScaleFactor mul] 0 setdash } bind def
+/invis {/fill {newpath} def /stroke {newpath} def /show {pop newpath} def} bind def
+/bold { 2 setlinewidth } bind def
+/filled { } bind def
+/unfilled { } bind def
+/rounded { } bind def
+/diagonals { } bind def
+
+% hooks for setting color 
+/nodecolor { sethsbcolor } bind def
+/edgecolor { sethsbcolor } bind def
+/graphcolor { sethsbcolor } bind def
+/nopcolor {pop pop pop} bind def
+
+/beginpage {	% i j npages
+	/npages exch def
+	/j exch def
+	/i exch def
+	/str 10 string def
+	npages 1 gt {
+		gsave
+			coordfont setfont
+			0 0 moveto
+			(\() show i str cvs show (,) show j str cvs show (\)) show
+		grestore
+	} if
+} bind def
+
+/set_font {
+	findfont exch
+	scalefont setfont
+} def
+
+% draw aligned label in bounding box aligned to current point
+% alignfactor tells what fraction to place on the left.
+% -.5 is centered.
+/alignedtext {			% text labelwidth fontsz alignfactor
+	/alignfactor exch def
+	/fontsz exch def
+	/width exch def
+	/text exch def
+	gsave
+		% even if node or edge is dashed, don't paint text with dashes
+		[] 0 setdash
+		currentpoint newpath moveto
+		text stringwidth pop
+		alignfactor mul fontsz -.3 mul rmoveto
+		text show
+	grestore
+} def
+
+/boxprim {				% xcorner ycorner xsize ysize
+		4 2 roll
+		moveto
+		2 copy
+		exch 0 rlineto
+		0 exch rlineto
+		pop neg 0 rlineto
+		closepath
+} bind def
+
+/ellipse_path {
+	/ry exch def
+	/rx exch def
+	/y exch def
+	/x exch def
+	matrix currentmatrix
+	newpath
+	x y translate
+	rx ry scale
+	0 0 1 0 360 arc
+	setmatrix
+} bind def
+
+/endpage { showpage } bind def
+
+/layercolorseq
+	[	% layer color sequence - darkest to lightest
+		[0 0 0]
+		[.2 .8 .8]
+		[.4 .8 .8]
+		[.6 .8 .8]
+		[.8 .8 .8]
+	]
+def
+
+/setlayer {/maxlayer exch def /curlayer exch def
+	layercolorseq curlayer get
+	aload pop sethsbcolor
+	/nodecolor {nopcolor} def
+	/edgecolor {nopcolor} def
+	/graphcolor {nopcolor} def
+} bind def
+
+/onlayer { curlayer ne {invis} if } def
+
+/onlayers {
+	/myupper exch def
+	/mylower exch def
+	curlayer mylower lt
+	curlayer myupper gt
+	or
+	{invis} if
+} def
+
+/curlayer 0 def
+
+%%EndResource
+14 default-font-family set_font
+1 setmiterlimit
+% /arrowlength 10 def
+% /arrowwidth 5 def
+%%EndProlog
+%%Page: 1 1
+%%PageBoundingBox: 36 36 397 135
+%%PageOrientation: Portrait
+gsave
+35 35 362 100 boxprim clip newpath
+36 36 translate
+0 0 1 beginpage
+0.3900 set_scale
+0 0 translate 0 rotate
+0.000 0.000 0.000 graphcolor
+14.00 /Times-Roman set_font
+
+%	slash
+gsave 10 dict begin
+478 234 27 18 ellipse_path
+stroke
+gsave 10 dict begin
+478 235 moveto (/) 3 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	type
+gsave 10 dict begin
+152 162 27 18 ellipse_path
+stroke
+gsave 10 dict begin
+152 163 moveto (type:) 28 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	slash -> type
+newpath 443 226 moveto
+378 212 236 180 178 168 curveto
+stroke
+newpath 443 223 moveto
+452 228 lineto
+442 228 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	year
+gsave 10 dict begin
+354 162 27 18 ellipse_path
+stroke
+gsave 10 dict begin
+354 163 moveto (year:) 27 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	slash -> year
+newpath 450 218 moveto
+427 205 395 186 374 174 curveto
+stroke
+newpath 450 215 moveto
+458 222 lineto
+448 220 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	art
+gsave 10 dict begin
+478 162 27 18 ellipse_path
+stroke
+gsave 10 dict begin
+478 163 moveto (art) 14 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	slash -> art
+newpath 478 206 moveto
+478 197 478 188 478 180 curveto
+stroke
+newpath 481 206 moveto
+478 216 lineto
+476 206 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	geography
+gsave 10 dict begin
+665 162 40 18 ellipse_path
+stroke
+gsave 10 dict begin
+665 163 moveto (geography) 58 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	slash -> geography
+newpath 509 222 moveto
+544 209 600 187 635 174 curveto
+stroke
+newpath 512 223 moveto
+502 225 lineto
+510 219 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	plugins
+gsave 10 dict begin
+819 162 31 18 ellipse_path
+stroke
+gsave 10 dict begin
+819 163 moveto (plugins) 41 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	slash -> plugins
+newpath 513 227 moveto
+580 213 727 181 790 168 curveto
+stroke
+newpath 514 229 moveto
+504 229 lineto
+513 224 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	typepict
+gsave 10 dict begin
+43 90 43 18 ellipse_path
+stroke
+gsave 10 dict begin
+43 91 moveto (type:picture) 66 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	type -> typepict
+newpath 126 144 moveto
+107 133 84 117 66 105 curveto
+stroke
+newpath 126 141 moveto
+133 149 lineto
+123 145 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	typeprog
+gsave 10 dict begin
+152 90 48 18 ellipse_path
+stroke
+gsave 10 dict begin
+152 91 moveto (type:program) 75 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	type -> typeprog
+newpath 152 134 moveto
+152 125 152 116 152 108 curveto
+stroke
+newpath 155 134 moveto
+152 144 lineto
+150 134 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	year2000
+gsave 10 dict begin
+256 90 38 18 ellipse_path
+stroke
+gsave 10 dict begin
+256 91 moveto (year:2000) 55 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	year -> year2000
+newpath 329 143 moveto
+312 131 292 116 277 105 curveto
+stroke
+newpath 329 140 moveto
+336 148 lineto
+326 144 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	yearsup2000
+gsave 10 dict begin
+354 90 42 18 ellipse_path
+stroke
+gsave 10 dict begin
+354 91 moveto (year:>2000) 63 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	year -> yearsup2000
+newpath 354 134 moveto
+354 125 354 116 354 108 curveto
+stroke
+newpath 357 134 moveto
+354 144 lineto
+352 134 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	year2001
+gsave 10 dict begin
+307 18 38 18 ellipse_path
+stroke
+gsave 10 dict begin
+307 19 moveto (year:2001) 55 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	yearsup2000 -> year2001
+newpath 338 65 moveto
+332 55 324 44 318 35 curveto
+stroke
+newpath 340 63 moveto
+343 73 lineto
+336 66 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	year2002
+gsave 10 dict begin
+401 18 38 18 ellipse_path
+stroke
+gsave 10 dict begin
+401 19 moveto (year:2002) 55 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	yearsup2000 -> year2002
+newpath 368 68 moveto
+375 57 383 45 390 35 curveto
+stroke
+newpath 372 66 moveto
+365 73 lineto
+368 63 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	movie
+gsave 10 dict begin
+442 90 28 18 ellipse_path
+stroke
+gsave 10 dict begin
+442 91 moveto (movie) 35 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	art -> movie
+newpath 465 136 moveto
+460 126 455 116 451 107 curveto
+stroke
+newpath 467 135 moveto
+469 145 lineto
+463 137 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	music
+gsave 10 dict begin
+515 90 27 18 ellipse_path
+stroke
+gsave 10 dict begin
+515 91 moveto (music) 33 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	art -> music
+newpath 491 137 moveto
+497 127 502 116 506 107 curveto
+stroke
+newpath 494 137 moveto
+487 145 lineto
+489 135 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	seaside
+gsave 10 dict begin
+590 90 30 18 ellipse_path
+stroke
+gsave 10 dict begin
+590 91 moveto (seaside) 40 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	geography -> seaside
+newpath 641 139 moveto
+630 128 617 115 606 105 curveto
+stroke
+newpath 643 137 moveto
+648 146 lineto
+639 141 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	port
+gsave 10 dict begin
+665 90 27 18 ellipse_path
+stroke
+gsave 10 dict begin
+665 91 moveto (port) 22 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	geography -> port
+newpath 665 134 moveto
+665 125 665 116 665 108 curveto
+stroke
+newpath 668 134 moveto
+665 144 lineto
+663 134 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	USA
+gsave 10 dict begin
+737 90 27 18 ellipse_path
+stroke
+gsave 10 dict begin
+737 91 moveto (USA) 28 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	geography -> USA
+newpath 689 138 moveto
+700 127 712 115 722 105 curveto
+stroke
+newpath 691 140 moveto
+682 145 lineto
+687 136 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	capital
+gsave 10 dict begin
+811 90 29 18 ellipse_path
+stroke
+gsave 10 dict begin
+811 91 moveto (capital) 37 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	geography -> capital
+newpath 701 145 moveto
+728 131 765 113 788 101 curveto
+stroke
+newpath 702 147 moveto
+692 149 lineto
+700 143 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	logic:
+gsave 10 dict begin
+885 90 27 18 ellipse_path
+stroke
+gsave 10 dict begin
+885 91 moveto (logic:) 31 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	plugins -> logic:
+newpath 840 139 moveto
+850 128 862 115 871 105 curveto
+stroke
+newpath 842 140 moveto
+834 146 lineto
+839 137 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+
+%	logic:year
+gsave 10 dict begin
+885 18 38 18 ellipse_path
+stroke
+gsave 10 dict begin
+885 19 moveto (logic:year) 55 14.00 -0.50 alignedtext
+end grestore
+end grestore
+
+%	logic: -> logic:year
+newpath 885 62 moveto
+885 53 885 44 885 36 curveto
+stroke
+newpath 888 62 moveto
+885 72 lineto
+883 62 lineto
+closepath
+gsave 0 setgray stroke grestore fill
+endpage
+grestore
+%%PageTrailer
+%%EndPage: 1
+%%Trailer
+%%Pages: 1
+end
+restore
+%%EOF

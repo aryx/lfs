@@ -1,0 +1,136 @@
+// -*- wikipedia -*-
+
+====== Logic File System ======
+
+{{lis.png?200}}
+Welcome to LFS.
+
+==== News ====
+  *  3 Jul 2008: A fresh new LFS website !!
+  * 30 Jun 2008: A new version of LFS, LFS 0.5, far less invasive
+  *  1 Sep 2000: Start of my PhD on LFS (yes, 8 years before a real website, I know, I sux)
+
+===== What is LFS ? =====
+
+It's the filesystem you always wanted.
+It's a [[wp>Semantic_File_System]]
+
+===== Examples of interactions =====
+
+ls '/lfs/ext:c|ext:h/date:*--*--2008/.ext/'
+
+mplayer  -z '/lfs/ext:mp3/genre:Disco|genre:Electro/year:<70/.ext/'*.mp3
+
+firefox 'http://aryx.kicks-ass.org/~pad/lfs_view.query/ext:pdf/.ext/'
+
+Here are additional examples of use of LFS:
+
+  * [[demo-homedir]]
+  * [[demo-gentoo-packages]]
+  * [[demo-ubuntu-packages]]
+  * [[demo-linux-source]]
+  * [[demo-mp3]]
+  * [[demo-mp3-ipod]]
+  * [[demo-pictures]]
+  * [[demo-porn]]
+  * [[demo-gnus-email]]
+  * [[demo-bibtex]]
+
+===== Quick Guide =====
+
+See [[quickguide]]
+
+===== Guides =====
+
+  * [[readme]]
+  * [[features]]
+  * [[syntax]]
+  * [[manual:manual]]
+  * [[tricks]]
+  * [[comparison|comparison]], LFS vs xxx
+  * [[faq]]
+
+===== Download =====
+
+See http://aryx.kicks-ass.org/~pad/software/project-lfs/
+
+you can also clone my mercurial repositories available here
+http://aryx.kicks-ass.org/~pad/hg/hgwebdir.cgi
+
+===== Install =====
+
+  * [[install]]
+  * [[howto:install|install on gentoo]]
+  * [[install-debian]]
+
+
+===== Papers =====
+
+see http://www.irisa.fr/LIS/home_html and those LFS related
+[[http://www.irisa.fr/LIS/common/biblio/Author/PADIOLEAU-Y.html| bibtex entries]]
+and [[http://aryx.kicks-ass.org/~pad/software/project-lfs/papers/|pdf articles]]
+
+===== People ===== 
+
+  * [[http://www.irisa.fr/lande/ridoux/page.pro.e.html|Olivier Ridoux]]
+  * [[http://www.irisa.fr/lande/ferre|Sebastien Ferre]]
+  * [[http://aryx.kicks-ass.org/~pad/INDEX.php|Yoann Padioleau]] (a.k.a petit con)
+
+===== Contact =====
+
+If you have any question, send a mail to <yoann.padioleau@gmail.com> with
+[LFS] in the subject of your mail.
+
+If you want to donate money to support LFS, go to [[http://aryx.kicks-ass.org/~pad/donate.php]].
+
+===== Your comments =====
+
+You can freely edit the following pages [[comments]], [[feedbacks]], 
+[[lfs-users]]
+
+===== Acknowledgements =====
+
+This work was supported by INRIA Rennes (a.k.a irisa), France.
+
+===== History ======
+
+Short history
+
+  *  1 Jul 2008: A fresh new LFS website !!
+  * 30 Jun 2008: A new version of LFS, LFS 0.5, far less invasive
+  * 29 Jun 2008: LFS 0.5
+  *  x xxx 2006: LFS 0.4
+  *  x xxx 2005: LFS 0.3
+  *  x xxx xxxx: LFS 0.2
+  *  x xxx 2003: LFS 0.1
+  *  1 Sep 2000: Start of my PhD on LFS (yes, 8 years before a real website, I know, I sux)
+
+Feature history
+  * [[changes]]
+
+===== Related work ===== 
+
+Note that most of those related work were made after LFS (2003)
+
+  * [[http://en.wikipedia.org/wiki/Spotlight_(software)|Apple Spotlight]]
+  * [[http://en.wikipedia.org/wiki/Beagle_(software)|Beagle]] and [[http://svn.gnome.org/svn/beagle/trunk/beaglefs/README|Beaglefs]]
+  * [[http://www.tagsistant.net/|tagsistant]] and [[http://nascent.freeshell.org/programming/TagFS/|tagfs]] 
+
+See also [[related]].
+
+===== Copyleft =====
+
+  * [[authors]]
+  * [[copyright]]
+  * [[license]]
+  * [[credits]]
+
+===== Misc =====
+
+  * [[bugs]]
+
+  * [[faq-old|old faq]]
+
+  * the wikipedia page (not written by me) [[wp>Logic_File_System]]
+  * older website http://lfs.irisa.fr and http://lfs.irisa.fr/~pad/rawaccess.query/soft/project:LFS/
+

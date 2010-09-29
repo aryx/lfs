@@ -1,0 +1,10 @@
+#!/bin/sh
+
+find /sfl-meta/full/files -type f -type f -printf "%f\t\t%s\n" | sort > /tmp/list1
+#find /local/local2/bigs/mp3 -type f -printf "%f\t\t%s\n" | sort > /tmp/list2
+find /home/pad/backup/database -type f -printf "%f\t\t%s\n" | sort > /tmp/list2
+diff /tmp/list1 /tmp/list2
+
+#find /sfl-meta/full/files | egrep "mp3|ogg" | sed -e s%.*/%% | *sort > /tmp/list1
+#find /local/local2/bigs/mp3/ /local/local1/bigs/flatmp3 | egrep "mp3|ogg" | sed -e s%.*/%% | *sort > /tmp/list2
+

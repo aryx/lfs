@@ -1,0 +1,13 @@
+This is makeindex, version 2.14 [02-Oct-2002] (kpathsea + Thai support).
+Scanning style file ./index.ist.......done (7 attributes redefined, 0 ignored).
+Scanning input file main.idx....
+!! Input index error (file = main.idx, line = 112):
+   -- Extra `!' at position 30 of first argument.
+
+!! Input index error (file = main.idx, line = 135):
+   -- Extra `!' at position 35 of first argument.
+done (233 entries accepted, 2 rejected).
+Sorting entries.....done (2045 comparisons).
+Generating output file main.ind....done (246 lines written, 0 warnings).
+Output written in main.ind.
+Transcript written in main.ilg.

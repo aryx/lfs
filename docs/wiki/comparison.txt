@@ -1,0 +1,31 @@
+====== LFS versus other tools ======
+
+===== LFS vs unix 'find' =====
+
+===== LFS vs unix 'locate' =====
+
+===== LFS vs Apple Spotlight ===== 
+
+It's not a filesystem so you can not use some traditionnal tools over
+Spotlight queries. The navigation capabilities of Spotlight are also
+limited. But, but, they have an amazing GUI. Spotlight is really a
+nice software.
+
+===== LFS vs Beagle FS (and beagle) =====
+
+From the beagle FAQ: http://beagle-project.org/FAQ
+"How can I just search within a directory?"
+
+"This is not well implemented because Beagle is trying to remove the
+boundaries between directories! To this end, the main Beagle front-end
+does allow a directory to be selected. That said, if you search within
+the Nautilus GUI (using the Beagle extensions) you can choose a
+starting directory for the search.
+"
+
+This problem does not exist in LFS because LFS considers directories as properties
+too and is not just a finding tool, you can also navigate. Once you want
+to care about directories, about navigation, then it's not as simple as 
+beagleFS which is just a frontend to beagle (but a nice one).
+
+

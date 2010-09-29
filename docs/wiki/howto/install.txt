@@ -1,0 +1,46 @@
+// -*- wikipedia -*- 
+To install LFS you need to build it from the source.
+===== Installing on Gentoo =====
+It depends on several packages:
+^Package ^ ^
+| ocaml | The language in which lfs is coded. ocaml is needed to compile the source. |
+| camlidl | Needed to use C code from fuse, etc. |
+| db | Berkeley Database used to store all the metadata of the files. |
+| gdbm | Standard GNU database libraries. |
+| fuse | The interface for the filesystem. |
+These packages are the needed by lfs to work, but you may install several packages more to generate metadata from these file types. These are plugins for LFS.
+^File type ^Packages ^
+| mp3 | MP3-Info, MP3-Tags, Compress-Zlib |
+| ogg | vorbis-tools |
+If you want a GUI interface for your mp3 files and photos you need to install the package **lablgtk**.
+
+With new versions of fuse, you need to build the fuse module in the kernel, and then, install the fuse package. If it were your case, emerging fuse should fail.
+You have to set File-systems -> Filesystem in Userspace support (AKA FUSE) to be a module. After that, build your new module and install it with:
+   make modules modules_install
+Then load it
+   modprobe fuse
+And you should be able to emerge fuse as usual.
+
+The ebuild for LFS is on [[http://overlays.gentoo.org/proj/sunrise|Sunrise overlay]] in the //sys-fs// category.
+You just need to use layman and add the overlay and then:
+   emerge sys-fs/lfs
+You can also select the USE flags for the plugins you want to use.
+Once installed, you need to create a folder for your metadata database and a mount point to mount your LFS.
+   mkdir /tmp/meta-lfs /tmp/lfs
+And then you have to generate the metadata database with:
+   build-db.opt -build_db_gentoo /tmp/meta-lfs
+This can take several minutes depending on how much files you have in your hard drive. It shows the progress in this format
+   PARSING: ... (done/total)
+After the database of metadata has been created you have to mount your filesystem. There are several modes.
+=== Semi-real mode ===
+In semi-real mode your filesystem is not changed, it is read only and provides you another way to browse your files making queries but makes no changes in your filesystem.
+   mount.lfs -semi_real_mode /tmp/meta-lfs /tmp/lfs
+If it gets blocked on some queries, you may use the ''-timeout'' option to ''mount.lfs'' so it stops after the given seconds.
+Now you can browse your LFS filesystem with the lfs query sintax like:
+   ls /tmp/lfs/.best
+
+To unmount your filesystem you can do:
+   fusermount -u /tmp/lfs
+If you need to kill lfs for any reason you can run:
+   pkill -9 mount.lfs
+This may corrupt the LFS metadata so you may have to generate it again.

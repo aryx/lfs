@@ -1,0 +1,15 @@
+#!/bin/bash
+
+if [ $# -ne 1 ]
+    then echo "Usage: $0 <LFS-metadata-path> "
+    exit
+fi
+
+if [ ! -r $1/lfs_secu ]
+    then echo "There is no 'lfs_secu' file in directory $1. 
+You must give the LFS meta-data directory as an argument to launch this command.
+";
+    exit
+fi
+
+mount.lfs -nofuse -nostat $1

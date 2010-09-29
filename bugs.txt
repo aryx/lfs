@@ -1,0 +1,15 @@
+Sometimes mount.lfs failed, in the checking (fsck) part with strange
+error message such as
+
+ - ill formed message
+ - input value bad format
+ - assert_equal
+ - or even segmentation fault.
+
+This is especially true when managing more than 10 000 files. I dont
+know why, but it seems related to berkeley DB as there is no bug while
+using gdbm. Nevertheless, relaunch and pray and at some times it
+should work (that works for me at least). You can also use -nofsck.
+This problem never was a real problem for me while using LFS in
+real mode. It is an even less important problem in the semi real mode.
+

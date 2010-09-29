@@ -1,0 +1,9 @@
+mobile/project-lfs/code  for regular
+
+mobile/project-lfs/lisfs/code/trunk   for SVN 
+(so have both a .svn and .hg in this directory)
+
+mobile/project-comments/code/lfs_code 
+(use now also for iComment)
+
+mobile/homepage/hg/c-lfs

@@ -1,0 +1,5 @@
+name = "Fuse"
+description = "OCamlFuse - OCaml bindings for fuse, a toolkit for writing filesystems in userspace for the linux operating system"
+requires = "threads"
+archive(byte,mt) = "Fuse.cma"
+archive(native,mt) = "Fuse.cmxa"

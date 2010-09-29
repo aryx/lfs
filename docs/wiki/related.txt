@@ -1,0 +1,17 @@
+===== Related work ===== 
+
+
+Search tools
+
+  * Google Desktop search
+  * Beagle
+  * <XXX> Desktop search where XXX = Yahoo, Microsoft, PutyourNameHere
+
+Past research filesystems that could have been a source of inspiration:
+  * Semantic File system
+  * CATFS, BeFS
+  * HAC
+  * Nebula
+
+==== LFS vs ==== 
+ 

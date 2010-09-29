@@ -1,0 +1,140 @@
+INTRODUCTION
+
+This is a binding to fuse for the ocaml programming language, enabling
+you to write multithreaded filesystems in the ocaml language. It has
+been designed with simplicity as a goal, as you can see by looking at
+example/fusexmp.ml.
+
+REQUIREMENTS
+
+You need fuse - either the release, at least 2.1, or the cvs version,
+depending on if you are using the corresponding ocamlfuse release or
+the cvs version - you can find everything on
+
+http://www.sourceforge.net/projects/fuse
+
+Older releases won't work, you need the CVS version or a release >= 2.1.
+
+You also need ocaml >= 3.08 and camlidl >=1.05 (3.07/1.04 won't work,
+you need the 1.05 version of camlidl and consequently the 3.08 version
+of ocaml).
+
+INSTALLATION
+
+- Fuse
+
+  This usually involves downloading a tarball or checking it out of cvs,
+  then
+
+  ./configure # if configure is missing try ./makeconf.sh
+  make
+  make install
+  modprobe fuse 
+
+  Add it to your autoloaded modules if you want, and then edit
+  /etc/ld.so.conf and add /usr/local/lib, then issue ldconfig.
+
+- OCaml >= 3.08
+
+  This is straightforward in most installations, but if your vendor does
+  not carry >= 3.08 go to 
+
+  http://caml.inria.fr and follow instructions
+
+- CamlIDL >= 1.05
+
+  few distributions have this with the notable exception of gentoo. Go
+  to
+
+  http://caml.inria.fr/camlidl
+
+  and follow instructions
+
+- OCamlFuse
+
+  unpack the tarball, then
+
+  cd lib
+  make
+  make install
+
+  This will install ocamlfuse in your ocaml library directory. To uninstall
+  it you can use "make uninstall"
+
+TESTING
+
+cd example && make
+cd example
+mkdir tmp
+./fusexmp -s -o max_read=16384 tmp
+cd tmp #you'll find a copy of your "/" directory here
+
+BEFORE YOU WRITE YOUR OWN FILESYSTEM
+
+Read the "KNOWN PROBLEMS" section below, and always use "-s -o
+max_read=16384" as cmdline arguments.
+
+KNOWN PROBLEMS
+
+- multithreaded fuse does not work, sooner or later (after some milion of
+  operations) it will crash
+
+- du reports incorrect size
+
+- read and write operations copy the buffer and this makes things
+  slow. A lower lever read/write api based on cstrings should be
+  designed.
+
+- problems with short reads (currently they'll be ignored in fuse,
+  resulting in wrong data returned) should be solved
+
+- Maybe short writes should be reported as errors, so returning a size
+  from write is unuseful and should be removed from the interface
+
+- ls -la reports unknown error 127
+
+- many ocaml exceptions are reported as 127
+
+- we should write a library containing non-blocking lstat64 and a statfs
+  implementation for ocaml
+
+- No recursion: it will hang if you reach the entry point of the
+  filesystem under the filesystem itself.
+
+- You *HAVE* to supply the max_read=16384 argument. It should be done
+  automagically by the library.
+
+- Memory allocation in Fuse_util.c is just plain wrong
+
+HELPING THE PROJECT
+
+The best help you can give to the project is to test everything,
+including, but not limited to:
+
+- large file operations (files >= 4gb)
+
+- multithreaded operations: the filesystem should always be responsive,
+  no matter if reading a certain file blocks - by now multitheading is
+  implemented but crashes after some milion of operations.
+
+- robustness: the filesystem should NEVER exit from its mainloop if not
+  explicitly requested from the user.
+
+Also, we need packaging, I don't have the necessary time and don't know
+ocamlfindlib or GODI. Please if you have the time and the necessary
+knowledge help with packaging. Autoconf support would be useful too.
+
+If you test the example filesystem, which should be a correct
+implementation, let me know if it works or if you had problems. A
+mailing list has been set up on sourceforge, you are strongly encouraged
+to post feedback there.
+
+The sourceforge page for ocamlfuse is
+
+http://sourceforge.net/projects/ocamlfuse
+
+Bye and have fun
+
+Vincenzo Ciancia
+
+vincenzo_ml at yahoo dot it applejack at users dot sourceforge dot net

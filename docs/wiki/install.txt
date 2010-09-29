@@ -1,0 +1,139 @@
+------------------------------------------------------------------------------
+There are 3 versions and 3 ways to use LFS:
+
+ - The application version of LFS. This version is not a filesystem
+   but a normal application which provides a shell interface to test
+   the functionnality of LFS. This version is far easier to install,
+   but far less interesting from the user point of view because it is
+   not a filesystem.
+
+ - The full filesystem version of LFS. This version is a real filesystem, 
+   which give access to the advantages of a filesystem, allowing the user to:
+    - store real datas (such as music files, programs, ...),
+    - use a real shell providing advanced features (such as completion, 
+      globbing, ...),
+    - use traditional application over LFS (such as mp3 player, emacs, 
+      explorer, ...),
+   This version is more difficult to install as it requires to work
+   with the Linux kernel. 
+
+ - The filesystem version of LFS as a "semi-real" filesystem where LFS
+   just acts as a wrapper giving another view of your current
+   hierarchical filesystem. This version is a real filesystem and also
+   give access to the advantages of a filesystem, but it operates in a
+   different way than the previous mode. It provides a smooth path to
+   benefit of some of the advantages of LFS (powerful query and
+   navigation) without chaning anything to the way you organize your
+   current data. The drawback is that you can not benefit of some of
+   the advantages of LFS.
+
+------------------------------------------------------------------------------
+Requirements:
+
+A strong requirement for installing LFS is to use a Linux machine, and
+to be allowed to install a kernel module (which means root access).
+Nowadays this kernel module, fuse.ko, is present in almost all distributions
+so you just need to be able to use the fuse utilities.
+Note that LFS can also be installed as a user level application, but
+this type of install offers much less services; it must be reserved
+for playing with LFS ideas. In this case, the only requirement is that
+OCaml, a functional programming language, is available on the platform
+(most are, including Microsoft Windows and MacOS X).
+
+To install LFS from source you will also need to install some packages such as
+kernel-headers, the gcc/binutils toolsuite, ...
+
+
+
+------------------------------------------------------------------------------
+Install:
+
+   configure 
+   make depend
+   make
+   make coredemo
+
+ If the configure script tells you that some packages are missing, you
+ can install them by picking in lfs-dependencies.tgz, available on the
+ LFS website, which provides the source of those required external
+ libraries/tools used by LFS. The installation procedure for most of
+ those packages are either to run the commands "configure; make; make
+ install" or the commands "perl Makefile.PL; make; make install".
+
+ The preceding commands allows to install the application version of
+ LFS, and you can already play with LFS with this version. If you dont
+ want to install the filesystem version and play only with the
+ application version, just launch the LFS interpreter coredemo.top.
+ You will need some knowledge of ocaml. The file demo.ml contains
+ examples of interaction.
+
+ To compile the filesystem version (real and semi-real mode) type: 
+     make all
+ but you have first to install Fuse. You can either:
+  FIXME
+
+------------------------------------------------------------------------------
+Use:
+
+  The path "/your/meta_data_place" represents in the following a place
+   on your hard disk where you want to store the LFS meta data.
+
+  Run the command: touch /your/meta_data_place/lfs_secu
+
+  This command is required because some commands such as mkfs.lfs or
+  build-db requires before allocating its structure to be sure that it
+  will not erase the data of the user unintentionnaly. So before
+  proceeding check that /your/meta_data_place does not contain
+  important information.
+
+
+
+To use of the semi real mode of LFS (most people will want that):
+
+  The first time you use LFS, you have to initialise LFS meta-data with:
+     cd LFS-0.5/
+     source env.sh
+     ./build-db.opt -lfs_metapath /your/meta_date_place  /path/that/you/want/to/index 
+
+  Then to "mount" LFS run the command:
+     ./mount.lfs -semi_real_mode /your/meta_data_place /your/mount_point/
+     cd /your/mount_point/
+     ls
+
+  Use the following command for unmounting LFS: 
+       fusermount -u /your/mount_point/
+
+
+
+
+
+To use the real mode of LFS (most people will prefer the safer semi-real mode):
+
+  The first time you use LFS, you have to initialise LFS with:
+    mkfs.lfs /your/meta_data_place/
+
+  Then you can use LFS:
+
+   run the command:
+      mount.lfs -real_mode /your/meta_data_place /your/mount_point/; 
+      cd /your/mount_point/
+   Use the command: 
+       umount.lfs /your/mount_point/ for unmounting.
+
+  Example of session:
+   mkdir a
+   mkdir b
+   mkdir c
+   touch a/b/fab 
+   touch c/b/fbc
+   cd b
+   ls 
+      --> see a/ c/
+   cd a
+   ls 
+      --> see fab
+
+
+See the docs directory for more information.
+
+------------------------------------------------------------------------------

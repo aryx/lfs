@@ -1,0 +1,24 @@
+#!/usr/bin/perl
+
+#clone of export.lfs (a little)
+
+my $file = $ARGV[0];
+
+sub usage { "usage: path.lfs <file>\n" }
+
+
+my ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size, 
+    $atime, $mtime, $ctime, $blksize, $blocks) = 
+    stat $file;
+my $o = $nlink;
+opendir(DIR, "inode:$o/.int/") or die "cant opendir $!";
+my @dirs = grep { ! /^\./ } readdir(DIR);
+map {
+    my $s = $_;
+    if($s =~ /path:(.*)/) {
+        my $path = $1;
+        $path =~ s#__#/#g;
+        print "/$path/\n";
+    }
+} @dirs;
+

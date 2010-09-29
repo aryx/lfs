@@ -1,0 +1,21 @@
+#!/usr/bin/perl
+
+#clone of export.lfs a little
+
+my @files = @ARGV;
+
+sub usage { "usage: props.lfs <files>\n" }
+
+print "files = @files\n";
+
+map {
+    print "processing $_\n";
+    my $file = $_;
+    my ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size, 
+	$atime, $mtime, $ctime, $blksize, $blocks) = 
+	  stat $_;
+    my $o = $nlink;
+    opendir(DIR, "inode:$o/.int/") or die "cant opendir $!";
+    my @dirs = grep { ! /^\./ } readdir(DIR);
+    print "props = @dirs\n";
+} @files;

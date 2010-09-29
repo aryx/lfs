@@ -1,0 +1,8 @@
+bibtex_adv_transducer.cmo: common_adv_transducer.cmo ../commons/common.cmi 
+bibtex_adv_transducer.cmx: common_adv_transducer.cmx ../commons/common.cmx 
+common_adv_transducer.cmo: ../commons/common.cmi 
+common_adv_transducer.cmx: ../commons/common.cmx 
+naivec_adv_transducer.cmo: common_adv_transducer.cmo ../commons/common.cmi 
+naivec_adv_transducer.cmx: common_adv_transducer.cmx ../commons/common.cmx 
+naiveml_adv_transducer.cmo: common_adv_transducer.cmo ../commons/common.cmi 
+naiveml_adv_transducer.cmx: common_adv_transducer.cmx ../commons/common.cmx 
