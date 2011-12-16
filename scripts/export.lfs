@@ -16,8 +16,8 @@ die ("destination is not a directory\n" . usage()) unless (-d $dest);
 map {
     print "processing $_\n";
     my $file = $_;
-    my ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size, 
-	$atime, $mtime, $ctime, $blksize, $blocks) = 
+    my ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size,
+	$atime, $mtime, $ctime, $blksize, $blocks) =
 	  stat $_;
     my $o = $nlink;
     #print "inode = $o\n";
@@ -32,7 +32,7 @@ map {
     my $name = ($_ =~ /^(.*)\<\d+\>(.*)$/) ? "$1$2" : $_;
     #print "name = $name\n";
 
-    my $newname = 
+    my $newname =
       "__" .
       (join ("_._",@dirs)) .
       "__" .

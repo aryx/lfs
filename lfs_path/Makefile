@@ -3,17 +3,17 @@
 ##############################################################################
 TARGET=lfs_path
 
-SRC=pathparser.ml pathlexer.ml path.ml 
+SRC=pathparser.ml pathlexer.ml path.ml
 
 LIBS=../commons/commons.cma ../lfs_core/lfs_core.cma
 INCLUDES=-I ../commons -I ../lfs_core
 
-SYSLIBS=bigarray 
+SYSLIBS=bigarray
 
 ##############################################################################
 # Generic variables
 ##############################################################################
-OCAMLC=ocamlc$(OPTBIN) -g -dtypes   $(INCLUDES) 
+OCAMLC=ocamlc$(OPTBIN) -g -dtypes   $(INCLUDES)
 OCAMLOPT=ocamlopt$(OPTBIN)   $(INCLUDES) $(OPTFLAGS)
 #OCAMLLEX=ocamllex$(OPTBIN) -ml
 OCAMLLEX=ocamllex$(OPTBIN)
@@ -67,7 +67,7 @@ beforedepend:: pathparser.ml pathparser.mli
 .ml.cmx:
 	$(OCAMLOPT) -c $<
 
-.ml.mldepend: 
+.ml.mldepend:
 	$(OCAMLC) -i $<
 
 clean::

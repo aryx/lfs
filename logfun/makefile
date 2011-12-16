@@ -26,7 +26,7 @@ ALGEBRA = top.$(CMO) prod.$(CMO) sum.$(CMO)
 STRUCTURE = interval.$(CMO) multiset.$(CMO)
 LOGIC = iset.$(CMO) bottom.$(CMO) single.$(CMO) id.$(CMO) aik.$(CMO) prop.$(CMO) prop2.$(CMO) enum.$(CMO)
 SYNTAX = prefix.$(CMO) suffix.$(CMO) bracket.$(CMO)
-GEN2 = option.$(CMO) vector.$(CMO)  openinterval.$(CMO) 
+GEN2 = option.$(CMO) vector.$(CMO)  openinterval.$(CMO)
 GEN3 = prelist.$(CMO) mltype.$(CMO) javatype.$(CMO) date_pattern.$(CMO)
 GEN4 = segment.$(CMO) motif.$(CMO)
 ALL = $(COMMON) $(OLD) $(ATOM) $(ALGEBRA) $(STRUCTURE) $(LOGIC) $(SYNTAX) $(GEN2) $(GEN3) $(GEN4)
@@ -43,7 +43,7 @@ lib/logfun.$(CMA): $(ALL)
 #	$(OCAMLC) -I src -o $@ $^
 
 examples: bibtex.exe bioinfo.exe ocamltypes.exe
-	@echo "Compiling small examples for verification ..."	
+	@echo "Compiling small examples for verification ..."
 
 html:
 	@echo "Generating documentation with ocamldoc in subdirectory 'ocamldoc' ..."

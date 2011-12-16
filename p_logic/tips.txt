@@ -20,5 +20,5 @@ update: note that the interface have changed and so solver take their
  otherwise LFS is waiting forever the answer via the pipe
 
 
-update: don't have to be complete. Can make useful solver 
+update: don't have to be complete. Can make useful solver
 that do not order completely formula between them.

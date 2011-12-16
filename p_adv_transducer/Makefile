@@ -2,7 +2,7 @@
 # Variables
 ##############################################################################
 PLUGINSML= bibtex_adv_transducer naivec_adv_transducer naiveml_adv_transducer
-FULLPLUGIN= $(PLUGINSML) 
+FULLPLUGIN= $(PLUGINSML)
 
 LIBS=../commons/commons.cma
 SYSLIBS=str.cma unix.cma bigarray.cma nums.cma
@@ -22,14 +22,14 @@ STATIC=
 all: $(PLUGINSML)
 
 #note: it does not work if dont have a .depend, cos it even erase the intermediare cmx file
-# cos the dependeny is between plugin and plugin.cmx, 
+# cos the dependeny is between plugin and plugin.cmx,
 %: $(LIBS:.cma=.cmxa) common_adv_transducer.cmx %.cmx
 	$(OCAMLOPT) $(STATIC) -o $@ $(SYSLIBS:.cma=.cmxa) $+
 
 clean::
 	rm -f $(PLUGINSML)
 
-static: 
+static:
 	rm -f $(PLUGINSML)
 	$(MAKE) STATIC="-ccopt -static" all
 

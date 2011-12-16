@@ -50,4 +50,4 @@ module Make =
 
     let disj x y = [min x y]
 
-  end 
+  end

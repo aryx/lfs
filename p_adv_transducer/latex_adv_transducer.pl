@@ -6,11 +6,11 @@ use warnings;
 
 sub maybe { my ($Uv) = @_;    (defined($Uv))  ?  ($Uv)  :  () ;}
 sub maybe2 { my ($Uv, $s) = @_;    (defined($Uv))  ?  ("$s$Uv")  :  () ;}
-sub take_until { my ($f, $xs) = @_; 
+sub take_until { my ($f, $xs) = @_;
     my @res = ();
-    foreach $a (@{$xs}) { 
-	if (&$f($a)) { return \@res } 
-	else { push @res, $a } 
+    foreach $a (@{$xs}) {
+	if (&$f($a)) { return \@res }
+	else { push @res, $a }
     }
     return \@res;
 }
@@ -25,7 +25,7 @@ while(<STDIN>) {
     push @data, $s;
 }
 my $i = 0;
-map { 
+map {
 
 #while(<STDIN>) {
     my $s = $_;
@@ -66,7 +66,7 @@ map {
 	delete $state->{subsubsection};
 	push @aspects, "synchro3:section:$1::title:$1";
     }
-    if ($s =~ /^\s*\\subsection\*?{(.*?)}/) { 
+    if ($s =~ /^\s*\\subsection\*?{(.*?)}/) {
 	$state->{subsection}  = "$1";
 	delete $state->{subsubsection};
 	push @aspects, "synchro4:";
@@ -94,7 +94,7 @@ map {
     ##########################################
     while($s =~ /%(\w+):/g) { push @aspects, "note:$1" }
     if($s =~ /^\s*%%/)      { push @aspects, "note:toomuch" }
-    if($s =~ /^\s*%/) { 
+    if($s =~ /^\s*%/) {
 	if($s =~ /%((##########)|(\+\+\+\+\+\+\+\+)|(----------)|(\s*$))/) { push @aspects, "comment:estethic" }
 	else { push @aspects, "comment:base" }
     }
@@ -108,10 +108,10 @@ map {
 
 
     ##########################################
-    if($s =~ /^\s*\\(setlength|documentclass|usepackage|newcommand|date|maketitle|addcontent|index)/) 
+    if($s =~ /^\s*\\(setlength|documentclass|usepackage|newcommand|date|maketitle|addcontent|index)/)
       { push @aspects, "latex"}
     if($s =~ /^\s*\\(begin|end){document}/) { push @aspects, "latex"}
-    if($s =~ /^\s*\\(label|ref|cite)/) 
+    if($s =~ /^\s*\\(label|ref|cite)/)
       { push @aspects, "aspect:crossref"}
 
     $state->{environment}{$1} = 1 if $s =~ /\\begin{(.*?)}/;
@@ -119,7 +119,7 @@ map {
     #while($s =~ /\\index{(.*?)}/g) { push @aspects, "index:$1" }
 
     ##########################################
-    my $res = 
+    my $res =
       [
        @aspects,
        maybe2($state->{part}, "part:"),

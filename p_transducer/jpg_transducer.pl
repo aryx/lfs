@@ -9,8 +9,8 @@
 my $path = $ARGV[0];
 
 open(FILE, "jpeginfo '$path' |") or die "$!";
-#ex of output: jpeginfo vge.jpg => 
-#vge.jpg  393 x 207  24bit JFIF  N    8176 
+#ex of output: jpeginfo vge.jpg =>
+#vge.jpg  393 x 207  24bit JFIF  N    8176
 
 
 my @aux = ();

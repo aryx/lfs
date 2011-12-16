@@ -3,7 +3,7 @@
 ##############################################################################
 
 # This script can be run by the user who use the LFS real mode, in order
-# to populate LFS with a first hierarchy of properties. 
+# to populate LFS with a first hierarchy of properties.
 #
 # update: this script is also now analyzed by build-db.ml to also
 # generate properties (the ext: and type:) for the LFS semi-real mode.
@@ -14,7 +14,7 @@ root=`pwd`
 src=/home/pad/c-lfs
 
 if [ ! -r $src/p_logic ]
-    then echo 
+    then echo
 "It seems that $src is not the directory where resides LFS source.
 You must adjust in this file the src variable.
 ";
@@ -22,8 +22,8 @@ You must adjust in this file the src variable.
 fi
 
 if [ ! -r $root/.relaxed ]
-    then echo 
-"It seems that $root is not a directory where LFS is mounted. 
+    then echo
+"It seems that $root is not a directory where LFS is mounted.
 You must launch this script from a mounted LFS path.
 ";
     exit
@@ -45,8 +45,8 @@ mkdir "plugins";
 cd "plugins";
 mkdir "logic:";
 mkdir "transducer:";
-mkdir "adv_transducer:"; 
-#todo?: rename in  part_transducer, file_transducer 
+mkdir "adv_transducer:";
+#todo?: rename in  part_transducer, file_transducer
 
 ##############################################################################
 # Synchro
@@ -105,33 +105,33 @@ cd "$root"/logic:name:/;
 # mkdir -p system/ctime
 # mkdir -p system/atime
 # mkdir -p system/inode
-# 
+#
 # mkdir -p system/uid
 # mkdir -p system/gid
 # mkdir -p system/nuid
-# 
+#
 # mkdir -p system/mode
-# 
+#
 # mkdir -p system/mode/have
 # mkdir -p system/mode/have/user
 # mkdir -p system/mode/have/group
 # mkdir -p system/mode/have/other
-# 
+#
 # mkdir -p system/mode/style
 # mkdir -p system/mode/style/execute
 # mkdir -p system/mode/style/write
 # mkdir -p system/mode/style/read
 # mkdir -p system/mode/style/special
-# 
+#
 # mkdir -p system/mode/final
 # mkdir -p system/mode/final/execute/user/xu
 # mkdir -p system/mode/final/execute/group/xg
 # mkdir -p system/mode/final/execute/other/xo
-# 
+#
 # mkdir -p system/mode/final/write/user/wu
 # mkdir -p system/mode/final/write/group/wg
 # mkdir -p system/mode/final/write/other/wo
-# 
+#
 # mkdir -p system/mode/final/read/user/ru
 # mkdir -p system/mode/final/read/group/rg
 # mkdir -p system/mode/final/read/other/ro
@@ -366,7 +366,7 @@ mv "ext:rar/"  "type:Compressed/noprop_ext:rar/"
 mv "ext:7z/"  "type:Compressed/noprop_ext:7z/"
 
 # tar,  type:Archive
-# rpm deb ipk 
+# rpm deb ipk
 
 #-----------------------------
 # Object
@@ -406,10 +406,10 @@ mv "ext:old/" "type:Object/noprop_ext:old/"
 
 mv "ext:dvi/" "type:Object/noprop_ext:dvi/"
 mv "ext:aux/" "type:Object/noprop_ext:aux/"
-mv "ext:bbl" "type:Object/noprop_ext:bbl" 
-mv "ext:blg" "type:Object/noprop_ext:blg" 
-mv "ext:idx" "type:Object/noprop_ext:idx" 
-mv "ext:toc" "type:Object/noprop_ext:toc" 
+mv "ext:bbl" "type:Object/noprop_ext:bbl"
+mv "ext:blg" "type:Object/noprop_ext:blg"
+mv "ext:idx" "type:Object/noprop_ext:idx"
+mv "ext:toc" "type:Object/noprop_ext:toc"
 
 
 #-----------------------------
@@ -419,7 +419,7 @@ mv "ext:toc" "type:Object/noprop_ext:toc"
 #TODO cf dircolors.el
 
 
-#less: a bigtype:,  with coarser category,  Multimedia, Document, ... 
+#less: a bigtype:,  with coarser category,  Multimedia, Document, ...
 
 ##############################################################################
 # Time
@@ -429,7 +429,7 @@ cd "$root";
 
 mkdir "props-time";
 cd "props-time";
-mkdir "year:"; 
+mkdir "year:";
 mkdir "month:";
 # can also be done via date solver
 
@@ -465,7 +465,7 @@ cd "$root"
 mkdir "props-generic";
 cd "props-generic";
 mkdir "title:";
-mkdir "comment:"; 
+mkdir "comment:";
 mkdir "note:";
 mkdir "aspect:";
 # kind of inheritance, an aspect is a note which is a comment
@@ -707,12 +707,12 @@ mkdir "subject:";
  mkdir "thread:";
  mkdir "thema:";
 mkdir "mailing_list:";
-mkdir "from:"; 
+mkdir "from:";
  #TODO can be done via string solver
- mkdir "from_domain:"; 
- mkdir "from_surname:"; 
+ mkdir "from_domain:";
+ mkdir "from_surname:";
  mkdir "from_lastname:";
-mkdir "to:"; 
+mkdir "to:";
 mkdir "date_send:";
 
 #done: year: month:
@@ -834,7 +834,7 @@ mkdir "indent:";
 mkdir "make:";
 
 #done: "aspect:";
- #error, fault-tolerance, security, specification, 
+ #error, fault-tolerance, security, specification,
  #debugging, logging, profiling
  #optimisation, version
 #done: note:
@@ -925,11 +925,11 @@ mkdir "props-patch";
 cd "props-patch";
 
 
-mkdir "pdirectory:" 
-mkdir "pfile:" 
-mkdir "pext:" 
-mkdir "ppath:" 
-mkdir "pdirfull:" 
+mkdir "pdirectory:"
+mkdir "pfile:"
+mkdir "pext:"
+mkdir "ppath:"
+mkdir "pdirfull:"
 
 
 mkdir "pdiff:"
@@ -948,8 +948,8 @@ mkdir "phavepatch"
 
 mkdir "pkernel:"
 
-mkdir "pthemafunction:" 
-mkdir "pthemaclassfunction:" 
+mkdir "pthemafunction:"
+mkdir "pthemaclassfunction:"
 
 
 cd "$root";
@@ -961,7 +961,7 @@ mkdir "kspecial:"
 mkdir "kqualifier:"
 mkdir "cbody"
 mkdir "cinclude:"
-mkdir "cdefine:" 
+mkdir "cdefine:"
 mkdir "cfunctionpointer:"
 mkdir "cfieldop:"
 mkdir "csetstruct:"
@@ -979,7 +979,7 @@ mkdir "Original";
 
 mkdir "Symlinks";
 cd "Symlinks";
-ln -s "../.best/!props-system^" nosys 
+ln -s "../.best/!props-system^" nosys
 ln -s "../.compat/props-classic^|props-misc^/.strict" classicview
 
 ##############################################################################

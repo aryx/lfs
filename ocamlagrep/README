@@ -5,7 +5,7 @@ This library implements the Wu-Manber algorithm for string searching
 with errors, popularized by the "agrep" Unix command and the "glimpse"
 file indexing tool.  It was developed as part of a search engine for a
 largish MP3 collection; the "with error" searching comes handy for those
-who can't spell Liszt or Shostakovitch.  
+who can't spell Liszt or Shostakovitch.
 
 Given a search pattern and a string, this algorithm determines whether
 the string contains a substring that matches the pattern up to a

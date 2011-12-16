@@ -17,8 +17,8 @@ module NamesInt : Atom.PARAM =
     let names = ["chr";"pos";"nt_length";"nb_atoms";"c";"h";"n";"o";"s"]
       (** Names of integer attributes. *)
   end
-module AttrIntervInt = 
-  Pair.Make 
+module AttrIntervInt =
+  Pair.Make
    (Atom.Make(NamesInt))
    (Interv.Make(IntervParam)
      (Int.Make))
@@ -31,7 +31,7 @@ module NamesFloat : Atom.PARAM =
       (** Names of float attributes. *)
   end
 module AttrIntervFloat =
-  Pair.Make 
+  Pair.Make
    (Atom.Make(NamesFloat))
    (Interv.Make(IntervParam)
      (Float.Make))
@@ -159,13 +159,13 @@ module ToolsListWords : Sentence.PARAM =
     let separator c = List.mem c [' ';'\t';'\n';',';'.';';';'?';'!';':';'\'';'(';')';'@';'{';'}';'[';']']
     let stopword s = String.length s <= 3
     let rec prefixes_ w pos =
-      try 
+      try
         let pos' = String.index_from w pos '_' in
         (true,(true,String.sub w 0 pos',false)) :: prefixes_ w (pos'+1)
       with Not_found -> [(true,(true,w,false))]
     let words s = List.fold_right (fun w res -> prefixes_ w 0 @ res) (Syntax.split (normalize,separator,stopword) s) []
   end
-module AttrListWords = 
+module AttrListWords =
   Pair.Make
    (Atom.Make(NamesListWords))
    (Sentence.Make(ToolsListWords))

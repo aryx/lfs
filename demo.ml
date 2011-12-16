@@ -7,8 +7,8 @@ open Plugins
 (* open Ioplugins *)
 
 (*****************************************************************************)
-(* note: to debug can be helpful to put some  'end let res () =  begin'  
- * in the middle of a demo to end the demo at that point. 
+(* note: to debug can be helpful to put some  'end let res () =  begin'
+ * in the middle of a demo to end the demo at that point.
  *
  * could: as work with pure data-structure, could do a function  undo;
  * just need to save the old world and reassign back !Lfs.w .
@@ -19,7 +19,7 @@ let ls_ () = Lfs.ls_bis ()
 let ls_print () = ls_() +> List.iter print_endline
 
 (*****************************************************************************)
-let principles_demo () = 
+let principles_demo () =
   begin
     (*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*)
     (* \subsection{On files} *)
@@ -49,25 +49,25 @@ let principles_demo () =
     (* \subsubsection{Retrieve files} *)
     (*--------------------------------------------------------------*)
     cd_ "/port/USA";
-    assert(ls_() $=$ (set 
-			[ "music/"; "movie/"; "art/"; 
+    assert(ls_() $=$ (set
+			[ "music/"; "movie/"; "art/";
 			  "miami.jpg"; "san-diego.jpg"]));
 
     (*--------------------------------------------------------------*)
-    cd_ "/capital|movie/!seaside"; 
+    cd_ "/capital|movie/!seaside";
     assert(ls_() $=$ (set ["washington.jpg"]));
 
     (*--------------------------------------------------------------*)
     (* \subsubsection{Manipulate files} *)
     (*--------------------------------------------------------------*)
     rm (Left "washington.jpg") +> ignore;
-    
+
     (*--------------------------------------------------------------*)
     cd_ "/";
     mkdir "hot";
     cd_ "port/USA";
-    assert(ls_() $=$ (set 
-			[ "music/"; "movie/"; "art/"; 
+    assert(ls_() $=$ (set
+			[ "music/"; "movie/"; "art/";
 			  "miami.jpg"; "san-diego.jpg"]));
     mv_ "miami.jpg" "../hot";
     (* todo: assert not anymore in USA, and in hot, and still in seaside *)
@@ -95,7 +95,7 @@ let principles_demo () =
     mv_ "los-angeles.jpg" "movie/";
     assert(ls_() $=$ set ["san-diego.jpg"; "art/"]);
     cd_ "art";
-    assert(ls_() $=$ set ["movie/"; "music/"]);    
+    assert(ls_() $=$ set ["movie/"; "music/"]);
 
     (*--------------------------------------------------------------*)
     cd_ "/USA&music";
@@ -124,7 +124,7 @@ let principles_demo () =
     assert(ls_() $=$ set ["type:/"; "art/"; "geography/"; "hot/"]);
     cd_ "type:";
     assert(ls_() $=$ set ["type:program/"; "type:picture/"]);
-    
+
     (*--------------------------------------------------------------*)
     cd_ "/";
     mkdir "plugins";
@@ -140,8 +140,8 @@ let principles_demo () =
     cd_ "/year:>2000";
     assert(ls_() $=$ set ["year:2001/"; "year:2002/"]);
     cd_ "/year:";
-    assert(ls_() $=$ set ["year:2000/"; "year:>2000/"]);    
-	     
+    assert(ls_() $=$ set ["year:2000/"; "year:>2000/"]);
+
     (*--------------------------------------------------------------*)
     assert(interval_logic (Prop "2001")  (Prop ">2000") = true);
     assert(interval_logic (Prop ">2000") (Prop "2001")  = false);
@@ -158,11 +158,11 @@ let principles_demo () =
     mkfile_ "big.jpg" "xxxxxxxxxxxxxxxxx";
     mkfile_ "small.jpg" "xx";
     cd_ "ext:jpg";
-    assert(ls_() $=$ set [ 
+    assert(ls_() $=$ set [
        (* update: dont see anymore the size:xxx cos here both will have
         * just size:0ko => dont be displayed
         *)
-       "size:2/"; "size:17/"; 
+       "size:2/"; "size:17/";
        "name:small/"; "name:big/"]);
     (*--------------------------------------------------------------*)
     cd_ "/plugins";
@@ -177,16 +177,16 @@ let principles_demo () =
     mkfile_ "staying_alive.mp3" "tag_genre=Disco\ntag_artist=BeeGees\ndataaaa";
     mkfile_ "ete_indien.mp3"    "tag_genre=Pop\ntag_artist=JoeDassin\ndata";
     assert(ls_() $=$ set [ "genre:Disco/"; "genre:Pop/";
-			   "artist:BeeGees/"; "artist:JoeDassin/"; 
-			   "name:ete_indien/";  "name:staying_alive/"; 
-                           "size:39/"; "size:42/" 
-			   (* update: no more cos now size:0Ko,   
+			   "artist:BeeGees/"; "artist:JoeDassin/";
+			   "name:ete_indien/";  "name:staying_alive/";
+                           "size:39/"; "size:42/"
+			   (* update: no more cos now size:0Ko,
 			   *)
 			 ] );
 
     (*--------------------------------------------------------------*)
     cd_ "genre:Disco";
-    assert(mp3_transducer (read "staying_alive.mp3") $=$ 
+    assert(mp3_transducer (read "staying_alive.mp3") $=$
 	   set [Prop "artist:BeeGees"; Prop "genre:Disco"]);
 
     (*++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++*)
@@ -233,7 +233,7 @@ let principles_demo () =
     cd_ "parts";
 
     (*--------------------------------------------------------------*)
-    assert(ls_() $=$ set 
+    assert(ls_() $=$ set
 	     [ "debugging/"; "error/";
 	       "function:f/"; "function:f2/";
 	       "var:/";
@@ -246,16 +246,16 @@ let principles_demo () =
     (* \subsubsection{Retrieve and select file contents} *)
     (*--------------------------------------------------------------*)
     cd_ "function:f/var:/";
-    assert(ls_() $=$ set 
-	     [ "var:x/";  "var:y/";  
+    assert(ls_() $=$ set
+	     [ "var:x/";  "var:y/";
 	       "debugging/"; "error/";
 	       "synchro/"; (* ADDON *)
 	       "foo.c"]);
-    assert(read "foo.c" +> lines_with_nl +> length  = 7); 
+    assert(read "foo.c" +> lines_with_nl +> length  = 7);
 
     (*--------------------------------------------------------------*)
     cd_ "!(debugging|error)";
-    assert(ls_() $=$ set ["var:x/"; "var:y/"; 
+    assert(ls_() $=$ set ["var:x/"; "var:y/";
 			   "synchro/"; (* ADDON *)
 			   "foo.c"]);
     assert(read "foo.c" = unlines
@@ -272,7 +272,7 @@ let principles_demo () =
     (* \subsubsection{Manipulate file contents} *)
     (*--------------------------------------------------------------*)
     read "foo.c" +> Str.global_replace (Str.regexp "y") "z" +> write (Left "foo.c");
-    assert(ls_() $=$ set ["var:x/"; "var:z/"; 
+    assert(ls_() $=$ set ["var:x/"; "var:z/";
 			   "synchro/"; (* ADDON *)
 			   "foo.c"]);
 
@@ -292,12 +292,12 @@ let principles_demo () =
 	     ]);
 
 
-   
+
 
   end
 
 (*****************************************************************************)
-let basicenv_demo () = 
+let basicenv_demo () =
   begin
 
     mkdir "plugins";
@@ -332,7 +332,7 @@ let basicenv_demo () =
   end
 
 (*****************************************************************************)
-let logic_demo () = 
+let logic_demo () =
   begin
     basicenv_demo ();
 
@@ -362,19 +362,19 @@ let logic_demo () =
   end
 
 (*****************************************************************************)
-let relation_demo () = 
-  (*  persons (objs = persons, relation = mother/father/...) 
+let relation_demo () =
+  (*  persons (objs = persons, relation = mother/father/...)
    *  for  toones
    *  for  gods
-   * 
-   *  music   (objs = songs, artists, genre?;      relation = author) 
+   *
+   *  music   (objs = songs, artists, genre?;      relation = author)
    *  webpage (objs = webpage,                     relation = cited)
-   * 
+   *
    *  person,  male/female,  mother/father (constraints with female/male),
    *   parents
    *  brother (constraints too),  husband/spouse
    *  sibling, uncle, ants, ...
-   *  constraints/integreiry/semantic-checking/... 
+   *  constraints/integreiry/semantic-checking/...
    *)
 
   let ln_ = Lfs.ln in
@@ -403,7 +403,7 @@ let relation_demo () =
      mkfile_ "dedef" "";
      mkfile_ "severine" "";
      mkfile_ "noemie" "";
-    
+
     cd_ "/.ca/";
     ls_print(); print_endline "";
 
@@ -449,7 +449,7 @@ let relation_demo () =
   end
 
 (*****************************************************************************)
-let bibtex_demo () = 
+let bibtex_demo () =
   begin
     basicenv_demo ();
 
@@ -474,11 +474,11 @@ let bibtex_demo () =
     cd_ "parts/.relaxed/year:1988/author:/";
     ls_print();
 
-end let res () =  begin 
+end let res () =  begin
 
-    cd_ "year:"; 
+    cd_ "year:";
     ignore(read "ridoux.bib");
-    cd_ "year:2002"; 
+    cd_ "year:2002";
     print_endline (read "ridoux.bib");
 
     ls_print();
@@ -493,10 +493,10 @@ end let res () =  begin
   end
 
 (*****************************************************************************)
-(* put in lfs source: 
+(* put in lfs source:
  * let mark_string mark = ("                    (*...:" ^ (i_to_s mark) ^ "*)")
  *)
-let ml_demo () = 
+let ml_demo () =
   begin
     basicenv_demo ();
 
@@ -516,7 +516,7 @@ let ml_demo () =
   end
 
 (*****************************************************************************)
-let latex_demo () = 
+let latex_demo () =
   begin
     basicenv_demo ();
 
@@ -527,7 +527,7 @@ let latex_demo () =
 
     mkdir "comment:";
     mkdir "note:";
-    mkdir "aspect:"; 
+    mkdir "aspect:";
 
     mkdir "latex";
     mkdir "environment:";
@@ -544,10 +544,10 @@ let latex_demo () =
     cd_ "parts";
     ls_print();
     pr (read "main.tex");
-    
+
   end
 (*****************************************************************************)
-let constitution_demo () = 
+let constitution_demo () =
   begin
     basicenv_demo ();
 
@@ -588,7 +588,7 @@ let constitution_demo () =
 *)
 
 (*****************************************************************************)
-let demo_bug_mix_beck () = 
+let demo_bug_mix_beck () =
   begin
     mkdir "a";
     mkdir "b";
@@ -637,8 +637,8 @@ let demo_bug_mix_beck () =
 let statistics = ref false
 
 let default_demo = "principles"
-let demos_list = 
-  [ 
+let demos_list =
+  [
     "principles"   , principles_demo;
     "basic"        , basicenv_demo;
 
@@ -661,29 +661,29 @@ let demo = ref default_demo
 (*****************************************************************************)
 (* The main entry point *)
 (*****************************************************************************)
-let main ()  = 
+let main ()  =
   begin
     Lfs.copyright ();
 
     Common.verbose_level := 1;
     (* ugly: to have same value than real_lfs for file identifier *)
-    Common._counter := 2; 
+    Common._counter := 2;
 
     let options = [
-      "-demo", Arg.Set_string demo, 
+      "-demo", Arg.Set_string demo,
       "<string> possible demos are: " ^ all_demos_str;
-      "-stat", Arg.Set statistics, 
+      "-stat", Arg.Set statistics,
       " ";
     ]
     in
-    let usage_msg = 
-      ("Usage: " ^ Common.basename Sys.argv.(0) ^ 
-          " [options]\nOptions are:") 
+    let usage_msg =
+      ("Usage: " ^ Common.basename Sys.argv.(0) ^
+          " [options]\nOptions are:")
     in
     let args = Common.parse_options options usage_msg Sys.argv in
-    
+
     (match (args) with
-    | [] -> 
+    | [] ->
         (* !! the main entry !! *)
         Lfs.make_default_world ();
         let f = List.assoc !demo demos_list in
@@ -701,5 +701,5 @@ let main ()  =
   end
 
 (*****************************************************************************)
-let _ = 
+let _ =
   if not !Sys.interactive then main ()

@@ -4,26 +4,26 @@ diff -rN -u old-code/logfun/src/date_pattern.ml new-code/logfun/src/date_pattern
 @@ -56,9 +56,9 @@
  	  let feat_top = true
  	end)
- 
+
 -    module Day = MyTop (MyEnum (MyInterval MyInt))
 -    module Month = MyTop (MyEnum MyAtom)
 -    module Year = MyTop (MyEnum (MyInterval MyInt))
 +    module Day = MyTop (MyEnum (MyInterval(MyInt)))
 +    module Month = MyTop (MyEnum(MyAtom))
 +    module Year = MyTop (MyEnum (MyInterval(MyInt)))
- 
+
      module Date = MyProd(Day)(MyProd(Month)(Year))
- 
+
 diff -rN -u old-code/logfun/src/javatype.ml new-code/logfun/src/javatype.ml
 --- old-code/logfun/src/javatype.ml	2009-12-11 14:57:40.000000000 -0800
 +++ new-code/logfun/src/javatype.ml	2009-12-11 14:57:40.000000000 -0800
 @@ -129,7 +129,7 @@
      end)
- 
+
  module Object =
 -  MyBottom (SingleObject Class)
 +  MyBottom (SingleObject(Class))
- 
+
  module Atom =
    TopAtom (MySum(Primitive)(Object))
 @@ -137,7 +137,7 @@
@@ -32,7 +32,7 @@ diff -rN -u old-code/logfun/src/javatype.ml new-code/logfun/src/javatype.ml
      (Atom)
 -    (PrelistArray UnitArray)
 +    (PrelistArray(UnitArray))
- 
+
  module Kind =
    Taxo.Make
 @@ -198,15 +198,15 @@
@@ -55,12 +55,12 @@ diff -rN -u old-code/logfun/src/javatype.ml new-code/logfun/src/javatype.ml
 -	  (PrefixThrows Object))))
 +	  (PrefixClass(Object))
 +	  (PrefixThrows(Object)))))
- 
+
 diff -rN -u old-code/logfun/src/mltype.ml new-code/logfun/src/mltype.ml
 --- old-code/logfun/src/mltype.ml	2009-12-11 14:57:40.000000000 -0800
 +++ new-code/logfun/src/mltype.ml	2009-12-11 14:57:40.000000000 -0800
 @@ -148,30 +148,30 @@
- 
+
  module Val (Type : T) : T =
    MySum
 -    (PrefixVar Var)
@@ -70,14 +70,14 @@ diff -rN -u old-code/logfun/src/mltype.ml new-code/logfun/src/mltype.ml
 -       (MyBracket Type))
 +       (MyProd(Constr)(VectorArgs(Type)))
 +       (MyBracket(Type)))
- 
+
  module Tuple (Type : T) =
    MyBottom
      (SingleTuple
         (MultisetTuple
 -	  (Val Type)))
 +	  (Val(Type))))
- 
+
  module Fun (Type : T) =
    MyBottom
      (SingleFun
@@ -87,7 +87,7 @@ diff -rN -u old-code/logfun/src/mltype.ml new-code/logfun/src/mltype.ml
 -	     (Tuple Type))))
 +	     (Tuple(Type))
 +	     (Tuple(Type)))))
- 
+
  module rec Type : T =
    TopType
      (MySum
@@ -95,6 +95,6 @@ diff -rN -u old-code/logfun/src/mltype.ml new-code/logfun/src/mltype.ml
 -       (Fun Type))
 +       (Tuple(Type))
 +       (Fun(Type)))
- 
+
  module Make =
    struct

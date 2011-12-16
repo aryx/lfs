@@ -46,7 +46,7 @@ External links are recognized automagically: http://www.google.com or simply www
 
 ==== Internal ====
 
-Internal links are created by using square brackets. You can either just give a [[doku>wiki:pagename]] or use an additional [[doku>wiki:pagename|Title Text]]. Wiki pagenames are converted to lowercase automatically, special characters are not allowed. 
+Internal links are created by using square brackets. You can either just give a [[doku>wiki:pagename]] or use an additional [[doku>wiki:pagename|Title Text]]. Wiki pagenames are converted to lowercase automatically, special characters are not allowed.
 
   Internal links are created by using square brackets. You can either just give
   a [[pagename]] or use an additional [[pagename|Title Text]]. Wiki pagenames
@@ -232,15 +232,15 @@ Please note: These conversions can be turned off through a [[doku>wiki:config#ty
 Some times you want to mark some text to show it's a reply or comment. You can use the following syntax:
 
   I think we should do it
-  
+
   > No we shouldn't
-  
+
   >> Well, I say we should
-  
+
   > Really?
-  
+
   >> Yes!
-  
+
   >>> Then lets do it!
 
 I think we should do it
@@ -257,7 +257,7 @@ I think we should do it
 
 ===== Tables =====
 
-DokuWiki supports a simple syntax to create tables. 
+DokuWiki supports a simple syntax to create tables.
 
 ^ Heading 1      ^ Heading 2       ^ Heading 3          ^
 | Row 1 Col 1    | Row 1 Col 2     | Row 1 Col 3        |
@@ -312,7 +312,7 @@ This is preformatted code all spaces are preserved: like              <-this
 </code>
 
 <file>
-This is pretty much the same, but you could use it to show that you quoted a file.  
+This is pretty much the same, but you could use it to show that you quoted a file.
 </file>
 
 To let the parser ignore an area completely (ie. do no formatting on it), enclose the area either with ''nowiki'' tags or even simpler, with double percent signs ''<nowiki>%%</nowiki>''.
@@ -328,7 +328,7 @@ See the source of this page to see how to use these blocks.
 [[DokuWiki]] can highlight sourcecode, which makes it easier to read. It uses the [[http://qbnz.com/highlighter/|GeSHi]] Generic Syntax Highlighter -- so any language supported by GeSHi is supported. The syntax is the same like in the code block in the previous section, but this time the name of the used language is inserted inside the tag. Eg. ''<nowiki><code java></nowiki>''.
 
 <code java>
-/** 
+/**
  * The HelloWorldApp class implements an application that
  * simply displays "Hello World!" to the standard output.
  */

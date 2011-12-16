@@ -9,7 +9,7 @@ SRC_URI="http://aryx.kicks-ass.org/~pad/software/project-lfs/${P}.tgz"
 LICENSE="GPL-2"
 SLOT="0"
 KEYWORDS="amd64 x86"
-IUSE="gif gtk jpg mp3 vorbis" 
+IUSE="gif gtk jpg mp3 vorbis"
 
 DEPEND="dev-lang/ocaml
 	dev-ml/camlidl

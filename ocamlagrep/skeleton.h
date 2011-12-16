@@ -61,19 +61,19 @@ static value FUNCTION_NAME(ulong * table, uint pattern_length,
 #endif
     R0 = ((R0 & S) << 1) | (R0 & Ssharp) | MATCH_EMPTY;
 #if NERRS >= 1
-    R1 = (((R1 & S) | R0before | R0) << 1) 
+    R1 = (((R1 & S) | R0before | R0) << 1)
          | R0before
          | (R1 & Ssharp)
          | MATCH_EMPTY;
 #endif
 #if NERRS >= 2
-    R2 = (((R2 & S) | R1before | R1) << 1) 
+    R2 = (((R2 & S) | R1before | R1) << 1)
          | R1before
          | (R2 & Ssharp)
          | MATCH_EMPTY;
 #endif
 #if NERRS == 3
-    R3 = (((R3 & S) | R2before | R2) << 1) 
+    R3 = (((R3 & S) | R2before | R2) << 1)
          | R2before
          | (R3 & Ssharp)
          | MATCH_EMPTY;

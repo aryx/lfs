@@ -41,7 +41,7 @@ map {
 print ("total = " . $total/60 . "minutes \n");
 
 # LS (in mymusic^/.relaxed
-#  artist: 
+#  artist:
 #  genre:Disco/artist:
 #  genre:Comedy/artist:
 #  genre:Soundtrack/.strict

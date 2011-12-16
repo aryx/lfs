@@ -33,7 +33,7 @@ module Make (Param : PARAM) (A : T) =
       | None -> true
       | Some x -> A.feat x
 
-    let compare f g = 
+    let compare f g =
       match f, g with
       | None, None -> 0
       | None, Some _ -> -1

@@ -4,16 +4,16 @@
   OCamlFuse is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation (version 2 of the License).
-  
+
   OCamlFuse is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with OCamlFuse.  See the file LICENSE.  If you haven't received
   a copy of the GNU General Public License, write to:
-  
+
   Free Software Foundation, Inc.,
   59 Temple Place, Suite 330, Boston, MA
   02111-1307  USA
@@ -52,15 +52,15 @@ let log s = (output_string !_chan (s ^ "\n"); flush !_chan)
 let _ = start_log_file ()
 *)
 
-let fuse_loop fuse (multithreaded) = 
+let fuse_loop fuse (multithreaded) =
 (* XXX let _ = log "here" in *)
 
-   if multithreaded then 
+   if multithreaded then
 (*     let _ = log "here2" in *)
        Printf.printf "Warning: multithreading has problems (it crashes after some milion of operations) but you can test it if you like\n%!";
-   let f = 
-    if multithreaded 
-    then fun x y -> (*ignore (x y)*)  ignore (Thread.create x y)   
+   let f =
+    if multithreaded
+    then fun x y -> (*ignore (x y)*)  ignore (Thread.create x y)
     else fun x y -> ignore (x y)
   in
     while not (__fuse_exited fuse) do
@@ -102,18 +102,18 @@ let default_op_names = {
 type 'a result = Bad of Unix.error | Ok of 'a
 
 let start = ref 0
-let supply () = 
+let supply () =
   let r = !start in
     start := !start + 1;
     "__caml_cb_" ^ (string_of_int r)
-      
+
 let named_op f =
   if f == undefined
   then None
-  else 
-    let cb x = 
+  else
+    let cb x =
       try Ok (f x)
-      with	      
+      with
 	  Unix.Unix_error (err,_,_) -> Bad err
 	| _ -> Bad (Unix.EUNKNOWNERR (~-1)) in
     let name = supply () in
@@ -123,10 +123,10 @@ let named_op f =
 let named_op_2 f =
   if f == undefined
   then None
-  else 
-    let cb x y = 
+  else
+    let cb x y =
       try Ok (f x y)
-      with	      
+      with
 	  Unix.Unix_error (err,_,_) -> Bad err
 	| _ -> Bad (Unix.EUNKNOWNERR (~-1)) in
     let name = supply () in
@@ -136,10 +136,10 @@ let named_op_2 f =
 let named_op_3 f =
   if f == undefined
   then None
-  else 
-    let cb x y z = 
+  else
+    let cb x y z =
       try Ok (f x y z)
-      with	      
+      with
 	  Unix.Unix_error (err,_,_) -> Bad err
 	| _ -> Bad (Unix.EUNKNOWNERR (~-1)) in
     let name = supply () in
@@ -149,10 +149,10 @@ let named_op_3 f =
 let named_op_4 f =
   if f == undefined
   then None
-  else 
-    let cb x y z t = 
+  else
+    let cb x y z t =
       try Ok (f x y z t)
-      with	      
+      with
 	  Unix.Unix_error (err,_,_) -> Bad err
 	| _ -> Bad (Unix.EUNKNOWNERR (~-1)) in
     let name = supply () in

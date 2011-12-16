@@ -10,8 +10,8 @@ my $path = $ARGV[0];
 
 my @aux = ();
 
-mapf (sub { my ($s) =@_;  if($s =~ /^([^\s]+)\s+function\s/) { push @aux, "function:$1"; }}, 
-      cat("ctags -x --language-force=C $path|"));  
+mapf (sub { my ($s) =@_;  if($s =~ /^([^\s]+)\s+function\s/) { push @aux, "function:$1"; }},
+      cat("ctags -x --language-force=C $path|"));
 
 print (join "/", @aux); print "\n";
 

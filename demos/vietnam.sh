@@ -35,16 +35,16 @@ mkdir $LFS_ROOT/ingredient/sea-food/fish/tuna
 # lotte -> burbot (rivière), monkfish (de mer)
 
 mkdir $LFS_ROOT/ingredient/other
-mkdir $LFS_ROOT/ingredient/other/cu_nang   
-mkdir $LFS_ROOT/ingredient/other/dau_xanh  
-mkdir $LFS_ROOT/ingredient/other/lotus     
-mkdir $LFS_ROOT/ingredient/other/mam_tom   
-mkdir $LFS_ROOT/ingredient/other/ram_on    
-mkdir $LFS_ROOT/ingredient/other/ram_hun   
-mkdir $LFS_ROOT/ingredient/other/tapioca   
-mkdir $LFS_ROOT/ingredient/other/agar_agar 
+mkdir $LFS_ROOT/ingredient/other/cu_nang
+mkdir $LFS_ROOT/ingredient/other/dau_xanh
+mkdir $LFS_ROOT/ingredient/other/lotus
+mkdir $LFS_ROOT/ingredient/other/mam_tom
+mkdir $LFS_ROOT/ingredient/other/ram_on
+mkdir $LFS_ROOT/ingredient/other/ram_hun
+mkdir $LFS_ROOT/ingredient/other/tapioca
+mkdir $LFS_ROOT/ingredient/other/agar_agar
 mkdir $LFS_ROOT/ingredient/other/rice_alcohol
-mkdir $LFS_ROOT/ingredient/other/carmin    
+mkdir $LFS_ROOT/ingredient/other/carmin
 mkdir $LFS_ROOT/ingredient/other/glutamate
 mkdir $LFS_ROOT/ingredient/other/soya_alcohol
 

@@ -21,6 +21,6 @@ rule token = parse
   | "%"            { INOUT }
   | identifier     { ATOM(Lexing.lexeme lexbuf) } (* to put after keyword !!!! *)
   | '?' identifier ':' { token lexbuf } (* cos olabl, but dont handle it *)
-  | identifier ':'     { token lexbuf } 
+  | identifier ':'     { token lexbuf }
   | qualified      { ATOM(Lexing.lexeme lexbuf) }
   | eof            { EOF }

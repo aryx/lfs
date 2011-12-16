@@ -75,7 +75,7 @@ module Charset =
     type t = string (* of length 32 *)
 
     let new_empty () = String.make 32 '\000'
-    
+
     let all = String.make 32 '\255'
 
     let add s c =

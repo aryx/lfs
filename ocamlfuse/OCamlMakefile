@@ -1012,7 +1012,7 @@ endif
 .c.$(EXT_OBJ):
 			$(OCAMLC) -c -cc "$(CC)" -ccopt "$(CFLAGS) \
 				$(CPPFLAGS) $(CPPFLAGS_WIN32) \
-				$(CFLAGS_WIN32) $(CINCFLAGS) $(CFLAG_O)$@ " $< 
+				$(CFLAGS_WIN32) $(CINCFLAGS) $(CFLAG_O)$@ " $<
 
 .$(EXT_CXX).$(EXT_OBJ):
 			$(CXX) -c $(CXXFLAGS) $(CINCFLAGS) $(CPPFLAGS) \

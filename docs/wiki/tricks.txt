@@ -2,5 +2,5 @@
 
 ==== Using clever symbolic links, a.k.a smart folders ====
 
-  ln -s '/lfs/ext:c|ext:h/.ext' my_code.query 
+  ln -s '/lfs/ext:c|ext:h/.ext' my_code.query
 

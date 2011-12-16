@@ -4,7 +4,7 @@ sub maybe { my ($Uv) = @_;    (defined($Uv))  ?  ($Uv)  :  () ;}
 
 my $state = {};
 
-#if have to see forward then uncoment this  and replace 
+#if have to see forward then uncoment this  and replace
 #forward:    my @data = ();
 #forward:    while(<STDIN>) {
 #forward:        my $s = $_;
@@ -12,34 +12,34 @@ my $state = {};
 #forward:    }
 #forward:    my $i = 0;
 
-#forward:  map { 
+#forward:  map {
 while(<STDIN>) {
     my $s = $_;
     my @aspects = ();
 
-    if($s =~ /class\s*(\w+)/) { 
-        push @aspects, "synchro"; $state = {}; 
+    if($s =~ /class\s*(\w+)/) {
+        push @aspects, "synchro"; $state = {};
         $state->{class} = "class:$1";
         $state->{where} = "interface";
     }
 
     if($s =~ /(\w+)::(\w+)\s*\(/) {
-        push @aspects, "synchro"; $state = {}; 
+        push @aspects, "synchro"; $state = {};
         $state->{method} = "method:$2";
         $state->{class} = "class:$1";
         $state->{where} = "implementation";
     }
-    if($s =~ /(\w+)\s*\(/ && ($state->{where} eq "interface")) { 
+    if($s =~ /(\w+)\s*\(/ && ($state->{where} eq "interface")) {
         push @aspects, "method:$1";
     }
-    if($s =~ /^}/) { 
+    if($s =~ /^}/) {
         push @aspects,  maybe($state->{class}),  maybe($state->{method}),  maybe($state->{where}), maybe($state->{function});
-        $state = {}; 
+        $state = {};
 
     }
 
-    if($s =~ /^(\w+)\s+(\w+)\s*\(/) { 
-        push @aspects, "synchro"; $state = {}; 
+    if($s =~ /^(\w+)\s+(\w+)\s*\(/) {
+        push @aspects, "synchro"; $state = {};
         $state->{function} = "function:$2";
         $state->{where} = "implementation";
     }
@@ -50,11 +50,11 @@ while(<STDIN>) {
     if($s =~ /^private:/) { $state->{visibility} = "visibility:private"; }
 
 
-    if($s =~ /(\w+)\s*\(/ && ($state->{where} eq "implementation")) { 
+    if($s =~ /(\w+)\s*\(/ && ($state->{where} eq "implementation")) {
         push @aspects, "call:$1";
     }
 
-    my $res = 
+    my $res =
       [
        @aspects,
        maybe($state->{class}),

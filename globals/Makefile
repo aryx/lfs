@@ -11,7 +11,7 @@ INCLUDES=-I ../commons
 ##############################################################################
 # Generic variables
 ##############################################################################
-OCAMLC=ocamlc$(OPTBIN) -g -dtypes   $(INCLUDES) 
+OCAMLC=ocamlc$(OPTBIN) -g -dtypes   $(INCLUDES)
 OCAMLOPT=ocamlopt$(OPTBIN)   $(INCLUDES) $(OPTFLAGS)
 #OCAMLLEX=ocamllex$(OPTBIN) -ml
 OCAMLLEX=ocamllex$(OPTBIN)
@@ -51,7 +51,7 @@ $(TARGET).cmxa: $(OPTOBJS) $(LIBS:.cma=.cmxa)
 .ml.cmx:
 	$(OCAMLOPT) -c $<
 
-.ml.mldepend: 
+.ml.mldepend:
 	$(OCAMLC) -i $<
 
 clean::

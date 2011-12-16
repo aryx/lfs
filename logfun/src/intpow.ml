@@ -96,4 +96,4 @@ module Make =
 
     let diff x1 x2 = (get_max x1 - get_min x2, 0)
 
-  end 
+  end

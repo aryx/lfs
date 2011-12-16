@@ -119,7 +119,7 @@ module Make (Param : PARAM) : Logic.T =
 
 (*
     let conj a b =
-      if entails a b then a 
+      if entails a b then a
       else if entails b a then b
       else raise Not_found
 *)
@@ -163,7 +163,7 @@ module Make (Param : PARAM) : Logic.T =
 	      LSet.singleton (Term.id2s a) end
 	    else LSet.empty ()
       else LSet.empty ()
-	      
+
 
     let rec gen y d gs =
       List.fold_left

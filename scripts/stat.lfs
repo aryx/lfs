@@ -6,7 +6,7 @@ if [ $# -ne 1 ]
 fi
 
 if [ ! -r $1/lfs_secu ]
-    then echo "There is no 'lfs_secu' file in directory $1. 
+    then echo "There is no 'lfs_secu' file in directory $1.
 You must give the LFS meta-data directory as an argument to launch this command.
 ";
     exit

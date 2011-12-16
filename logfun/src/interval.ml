@@ -70,7 +70,7 @@ module Make (Param : PARAM) (Val : T) =
 	[(a1,b1); (a2,b2)]
 
     let features (a,b) =
-      if a=b 
+      if a=b
       then LSet.of_list (List.map (fun (vis,x) -> vis,(x,x)) (Val.features a))
       else LSet.empty ()
 

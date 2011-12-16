@@ -1,5 +1,5 @@
-agrep.cmo: agrep.cmi 
-agrep.cmx: agrep.cmi 
-testagrep.cmo: agrep.cmi 
-testagrep.cmx: agrep.cmx 
-agrep.cmi: 
+agrep.cmo: agrep.cmi
+agrep.cmx: agrep.cmi
+testagrep.cmo: agrep.cmi
+testagrep.cmx: agrep.cmx
+agrep.cmi:

@@ -1,13 +1,13 @@
 open Common
 
 
-type typep = 
+type typep =
   | Name of string
   | Poly of string               (* note: the string in poly and freepoly contain the ' and `, more convenient *)
   | Tuple of typep list
   | Application of string * typep (* note: 'a list -> Application (list, 'a) *) (* TODO? could have a 'a and a kind of typep for left too *)
-	
-  | Function of typep list * typep 
+
+  | Function of typep list * typep
    (* CHANGE? func returning func are not so useful, so special case make code after simpler *)
    (* TODO? could handle fact that sometimes programme make it more explicit via () and not merging *)
 
@@ -23,10 +23,10 @@ type typep =
 let rec string_of_typep = function
   | Name s -> s
   | Poly s -> s
-  | Function (es, e2) -> 
-      "(" ^ (es +> map string_of_typep +> join "|") ^ ")"  
+  | Function (es, e2) ->
+      "(" ^ (es +> map string_of_typep +> join "|") ^ ")"
        ^ "->" ^
-      "(" ^ string_of_typep e2 ^ ")" 
+      "(" ^ string_of_typep e2 ^ ")"
   | Tuple xs -> "(" ^ join " * " (xs +> map string_of_typep) ^ ")"
   | Application (s, e2) -> s ^ " " ^ string_of_typep e2
 

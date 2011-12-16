@@ -15,13 +15,13 @@ OCAMLOPT=ocamlopt $(INCLUDES)
 OCAMLDEP=ocamldep $(INCLUDES)
 
 #-ccopt -static
-STATIC= 
+STATIC=
 ##############################################################################
 # Top rules
 ##############################################################################
 all: $(PLUGINSML) index_LFS_with_glimpse
 
-%: $(LIBS:.cma=.cmxa) common_transducer.cmx %.cmx 
+%: $(LIBS:.cma=.cmxa) common_transducer.cmx %.cmx
 	$(OCAMLOPT) $(STATIC) -o $@ $(SYSLIBS:.cma=.cmxa) $+
 
 clean::
@@ -46,7 +46,7 @@ static:
 
 
 clean::
-	rm -f *.cm[iox] *.o 
+	rm -f *.cm[iox] *.o
 
 
 beforedepend::

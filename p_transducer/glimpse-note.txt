@@ -8,10 +8,10 @@ from the directory where reside LFS meta-data.
 Then the indexing of new files created under LFS is automatic.
 
 Glimpse normally index text files, but we can also index binary
-or more complex files if we know how to handle them. 
+or more complex files if we know how to handle them.
 We just have to convert such files in text files. For instance
 it is easy to transform a pdf into a text file with the command
-pdftotext. So, to extend the glimpse capability, just modifiy 
+pdftotext. So, to extend the glimpse capability, just modifiy
 the index_LFS_with_glimpse.ml file to add more converters.
 
 

@@ -89,7 +89,7 @@ module Make (Param : PARAM) =
         let z = x1, (a3,b3) in
         if Param.gen_cond x1 (a3,b3) (* b3/a3 <= 3 *) & not (List.exists (fun h -> entails h z) hs)
         then LSet.singleton z
-        else LSet.empty () 
+        else LSet.empty ()
       else LSet.empty ()
 
   end

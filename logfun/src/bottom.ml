@@ -43,7 +43,7 @@ module Make (Param : PARAM) (X : T) =
       | Other x -> X.feat x
       | Bot -> false
 
-    let compare f g = 
+    let compare f g =
       match f, g with
       | Bot, Bot -> 0
       | Bot, Other _ -> 1

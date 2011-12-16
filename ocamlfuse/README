@@ -29,7 +29,7 @@ INSTALLATION
   ./configure # if configure is missing try ./makeconf.sh
   make
   make install
-  modprobe fuse 
+  modprobe fuse
 
   Add it to your autoloaded modules if you want, and then edit
   /etc/ld.so.conf and add /usr/local/lib, then issue ldconfig.
@@ -37,7 +37,7 @@ INSTALLATION
 - OCaml >= 3.08
 
   This is straightforward in most installations, but if your vendor does
-  not carry >= 3.08 go to 
+  not carry >= 3.08 go to
 
   http://caml.inria.fr and follow instructions
 

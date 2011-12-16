@@ -8,7 +8,7 @@ my $path = $ARGV[0];
 open(FILE, "gifinfo '$path' |") or die "$!";
 #ex of output: gifinfo tech_t.gif =>
 #Size: 779x615
-#Comment: 
+#Comment:
 
 my @aux = ();
 

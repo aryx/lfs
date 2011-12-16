@@ -20,7 +20,7 @@ let weak_add : 'a Weak.t ref -> 'a -> unit =
   fun w x ->
     let i = weak_get_index w in
     Weak.set !w i (Some x)
-      
+
 let weak_iter : 'a Weak.t -> ('a -> unit) -> unit =
   fun w f ->
     for i=0 to Weak.length w - 1 do
@@ -267,7 +267,7 @@ let xemacs filename pattern =
 
 let mozilla url =
   ignore (Sys.command ("mozilla -remote \"openurl(" ^ url ^ ")\""))
-    
+
 let gqview filename =
   ignore (Sys.command ("gqview \"" ^ String.escaped filename ^ "\" &"))
 

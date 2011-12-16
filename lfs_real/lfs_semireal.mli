@@ -1,4 +1,4 @@
-open Common 
+open Common
 
 type database = {
   metapath : string;

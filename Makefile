@@ -22,10 +22,10 @@ INCLUDES=$(INCLUDEDIRS:%=-I %) -I commons/ocamlextra
 
 
 
-# Basic libs. 
+# Basic libs.
 SYSLIBS1=str unix bigarray nums   threads
 # Normally require dbm only for semi_real mode, so could remove this dependency
-SYSLIBS2=agrep bdb dbm 
+SYSLIBS2=agrep bdb dbm
 # With fuse
 SYSLIBS3=Fuse
 
@@ -42,7 +42,7 @@ endif
 LIBS1=commons/commons.cma globals/globals.cma \
       commons/commons_bdb.cma commons/commons_gdbm.cma \
       commons/commons_features.cma \
-      lfs_core/lfs_core.cma lfs_path/lfs_path.cma 
+      lfs_core/lfs_core.cma lfs_path/lfs_path.cma
 LIBS2=lfs_real/lfs_real.cma
 # no fuse dependency
 LIBS3=lfs_real/lfs_real1.cma
@@ -51,7 +51,7 @@ LIBS=$(LIBS1) $(LIBS2)
 
 
 
-SRC= mount.ml 
+SRC= mount.ml
 
 
 PLUGINSML= p_logic/int_logic.ml p_logic/string_logic.ml p_logic/date_logic.ml \
@@ -95,25 +95,25 @@ rec:
 	$(MAKE) -C ocamlbdb
 	$(MAKE) -C commons bdb
 	$(MAKE) -C commons gdbm
-	$(MAKE) features -C commons 
-	set -e; for i in $(MAKESUBDIRS); do $(MAKE) -C $$i all; done 
+	$(MAKE) features -C commons
+	set -e; for i in $(MAKESUBDIRS); do $(MAKE) -C $$i all; done
 rec.opt:
 	$(MAKE) -C commons all.opt
 	$(MAKE) -C ocamlbdb opt
 	$(MAKE) -C commons bdb.opt
 	$(MAKE) -C commons gdbm.opt
-	$(MAKE) features.opt -C commons 
-	set -e; for i in $(MAKESUBDIRS); do $(MAKE) -C $$i all.opt; done 
+	$(MAKE) features.opt -C commons
+	set -e; for i in $(MAKESUBDIRS); do $(MAKE) -C $$i all.opt; done
 
 clean::
-	set -e; for i in $(ALLSUBDIRS); do $(MAKE) -C $$i clean; done 
+	set -e; for i in $(ALLSUBDIRS); do $(MAKE) -C $$i clean; done
 depend::
 	set -e; for i in $(ALLSUBDIRS); do $(MAKE) -C $$i depend; done
 
 
 
 
-mount.lfs: $(LIBS:.cma=.cmxa) $(SRC:.ml=.cmx) 
+mount.lfs: $(LIBS:.cma=.cmxa) $(SRC:.ml=.cmx)
 	$(OCAMLOPT) $(STATIC) -o $@  $(SYSLIBS:=.cmxa) \
 	   -ccopt -Locamlfuse -cclib -lfuse -cclib -lcamlidl \
 	   $^
@@ -134,19 +134,19 @@ clean::
 
 
 .PHONY: plugins
-plugins: 
+plugins:
 	cd p_logic; $(MAKE)
-	cd p_transducer; $(MAKE) 
+	cd p_transducer; $(MAKE)
 	cd p_adv_transducer; $(MAKE)
 
 
 plugins.ml: $(PLUGINSML)
 	echo "(* automatically generated from plugins source *)" > plugins.ml
-	echo "(* useful only to construct core LFS *)" >> plugins.ml 
+	echo "(* useful only to construct core LFS *)" >> plugins.ml
 	echo "(* useful only for test/devel purpose *)" >> plugins.ml
-	echo "open Common" >> plugins.ml	
-	echo "open Lfs" >> plugins.ml	
-	echo "open Parser_combinators.Infix" >> plugins.ml	
+	echo "open Common" >> plugins.ml
+	echo "open Lfs" >> plugins.ml
+	echo "open Parser_combinators.Infix" >> plugins.ml
 	cat $(PLUGINSML) | grep -v "open" | grep -v "interact_" >> plugins.ml
 beforedepend:: plugins.ml
 clean::
@@ -157,18 +157,18 @@ clean::
 
 # note that this does not need lfs_real.cma
 LIBSCORE=commons/commons.cma globals/globals.cma lfs_core/lfs_core.cma lfs_path/lfs_path.cma
-coredemo: plugins.ml demo.ml 
+coredemo: plugins.ml demo.ml
 	$(MAKE) -C commons
 	$(MAKE) -C globals
 	$(MAKE) -C lfs_core
 	$(MAKE) -C lfs_path
 	$(OCAMLC) -custom $(SYSLIBS1:=.cma) -o $@ $(LIBSCORE)  $^
 
-coredemo.top: commons/commons.cma globals/globals.cma lfs_core/lfs_core.cma lfs_path/lfs_path.cma plugins.ml demo.ml 
+coredemo.top: commons/commons.cma globals/globals.cma lfs_core/lfs_core.cma lfs_path/lfs_path.cma plugins.ml demo.ml
 	$(OCAMLMKTOP) -custom str.cma unix.cma -o $@ $^
 
 
-clean:: 
+clean::
 	rm -f coredemo coredemo.top
 
 
@@ -182,7 +182,7 @@ build_db: $(LIBS1) $(LIBS3) commons/commons_gdbm.cma $(SRCBUILDDB:.ml=.cmo)
 	$(MAKE) nofuse
 	$(OCAMLC) -o $@ $(SYSLIBS1:=.cma) $(SYSLIBS2:=.cma) $^
 
-build_db.opt: $(LIBS1:.cma=.cmxa) $(LIBS3:.cma=.cmxa) commons/commons_gdbm.cmxa $(SRCBUILDDB:.ml=.cmx) 
+build_db.opt: $(LIBS1:.cma=.cmxa) $(LIBS3:.cma=.cmxa) commons/commons_gdbm.cmxa $(SRCBUILDDB:.ml=.cmx)
 	$(MAKE) -C commons gdbm.opt
 	$(MAKE) nofuse.opt
 	$(OCAMLOPT) $(STATIC) -o $@ $(SYSLIBS1:=.cmxa) $(SYSLIBS2:=.cmxa) \
@@ -196,7 +196,7 @@ clean::
 
 # google says that need -lrt if get an error with "clock_gettime undefined"
 static:
-	rm -f mount.lfs build_db.opt 
+	rm -f mount.lfs build_db.opt
 	make -C p_logic static
 	make -C p_transducer static
 	make -C p_adv_transducer static
@@ -210,22 +210,22 @@ static:
 # Here is a cut down version of LFS, to be used by other programs
 # - no ocamlfuse, no ocamlagrep, no logfun
 # - a limited lfs_real
-nofuse: 
+nofuse:
 	$(MAKE) -C commons
 	$(MAKE) -C globals
 	$(MAKE) -C lfs_core
 	$(MAKE) -C lfs_path
 	$(MAKE) -C ocamlbdb
-	$(MAKE) bdb -C commons 
+	$(MAKE) bdb -C commons
 	$(MAKE) lfs_real1.cma -C lfs_real
 
-nofuse.opt: 
+nofuse.opt:
 	$(MAKE) opt -C commons
 	$(MAKE) opt -C globals
 	$(MAKE) opt -C lfs_core
 	$(MAKE) opt -C lfs_path
 	$(MAKE) opt -C ocamlbdb
-	$(MAKE) bdb.opt -C commons 
+	$(MAKE) bdb.opt -C commons
 	$(MAKE) lfs_real1.cmxa -C lfs_real
 
 ##############################################################################
@@ -236,9 +236,9 @@ nofuse.opt:
 install:: all all.opt
 	mkdir -p $(DESTDIR)$(BINDIR)
 	mkdir -p $(DESTDIR)$(SHAREDIR)
-	cp mount.lfs $(DESTDIR)$(BINDIR)	
-	cp build_db.opt $(DESTDIR)$(BINDIR)	
-	rm -rf $(DESTDIR)$(SHAREDIR)/p_logic $(DESTDIR)$(SHAREDIR)/p_transducer $(DESTDIR)$(SHAREDIR)/p_adv_transducer  
+	cp mount.lfs $(DESTDIR)$(BINDIR)
+	cp build_db.opt $(DESTDIR)$(BINDIR)
+	rm -rf $(DESTDIR)$(SHAREDIR)/p_logic $(DESTDIR)$(SHAREDIR)/p_transducer $(DESTDIR)$(SHAREDIR)/p_adv_transducer
 	cp -a p_logic p_transducer p_adv_transducer  $(DESTDIR)$(SHAREDIR)
 	rm -rf $(DESTDIR)$(SHAREDIR)/data
 	cp -a data $(DESTDIR)$(SHAREDIR)
@@ -246,7 +246,7 @@ install:: all all.opt
 	@echo "(available in this directory) anywhere you want"
 
 #	cp scripts/*.lfs $(BINDIR)
-#	cp p_transducer/index_LFS_with_glimpse $(BINDIR)	
+#	cp p_transducer/index_LFS_with_glimpse $(BINDIR)
 
 #uninstall:
 #	rm -f $(BINDIR)/*.lfs
@@ -288,7 +288,7 @@ bintar: all all.opt
 	cd $(TOPLFS); tar cvfz $(PACKAGE)-bin-static.tgz $(BINSRC2)
 
 clean::
-	rm -f $(PACKAGE) $(PACKAGE)-bin.tgz $(PACKAGE)-bin-static.tgz 
+	rm -f $(PACKAGE) $(PACKAGE)-bin.tgz $(PACKAGE)-bin-static.tgz
 
 
 
@@ -301,7 +301,7 @@ website:
 
 syncwiki:
 	unison ~/public_html/wiki/wiki-LFS/data/pages/ docs/wiki/
-#	set -e; for i in $(TXT); do unison $$i docs/wiki/$$i; done 
+#	set -e; for i in $(TXT); do unison $$i docs/wiki/$$i; done
 
 hgweb:
 	@echo pull from ~/public_html/hg/c-lfs and c-commons
@@ -356,7 +356,7 @@ MOUNTPROG=./mount.lfs
 
 .PHONY: mount umount mkfs
 
-mount: 
+mount:
 	rm -f /tmp/debugml500:*
 	rm -f /tmp/xdebugml500:*
 	rm -f /tmp/debugml1000:*
@@ -379,10 +379,10 @@ test:
 #  check, bench, package that suppr debugging stuff automatically ?
 #  fsck, stat,
 
-#for debug:  make debug (debug realfs) or make command,   can also 
+#for debug:  make debug (debug realfs) or make command,   can also
 # put a -inline 0 with OCAMLC when want good backtrace of a coredump, ...
-# for the moment the make command is done via modifying common_fuse.ml 
-# at a certain place, C-r command from eof or simply by execution 
+# for the moment the make command is done via modifying common_fuse.ml
+# at a certain place, C-r command from eof or simply by execution
 # mount.lfs -command (where command content is specified in lfsbdb_fuse
 
 #for profiling=  make prof (prof corefs)
@@ -391,8 +391,8 @@ test:
 # boostrapping LFS
 #------------------------------------------------------------------------------
 
-#if ininitialise a new context from a code.tgz 
-# (to make code.tgz just make clean; tar cvfz /tmp/code.tgz code/ from 
+#if ininitialise a new context from a code.tgz
+# (to make code.tgz just make clean; tar cvfz /tmp/code.tgz code/ from
 #  lfs-src dir :)  )
 # detar code.tgz
 # cd code

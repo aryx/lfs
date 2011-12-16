@@ -1,11 +1,11 @@
    mkdir a
    mkdir b
    mkdir c
-   touch a/b/fab 
+   touch a/b/fab
    touch c/b/fbc
    cd b
-   ls 
+   ls
 #      --> see a/ c/
    cd a
-   ls 
+   ls
 #      --> see fab

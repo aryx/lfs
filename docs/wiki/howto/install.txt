@@ -1,4 +1,4 @@
-// -*- wikipedia -*- 
+// -*- wikipedia -*-
 To install LFS you need to build it from the source.
 ===== Installing on Gentoo =====
 It depends on several packages:

@@ -5,7 +5,7 @@ use strict;
 use warnings;
 
 sub maybe { my ($Uv) = @_;    (defined($Uv))  ?  ($Uv)  :  () ;}
-sub filter { 
+sub filter {
     my ($f, $xs) = @_;
     my @res = ();
     foreach $a (@{$xs}) {  push @res, $a if (&$f($a)) }
@@ -22,7 +22,7 @@ while(<STDIN>) {
     push @data, $s;
 }
 my $i = 0;
-map { 
+map {
 
 
     my $s = $_;
@@ -32,28 +32,28 @@ map {
     # the structure/hierarchy of a doc (and synchro points)
     ####################################################
     #my format
-     #note: genant le fait que c pas la ligne qui est en fait la synchro ? 
+     #note: genant le fait que c pas la ligne qui est en fait la synchro ?
      #note: si only one level synchro, c pas grave.
-    if(($s =~ /\(\*\*\*/) && ($data[$i+1] =~ /\(\* \*(.*)\* \*\)/)) { 
+    if(($s =~ /\(\*\*\*/) && ($data[$i+1] =~ /\(\* \*(.*)\* \*\)/)) {
 	push @aspects, "synchro"; $state = {};
 	push @aspects, "header";
 	$state->{section} = "section:$1";
     }
-    if(($s =~ /\(\+\+\+/) && ($data[$i+1] =~ /\(\* \+(.*)\+ \*\)/)) { 
+    if(($s =~ /\(\+\+\+/) && ($data[$i+1] =~ /\(\* \+(.*)\+ \*\)/)) {
 	push @aspects, "header";
 	$state->{subsection} = "subsection:$1";
     }
 
-    
+
     #ocaml standard format (often in .ml only), ex: (* Comparaisons *)
-    if($s =~ /^\(\*\s+([A-Z]\w+)\s+\*\)/) { 
+    if($s =~ /^\(\*\s+([A-Z]\w+)\s+\*\)/) {
         push @aspects, "synchro"; $state = {};
         push @aspects, "header";
         $state->{section} = "section:$1";
     }
 
     #literate ocaml format, ex:   (** {6 Comparaisons}
-    if($s =~ /^\(\*\*\s+{\d\s+(.*)}\s+/) { 
+    if($s =~ /^\(\*\*\s+{\d\s+(.*)}\s+/) {
         push @aspects, "synchro"; $state = {};
         push @aspects, "header";
         $state->{section} = "section:$1";
@@ -68,7 +68,7 @@ map {
 
     if($s =~ /[aA]ssert/) { push @aspects, "error", "aspect:error" };
     if($s =~ /[eE]xample/) { push @aspects, "example", "aspect:specification" };
-    #pre post inv, 
+    #pre post inv,
     #algo?
 
 
@@ -88,15 +88,15 @@ map {
     #todo6:  multilvevel synchro with func, type, ..., but less needed
 
     #note: so many format for fun specification in ocaml :(
-    if($s =~ /^let\s*(rec\s*)?(\w+)\s*=\s*(fun|function)\s+/) { 
+    if($s =~ /^let\s*(rec\s*)?(\w+)\s*=\s*(fun|function)\s+/) {
 	push @aspects, "header";
-	$state->{decl} = "function:$2" 
+	$state->{decl} = "function:$2"
     }
-    elsif($s =~ /^let\s*(rec\s*)?(\w+)\s+(\w+)/) { 
+    elsif($s =~ /^let\s*(rec\s*)?(\w+)\s+(\w+)/) {
 	push @aspects, "header";
-	$state->{decl} = "function:$2" 
+	$state->{decl} = "function:$2"
     }
-    elsif($s =~ /^let\s*(rec\s*)?\((\w+):\s*(.*)\)\s+=\s*fun/) { 
+    elsif($s =~ /^let\s*(rec\s*)?\((\w+):\s*(.*)\)\s+=\s*fun/) {
 	push @aspects, "header";
 	$state->{decl} = "function:$2";
 	$state->{type} = "functype:$3";
@@ -109,15 +109,15 @@ map {
 	push @aspects, "header";
 	$state->{decl} = "defvar:$id"; #todo6: vartype:
         }
-    } 
-    elsif($s =~ /^type\s*(\w+)/) { 
+    }
+    elsif($s =~ /^type\s*(\w+)/) {
 	push @aspects, "header";
 	$state->{decl} = "deftype:$1" } #todo6: et les type and
 
     else { }
 
     # for mli
-    if(($s =~ /^external\s+(\w+)\s*:\s*(.*?)\s*=/) || ($s =~ /^external\s+\(\s*(.*?)\s*\)\s*:\s*(.*?)\s*=/)) { 
+    if(($s =~ /^external\s+(\w+)\s*:\s*(.*?)\s*=/) || ($s =~ /^external\s+\(\s*(.*?)\s*\)\s*:\s*(.*?)\s*=/)) {
 	push @aspects, "header";
 	$state->{decl} = "function:$1";
 	$state->{type} = "functype:$2";
@@ -131,7 +131,7 @@ map {
     }
 
     # fucking multi line
-    if($s =~ /^val\s+(\w+)\s*:\s*$/) { 
+    if($s =~ /^val\s+(\w+)\s*:\s*$/) {
         my $func = $1;
         if ($data[$i+1] =~ /\s*([^;\n]+)/) {
 ##        if ($data[$i+1] =~ /\s*(.*)/) {
@@ -143,7 +143,7 @@ map {
 
     #todo: class  and so have different condition for function, or have method (mais bon aimerait les avoir toute)
 
-    #todo:  cd take:acc, cd take:f (idioms/norm of ocaml), 
+    #todo:  cd take:acc, cd take:f (idioms/norm of ocaml),
 
 
     #todo: when have multi-obj for pof,  can have   prop have_field:  pour les entités types
@@ -152,7 +152,7 @@ map {
     #todo:  just select lines withouth, and so when ls function:,  get also func that do :(
 
     ####################################################
-    #indentation based parsing. 
+    #indentation based parsing.
 
     # if use tab, then should change length() to compute_tab_space(), but complex cos depending on column.
     # indeed tabbing does not take same space,
@@ -170,8 +170,8 @@ map {
     push @aspects, "indent:$current_indent";
 
     #type enumere
-    #if($s =~ /^\s*\|\s*([A-Z]\w*)(.*?)\s*->/) { 
-    if($s =~ /^\s*\|\s*(.*?)\s*->/) { 
+    #if($s =~ /^\s*\|\s*([A-Z]\w*)(.*?)\s*->/) {
+    if($s =~ /^\s*\|\s*(.*?)\s*->/) {
         push @{$state->{indent}}, { prop => "match:$1", level => $current_indent};
     }
 
@@ -179,34 +179,34 @@ map {
 
 
     # field assignation,  w with ...
-    if($s =~ /^\s*(\w+)\s*=/) { 
+    if($s =~ /^\s*(\w+)\s*=/) {
         push @{$state->{indent}}, { prop => "field:$1", level => $current_indent};
     }
-    if($s =~ /^(\s*{).*\bwith\s*(\w+)\s*=/) { 
+    if($s =~ /^(\s*{).*\bwith\s*(\w+)\s*=/) {
         push @{$state->{indent}}, { prop => "field:$2", level => lentgh($1)};
     }
     # field acess
-    while($s =~ /(\w+)\.(\w+)/g) { 
+    while($s =~ /(\w+)\.(\w+)/g) {
 	my $name=$2;
 	if ($1 =~ /^[a-z].*/) { #  dont want List.nth
-	    push @aspects, "field:$name" 
+	    push @aspects, "field:$name"
 	}
     }
 
 
     # effect assign
-    if($s =~ /^\s*(\w+)\s*:=/) { 
+    if($s =~ /^\s*(\w+)\s*:=/) {
         push @{$state->{indent}}, { prop => "effect:$1", level => $current_indent};
     }
     # effect access
-    while($s =~ /!(\w+)/g) { 
-        push @aspects, "effect:$1" 
+    while($s =~ /!(\w+)/g) {
+        push @aspects, "effect:$1"
     }
 
 
 
     ##########################################
-    my $res = 
+    my $res =
       [
        @aspects,
        maybe($state->{section}),

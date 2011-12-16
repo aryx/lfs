@@ -14,7 +14,7 @@ map {
     my $file = basename($_);
 
 
-    #my $newname = 
+    #my $newname =
     #  "__" .
     #  (join ("_._",@dirs)) .
     #  "__" .
@@ -30,8 +30,8 @@ map {
         print "props = @dirs\n";
         # see if a same file already here (same name, and then try see if is same md5sum)
 
-        map { 
-            if (!(-d $_)) { 
+        map {
+            if (!(-d $_)) {
                 print "PB PROPERTY $_ does not exist, i create it in .compat\n";
 #CONFIG
                 `mkdir ".compat/$_"`;

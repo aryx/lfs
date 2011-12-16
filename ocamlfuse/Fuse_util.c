@@ -4,16 +4,16 @@
   OCamlFuse is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation (version 2 of the License).
-  
+
   OCamlFuse is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with OCamlFuse.  See the file LICENSE.  If you haven't received
   a copy of the GNU General Public License, write to:
-  
+
   Free Software Foundation, Inc.,
   59 Temple Place, Suite 330, Boston, MA
   02111-1307  USA
@@ -77,7 +77,7 @@ value cstring_length(value * vstr)
 value c2ml_copy_string(value vsource,value vdest)
 {
   CAMLparam2(vsource,vdest);
-  
+
   struct cstring * str = (struct cstring *) Field(vsource,0);
   memcpy(String_val(vdest),str->data,min(str->length,string_length(vdest)));
 
@@ -148,8 +148,8 @@ value c_flags_to_open_flag_list (int flags) {
 }
 /* End of shame */
 
-static int ml2c_unix_error[] = 
-{ 
+static int ml2c_unix_error[] =
+{
   E2BIG,
   EACCES,
   EAGAIN,
@@ -240,7 +240,7 @@ void ml2c_Unix_stats_struct_stat(value v,struct stat * s)
   s->st_uid=Int_val(Field(v,5));
   s->st_gid=Int_val(Field(v,6));
   s->st_rdev=Int_val(Field(v,7));
-  s->st_size=Int64_val(Field(v,8)); 
+  s->st_size=Int64_val(Field(v,8));
   s->st_blksize=4096; /* STUB */
   s->st_blocks=ceil((double)s->st_size/(double)s->st_blksize); /* STUB! */
   s->st_atime=Double_val(Field(v,9));
@@ -378,7 +378,7 @@ FOR_ALL_OPS(DECLARE_OP_CLOSURE)
 
 #define write_ARGS (const char *path, const char *buf, size_t size,off_t offset)
 #define write_CB \
-     vres=callback3(*write_closure,vpath,c2ml_cstring(size,buf,&cstr),copy_int64(offset)); 
+     vres=callback3(*write_closure,vpath,c2ml_cstring(size,buf,&cstr),copy_int64(offset));
 #define write_RES res=Int_val(Field(vres,0));
 
 #define release_ARGS (const char *path, int flags)
@@ -395,7 +395,7 @@ FOR_ALL_OPS(DECLARE_OP_CLOSURE)
 
 #define fsync_ARGS (const char *path, int isdatasync)
 #define fsync_CB vres=callback2(*fsync_closure,vpath,Val_bool(isdatasync));
-#define fsync_RES 
+#define fsync_RES
 
 #define setxattr_ARGS (const char *path, const char *name, const char *val,size_t size,int flags)
 #define setxattr_CB \
@@ -489,7 +489,7 @@ FOR_ALL_OPS(CALLBACK)
       ops.OPNAME=ops_##OPNAME; \
     }
 
-void set_fuse_operations(struct fuse_operation_names const *op) 
+void set_fuse_operations(struct fuse_operation_names const *op)
 {
   FOR_ALL_OPS(SET_OPERATION)
 }
@@ -505,10 +505,10 @@ int mainloop(struct fuse * f,int multithreaded)
 {
   if (f == NULL)
     return(-1);
-  
+
   value _fuse=alloc_small(1, Abstract_tag);
   Field(_fuse, 0) = (value) f;
-  
+
   return callback2(*ocaml_fuse_loop_closure,_fuse,Val_bool(multithreaded));
 }
 
@@ -524,7 +524,7 @@ void ml_fuse_main(int argc,str * argv,struct fuse_operations const * op)
 
   struct fuse * fuse = __fuse_setup(argc,argv,op,&mountpoint,&multithreaded,&fd);
 
-  if (fuse!=NULL) 
+  if (fuse!=NULL)
     {
       mainloop(fuse,multithreaded);
       __fuse_teardown(fuse,fd,mountpoint);

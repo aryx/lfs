@@ -30,7 +30,7 @@ art -> music   [dir=back];
 
 type -> typepict   [dir=back];
 type -> typeprog   [dir=back];
- 
+
 geography -> seaside   [dir=back];
 geography -> port   [dir=back];
 geography -> USA   [dir=back];

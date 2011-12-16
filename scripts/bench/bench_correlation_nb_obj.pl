@@ -77,7 +77,7 @@ map {
 #    `cd /sfl/bibtex/mine/parts/.relaxed/'typeref:Book|typeref:book'/year:/; ls > /tmp/$current.lsres4`;
 #    `cd /sfl/bibtex/mine/parts/.relaxed/'typeref:Book|typeref:book'/.strict/; ls > /tmp/$current.lsres4`;
     `cd /sfl/bibtex/mine/parts/.relaxed/'typeref:Book|typeref:book'/.strict/author:/title:/; ls > /tmp/$current.lsres4`;
-      #tofix: normalement les author:/title:  sont inutiles,  mais mon transducer est pas top pour l'instant car 
+      #tofix: normalement les author:/title:  sont inutiles,  mais mon transducer est pas top pour l'instant car
       #tofix: des fois a des auteurs mais sont sur plusieurs ligness
     my $time2 = Time::HiRes::time();
     print "res = " . ($time2 - $time) ."\n";
@@ -89,7 +89,7 @@ map {
     print "moyenne arith ls=$moy\n";
     print LSMOY $moy; print LSMOY "\n";
 
-    # geometric 
+    # geometric
     my $moy = sqrt(sqrt($ls1*$ls2*$ls3*$ls4));
     print "moyenne geo ls=$moy\n";
     print LSMOYGEO $moy; print LSMOYGEO "\n";
@@ -135,13 +135,13 @@ map {
     my $sav3 = ($time2 - $time);
 
     my $sav4 = $sav2; # cheat mais c le pire cas donc ca va, cheattresgentil :)
-    
+
     # arith
     my $moy = ($sav1+$sav2+$sav3+$sav4)/4;
     print "moyenne arith sav=$moy\n";
     print SAVMOY $moy; print SAVMOY "\n";
 
-    # geometric 
+    # geometric
     my $moy = sqrt(sqrt($sav1*$sav2*$sav3*$sav4));
     print "moyenne geo sav=$moy\n";
     print SAVMOYGEO $moy; print SAVMOYGEO "\n";

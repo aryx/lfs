@@ -57,7 +57,7 @@ module Make (Param : PARAM) (X : T) =
       | Top -> true
       | Other x -> X.feat x
 
-    let compare f g = 
+    let compare f g =
       match f, g with
       | Top, Top -> 0
       | Top, Other _ -> -1

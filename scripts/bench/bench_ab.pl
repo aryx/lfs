@@ -25,14 +25,14 @@ my $SRC = "/home/pad/work/lfs/code";
 
 my @phase;
 
-for my $i (1..10) { 
-    print "test:$i\n"; 
+for my $i (1..10) {
+    print "test:$i\n";
     `cd $DIR; mkdir pad-$i; cd pad-$i;`;
 
-    for my $j (1..5) { 
+    for my $j (1..5) {
 	my $time = Time::HiRes::time();
 #	`cd $DIR/pad-$i; make -f /home/pad/work/lfs/bench/ab/Makefile2 phase$j`;  #test EXT3
-	
+
 #pire :(	`cd $DIR/pad-$i/.relaxed/abprop^/.ext/; make -f /home/pad/work/lfs/bench/ab/Makefile2 phase$j` if $j==2;
 	`cd $DIR/pad-$i/.relaxed/; make -f /home/pad/work/lfs/bench/ab/Makefile2 phase$j` if $j==2;
 	`cd $DIR/pad-$i/.relaxed/abprop^/; make -f /home/pad/work/lfs/bench/ab/Makefile2 phase$j` if $j !=2;
@@ -46,7 +46,7 @@ pr "phase2=$phase[2]";
 pr "phase3=$phase[3]";
 pr "phase4=$phase[4]";
 pr "phase5=$phase[5]";
- 
+
 pr ("total: " . ($phase[1]+$phase[2]+$phase[3]+$phase[4]+$phase[5]));
 
 `umount /sfl/ab`;

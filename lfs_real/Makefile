@@ -56,7 +56,7 @@ $(TARGET).cmxa: $(OPTOBJS) $(LIBS:.cma=.cmxa)
 # Other targets
 ##############################################################################
 
-MINISRC=ioplugins.ml lfs_real.ml lfs_persistent.ml lfs_bdb.ml lfs_semireal.ml 
+MINISRC=ioplugins.ml lfs_real.ml lfs_persistent.ml lfs_bdb.ml lfs_semireal.ml
 # less dependencies, for a "core++ LFS"
 lfs_real1.cma: $(MINISRC:.ml=.cmo)
 	$(OCAMLC) -a -o $@ $^
@@ -76,7 +76,7 @@ lfs_real1.cmxa: $(MINISRC:.ml=.cmx)
 .ml.cmx:
 	$(OCAMLOPT) -c $<
 
-.ml.mldepend: 
+.ml.mldepend:
 	$(OCAMLC) -i $<
 
 clean::

@@ -5,7 +5,7 @@
 
 ** Features:
  - put back logic and transducers for the semi_real mode too
- - the intrinsic attributes (not only valued attributes) properties 
+ - the intrinsic attributes (not only valued attributes) properties
    can be automatically created
 
 ** Bug-fixes:
@@ -17,15 +17,15 @@
 ** Features:
 
  - semi real mode enabling to use LFS without using LFS :). LFS just acts
-   as a wrapper over your classical hierarchical fs. For now there 
-   is only ext:, size:, name:, date:, and dir: as intrinsic properties and 
+   as a wrapper over your classical hierarchical fs. For now there
+   is only ext:, size:, name:, date:, and dir: as intrinsic properties and
    some date and string logic.
  - date:yesterday special property
 
 ** Internal:
 
- - reorganize the code. More .mli, cleaner interfaces, less dependencies. 
-   Also make it easier to use the core of LFS (useful for my other CComment 
+ - reorganize the code. More .mli, cleaner interfaces, less dependencies.
+   Also make it easier to use the core of LFS (useful for my other CComment
    project)
 
 
@@ -34,7 +34,7 @@
 
 ** Features:
 
- - better support for date by using a logic solver 
+ - better support for date by using a logic solver
    (made using logfun by Sebastien Ferré)
  - a cd .nojump/ new special command.
 
@@ -44,39 +44,39 @@
 
 ** Internal:
  - include the logfun library by Sebastien Ferré to implement more easily
-   some logic solvers by combining simpler logic solvers. 
+   some logic solvers by combining simpler logic solvers.
 
 
 * 0.4beta2
 ----------
 
 ** Features:
- - add some support for date. very basic. 
+ - add some support for date. very basic.
       * have a new 'date:' property  handled by a system transducer
-      * have a "dynamic property" 'date:today' that translates into going 
+      * have a "dynamic property" 'date:today' that translates into going
         to the current day
  - add some options to mount.lfs (such as -fsckshowprogress)
- 
+
 ** Finalize old features:
  - allow delete and mv "ambiguous" filename (the one containing <xx>)
-   => that allows to mv easily a big set of files,  and so add or del a 
+   => that allows to mv easily a big set of files,  and so add or del a
       property to a big set of files.
      just do  cd .ext; mv * <newpath>
  - stree: (which is also all:) properties are now up to date.
- - glimpse: properties are now also up to date ("a la spotlight"). 
-   kind of incremental indexing. I use grep to search recent files, 
+ - glimpse: properties are now also up to date ("a la spotlight").
+   kind of incremental indexing. I use grep to search recent files,
    a secondary glimpseindex to search less recent files, and the primary
    glimpseindex to search the really old files.
  - the cache of the dynamic properties are invalidated when necessary, so the
-   content of directory such as glimpse:xxx is recomputed when necessary, 
+   content of directory such as glimpse:xxx is recomputed when necessary,
    and always up to date.
- - log files of berkeley DB are now deleted automatically. I do some 
+ - log files of berkeley DB are now deleted automatically. I do some
    checkpoint regularily.
 
 ** Bug-fixes:
  - make some functions (assoc#iter and assoc#length) tail call or more
    efficient. fsck now works better in native mode (but still wierd).
- - fix problem when create file with strange names such as toto$1.txt 
+ - fix problem when create file with strange names such as toto$1.txt
    or -toto.txt.
 
 
@@ -89,36 +89,36 @@
 ----------
 
 ** Features:
- - when .ca, now also gather in x&y&z if x, y, z are "equivalent" 
-   (lead do same set of files), so better navigation experience 
+ - when .ca, now also gather in x&y&z if x, y, z are "equivalent"
+   (lead do same set of files), so better navigation experience
    (avoid also to implement a little the .goint)
- - versionning by default. at each save (only for .txt for the moment 
+ - versionning by default. at each save (only for .txt for the moment
    (can be customized))
- - when rm,  in fact mv in meta-lfs/lost+found/  
+ - when rm,  in fact mv in meta-lfs/lost+found/
    (do same as what fsck do when pb)
  - when there is multiple files with same name in same dir, append to some
    of them a <xx> as emacs do  with buffer to allow disambiguate them
  - can now get inode number  via hardlink count  (do ls -l to see it )
  - can now use cd .int to get intension of a file. for the moment work
-   only with one file at a time and return only the extrinsic property. 
-   In futur will be able with the same command to get also the intension 
-   of a set of files (of a pwd) 
- - export import (available in scripts/). indeed, with inode:xx, 
-   with disambiguation (via <xxx>), with .int 
+   only with one file at a time and return only the extrinsic property.
+   In futur will be able with the same command to get also the intension
+   of a set of files (of a pwd)
+ - export import (available in scripts/). indeed, with inode:xx,
+   with disambiguation (via <xxx>), with .int
      => can now have import export
-    allow to cp some files from one lfs mountpoint to another lfs mountpoint. 
- - can now create files in disjunction/negation/special  dir, 
-   => can create file even in google:xxx 
+    allow to cp some files from one lfs mountpoint to another lfs mountpoint.
+ - can now create files in disjunction/negation/special  dir,
+   => can create file even in google:xxx
  - add few features to lfs-tunes (keep the random order history)
 
 
 ** Bug-fixes:
- - when  mv  filename,  need update some intrinsic property (name:xxx) 
+ - when  mv  filename,  need update some intrinsic property (name:xxx)
    and so call transducers (at least system transducers)
 
- - I have added  . and .. in ls listing,  cos some tools still except 
-   and use those entries, for instance cp xx ..  didnt work before 
-   this fix under LFS 
+ - I have added  . and .. in ls listing,  cos some tools still except
+   and use those entries, for instance cp xx ..  didnt work before
+   this fix under LFS
 
 
 
@@ -157,7 +157,7 @@
 
 ** Switch to Ocaml (but still with a PerlFS part)
 
-** change model, have a smoother interface 
+** change model, have a smoother interface
    for plug-ins (logics and transducers)
    for inter- and intra-file navigation
 
@@ -179,7 +179,7 @@
 
 ** in Perl (so real fs with help of PerlFS, but ugly because Perl)
 
-* LFS pre-alpha: 
+* LFS pre-alpha:
 ---------------
 
 ** in Caml (but no fs)

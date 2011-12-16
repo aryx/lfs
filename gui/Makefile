@@ -21,7 +21,7 @@ OCAMLMKTOP=ocamlmktop -custom $(INCLUDES)
 ##############################################################################
 # Top rules
 ##############################################################################
-PROGS=lfs-tunes #lfs-photos 
+PROGS=lfs-tunes #lfs-photos
 
 all: $(PROGS)
 
@@ -31,7 +31,7 @@ lfs-tunes: $(LIBS) lfs-tunes.ml
 lfs-photos: $(LIBS) lfs-photos.ml
 	$(OCAMLC) -I +lablgtk $(SYSLIBS) lablgtk.cma gtkInit.cmo $^ -o $@
 
-#the native version dont work well, pb when launch other process, 
+#the native version dont work well, pb when launch other process,
 #pb with signals, ...
 #seems that threaded version dont work well too
 #lfs-tunes: $(LIBS:.cma=.cmxa) lfs-tunes.ml

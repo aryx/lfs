@@ -1,12 +1,12 @@
 A big thanks to Olivier Ridoux and Sebastien Ferré for all their work
 around LIS and LFS.
 
-Thanks to 
-  * Vincenzo Ciancia for the OCaml binding to the Fuse library, 
-  * Lex Stein for the OCaml binding to Berkeley DB, 
+Thanks to
+  * Vincenzo Ciancia for the OCaml binding to the Fuse library,
+  * Lex Stein for the OCaml binding to Berkeley DB,
   * Sebastien Ferré for his implementation in OCaml of a suffix tree library, and for his logic functors (logfun).
 
-  * Richard Jones for his dumper module, 
+  * Richard Jones for his dumper module,
   * Brian Hurt and Nicolas Cannasse for their dynArray module,
   * Troestler Christophe for his ANSITerminal module,
 

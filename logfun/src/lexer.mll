@@ -21,7 +21,7 @@ let norm_string : string -> string =
     done;
     String.sub s 0 !w;;
 
-} 
+}
 
 let skip_char = [' ' '\t' '\n']
 let ident_char = ['A'-'Z' 'a'-'z' '0'-'9' '_']

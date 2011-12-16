@@ -1,31 +1,31 @@
-common_logic.cmo: ../commons/common.cmi 
-common_logic.cmx: ../commons/common.cmx 
-date_logic.cmo: common_logic.cmo ../commons/common.cmi 
-date_logic.cmx: common_logic.cmx ../commons/common.cmx 
-date_logic_via_logfun.cmo: 
-date_logic_via_logfun.cmx: 
-duree_logic.cmo: common_logic.cmo ../commons/common.cmi 
-duree_logic.cmx: common_logic.cmx ../commons/common.cmx 
-int_logic.cmo: common_logic.cmo ../commons/common.cmi 
-int_logic.cmx: common_logic.cmx ../commons/common.cmx 
+common_logic.cmo: ../commons/common.cmi
+common_logic.cmx: ../commons/common.cmx
+date_logic.cmo: common_logic.cmo ../commons/common.cmi
+date_logic.cmx: common_logic.cmx ../commons/common.cmx
+date_logic_via_logfun.cmo:
+date_logic_via_logfun.cmx:
+duree_logic.cmo: common_logic.cmo ../commons/common.cmi
+duree_logic.cmx: common_logic.cmx ../commons/common.cmx
+int_logic.cmo: common_logic.cmo ../commons/common.cmi
+int_logic.cmx: common_logic.cmx ../commons/common.cmx
 prop_logic.cmo: ../commons/parser_combinators.cmi common_logic.cmo \
-    ../commons/common.cmi 
+    ../commons/common.cmi
 prop_logic.cmx: ../commons/parser_combinators.cmx common_logic.cmx \
-    ../commons/common.cmx 
-proptype.cmo: 
-proptype.cmx: 
-size_logic.cmo: common_logic.cmo ../commons/common.cmi 
-size_logic.cmx: common_logic.cmx ../commons/common.cmx 
-string_logic.cmo: common_logic.cmo ../commons/common.cmi 
-string_logic.cmx: common_logic.cmx ../commons/common.cmx 
+    ../commons/common.cmx
+proptype.cmo:
+proptype.cmx:
+size_logic.cmo: common_logic.cmo ../commons/common.cmi
+size_logic.cmx: common_logic.cmx ../commons/common.cmx
+string_logic.cmo: common_logic.cmo ../commons/common.cmi
+string_logic.cmx: common_logic.cmx ../commons/common.cmx
 type_logic.cmo: typetype.cmo typeparser.cmi typelexer.cmo common_logic.cmo \
-    ../commons/common.cmi 
+    ../commons/common.cmi
 type_logic.cmx: typetype.cmx typeparser.cmx typelexer.cmx common_logic.cmx \
-    ../commons/common.cmx 
-typelexer.cmo: typeparser.cmi 
-typelexer.cmx: typeparser.cmx 
-typeparser.cmo: typetype.cmo ../commons/common.cmi typeparser.cmi 
-typeparser.cmx: typetype.cmx ../commons/common.cmx typeparser.cmi 
-typetype.cmo: ../commons/common.cmi 
-typetype.cmx: ../commons/common.cmx 
-typeparser.cmi: typetype.cmo 
+    ../commons/common.cmx
+typelexer.cmo: typeparser.cmi
+typelexer.cmx: typeparser.cmx
+typeparser.cmo: typetype.cmo ../commons/common.cmi typeparser.cmi
+typeparser.cmx: typetype.cmx ../commons/common.cmx typeparser.cmi
+typetype.cmo: ../commons/common.cmi
+typetype.cmx: ../commons/common.cmx
+typeparser.cmi: typetype.cmo

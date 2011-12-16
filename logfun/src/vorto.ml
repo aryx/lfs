@@ -49,7 +49,7 @@ module Make =
       fun w n ->
 	try String.sub w 0 n
 	with _ -> ""
-	  
+
     let suffix : string -> int -> string =
       fun w n ->
 	try String.sub w (String.length w - n) n
@@ -81,7 +81,7 @@ module Make =
 	List.mem (prefix w npre) lpre  (* le prefix a du sens *)
 
     let rec split_pres : string list * string -> string list * string =
-      fun (pres, w) -> 
+      fun (pres, w) ->
 	let l = String.length w in
 	if pred_pre 6 w l ["antaux";"ekster"]
 	then split_pres (pres @ [prefix w 6], suffix w (l-6))
@@ -102,8 +102,8 @@ module Make =
 	(w' = "" || List.exists (fun c -> String.contains w' c) ['a';'e';'i';'o';'u']) &&  (* le radical a au moins une voyelle *)
 	List.mem (suffix w nsuf) lsuf  (* le suffixe a du sens *)
 
-    let rec split_sufs : string * string list -> string * string list = 
-      fun (w, sufs) -> 
+    let rec split_sufs : string * string list -> string * string list =
+      fun (w, sufs) ->
 	let l = String.length w in
 	if pred_suf 4 w l ["estr"]
 	then split_sufs (prefix w (l-4), suffix w 4 :: sufs)
@@ -173,8 +173,8 @@ module Make =
 	else false
 
 (*
-      not (List.mem a constants) && 
-      not (List.mem b constants) && 
+      not (List.mem a constants) &&
+      not (List.mem b constants) &&
       not (List.mem_assoc a patterns) &&
       str_match a (try List.assoc b patterns with Not_found -> b)
 *)
