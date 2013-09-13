@@ -9,17 +9,17 @@ root=$1
 
 cd $root
 if [ ! -r lfs_secu ]
-    then echo "Security: first create a file 'lfs_secu' in the directory: $root. 
-You have to know that if mkfs.lfs succeed it creates data files for LFS 
+    then echo "Security: first create a file 'lfs_secu' in the directory: $root.
+You have to know that if mkfs.lfs succeed it creates data files for LFS
 and so may erase a file with the same name in this directory, so before
-creating the file 'lfs_secu' in $root, check that $root 
+creating the file 'lfs_secu' in $root, check that $root
 does not contain important files.
 ";
     exit
 fi
 
 if [ -r children.dir ] || [ -r children.db4 ]
-    then echo "Security: It seems that there is some LFS metadata here. 
+    then echo "Security: It seems that there is some LFS metadata here.
 I am backuping it (On sait jamais).
 ";
     #cp *.dir *.pag counter* backup1/
@@ -31,10 +31,10 @@ fi
 rm -f *.dir *.pag counter*
 
 #if use berkeley db
-rm -f counter* *.db4 __* log* 
+rm -f counter* *.db4 __* log*
 
 
-#uncomment_when_lfs_sure: 
+#uncomment_when_lfs_sure:
 # rm -rf files
 mkdir files
 

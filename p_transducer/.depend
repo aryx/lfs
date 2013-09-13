@@ -1,8 +1,8 @@
-c_transducer4.cmo: common_transducer.cmo ../commons/common.cmi 
-c_transducer4.cmx: common_transducer.cmx ../commons/common.cmx 
-common_transducer.cmo: ../commons/common.cmi 
-common_transducer.cmx: ../commons/common.cmx 
-fakemp3_transducer.cmo: common_transducer.cmo ../commons/common.cmi 
-fakemp3_transducer.cmx: common_transducer.cmx ../commons/common.cmx 
-index_LFS_with_glimpse.cmo: ../commons/common.cmi 
-index_LFS_with_glimpse.cmx: ../commons/common.cmx 
+c_transducer4.cmo: common_transducer.cmo ../commons/common.cmi
+c_transducer4.cmx: common_transducer.cmx ../commons/common.cmx
+common_transducer.cmo: ../commons/common.cmi
+common_transducer.cmx: ../commons/common.cmx
+fakemp3_transducer.cmo: common_transducer.cmo ../commons/common.cmi
+fakemp3_transducer.cmx: common_transducer.cmx ../commons/common.cmx
+index_LFS_with_glimpse.cmo: ../commons/common.cmi
+index_LFS_with_glimpse.cmx: ../commons/common.cmx

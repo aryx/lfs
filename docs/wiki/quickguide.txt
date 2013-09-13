@@ -14,7 +14,7 @@ If you use tcsh, do instead (note the .csh not .sh):
     $ source env.csh
 
 
-=== Index === 
+=== Index ===
 
     $ mkdir /tmp/meta-lfs
     $ mkdir /tmp/lfs
@@ -32,11 +32,11 @@ For instance to index your homedir do
 
     $ ls '/tmp/lfs/ext:c|ext:h/.ext/'
 
-=== Umount === 
+=== Umount ===
 
     $ fusermount -u /tmp/lfs
 
-If you want to get rid of LFS data you can then do: 
+If you want to get rid of LFS data you can then do:
 
     $ rm -rf /tmp/meta-lfs
 

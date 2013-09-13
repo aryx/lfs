@@ -8,7 +8,7 @@ PLUGINSML= int_logic string_logic date_logic    \
 FULLPLUGIN=$(PLUGINSML) date_logic_via_logfun
 
 INCLUDES= -I ../commons -I ../commons/ocamlextra
-LIBS=../commons/commons.cma 
+LIBS=../commons/commons.cma
 
 SYSLIBS=str unix bigarray nums
 
@@ -26,12 +26,12 @@ OCAMLDEP=ocamldep $(INCLUDES)
 OCAMLMKTOP=ocamlmktop -custom $(INCLUDES)
 
 #-ccopt -static
-STATIC= 
+STATIC=
 
 ##############################################################################
 # Top rules
 ##############################################################################
-all: $(FULLPLUGIN) 
+all: $(FULLPLUGIN)
 
 %: $(LIBS:.cma=.cmxa) common_logic.cmx %.cmx
 	$(OCAMLOPT) $(STATIC) -o $@ $(SYSLIBS:=.cmxa) $+
@@ -46,14 +46,14 @@ p_logic.top: ../commons/commons.cma common_logic.cmo prop_logic.cmo
 clean::
 	rm -f p_logic.top
 
-#.SUFFIXES: .byte 
+#.SUFFIXES: .byte
 #%.byte: $(LIBS:.cma) common_logic.cma %.cma
 #	$(OCAMLC) -o $@ str.cma unix.cma $+
 
 
 
-#old: when not using parser combinators 
-#prop_logic: $(LIBS:.cma=.cmxa) common_logic.cmx proptype.cmx propparser.cmx proplexer.cmx prop_logic.cmx 
+#old: when not using parser combinators
+#prop_logic: $(LIBS:.cma=.cmxa) common_logic.cmx proptype.cmx propparser.cmx proplexer.cmx prop_logic.cmx
 #	$(OCAMLOPT) $(STATIC) -o $@ str.cmxa unix.cmxa $+
 #
 #proplexer.ml: proplexer.mll
@@ -64,11 +64,11 @@ clean::
 #
 #beforedepend:: proplexer.ml propparser.ml propparser.mli
 clean::
-	rm -f proplexer.ml 
-	rm -f propparser.ml propparser.mli 
+	rm -f proplexer.ml
+	rm -f propparser.ml propparser.mli
 
 
-type_logic: $(LIBS:.cma=.cmxa) common_logic.cmx typetype.cmx typeparser.cmx typelexer.cmx type_logic.cmx 
+type_logic: $(LIBS:.cma=.cmxa) common_logic.cmx typetype.cmx typeparser.cmx typelexer.cmx type_logic.cmx
 	$(OCAMLOPT) $(STATIC) -o $@ $(SYSLIBS:=.cmxa) $+
 
 typelexer.ml: typelexer.mll
@@ -79,15 +79,15 @@ typeparser.ml typeparser.mli: typeparser.mly
 
 beforedepend:: typelexer.ml typeparser.ml typeparser.mli
 clean::
-	rm -f typelexer.ml 
-	rm -f typeparser.ml typeparser.mli 
+	rm -f typelexer.ml
+	rm -f typeparser.ml typeparser.mli
 
 
 
 
 prop_logic2: prop_logic2.pm
 	pmc prop_logic2.pm -o prop_logic2
-clean:: 
+clean::
 	rm -f  *.i *.tmp *.c
 
 

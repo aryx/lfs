@@ -5,5 +5,5 @@ type database = {
     abort:  unit -> unit;
     checkpoint: unit -> unit;
     archives: unit -> string list;
-  } 
+  }
 

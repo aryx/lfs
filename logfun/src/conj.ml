@@ -1,7 +1,7 @@
 (** Conjunctions of formulas from the sub-logic. *)
 
 module type PARAM =
-  sig 
+  sig
     val top : bool  (** Set to [true] if this functor is embedded in another 'Conj' occurence. *)
     val sep : Token.t option  (** Token to be used as the conjunction connector (optional). *)
     val lgg : bool  (** Set to [true] if "lggs" is the required implementation of [gen]. *)
@@ -157,7 +157,7 @@ module Make (Param : PARAM) (E : Logic.T) =
                    else (s, xs)
                 ) smallest_hs (2*size, LSet.empty ()) in
             xs2
-                
+
     let gen_gen f g hs =
       (* assumes that E.gen returns lggs *)
       let zs' =

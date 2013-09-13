@@ -3,17 +3,17 @@ open Fullcommon
 
 open Lfs
 
-open Oassocdbm 
+open Oassocdbm
 
 open Common_fuse
 
 open Ioplugins
 
-let launch_db_and_lfs path_meta argv_fuse = 
-  let obj_to_path = (fun obj -> 
+let launch_db_and_lfs path_meta argv_fuse =
+  let obj_to_path = (fun obj ->
      (* cos of ext2 limitation, cant have dire with more than 32000 files => have to split *)
      (* coupling: with check_world *)
-      path_meta ^ "/files/" ^ (i_to_s (obj / 1000)) ^ "/" ^ (i_to_s obj)) 
+      path_meta ^ "/files/" ^ (i_to_s (obj / 1000)) ^ "/" ^ (i_to_s obj))
   in
   let obj_to_filename = (fun obj -> obj_to_path obj ^ "/data") in
 
@@ -22,18 +22,18 @@ let launch_db_and_lfs path_meta argv_fuse =
     Lfs._realfs := true;
     Lfs.core_get_path_data := (fun () -> path_meta);
 
-    Lfs.core_get_fcontent__id  := 
+    Lfs.core_get_fcontent__id  :=
       (function (Real o) -> read_file (obj_to_filename o) | _ -> raise Impossible);
 
-    Lfs.core_set_fcontent__fst := 
+    Lfs.core_set_fcontent__fst :=
       (function ((Core content), o) -> (Real o) | _ -> raise Impossible);
 
-    Lfs.core_get_size_fcontent__slength := 
+    Lfs.core_get_size_fcontent__slength :=
       (function (Real o) -> (try filesize (obj_to_filename o) with _ -> 0) +> size_mo_ko | _ -> raise Impossible);
       (*  why try ? cos perl first call ml to check if can mkfile, and then create file on disk (but normally no more pb cos dont get called) *)
 
-    Lfs.core_update_fcontent__fst := 
-      (function (content, o) -> 
+    Lfs.core_update_fcontent__fst :=
+      (function (content, o) ->
         (*  CONFIG,  can comment if want lazy update (or no update at all) *)
         write_file (obj_to_filename o) (content());
         (*  CONFIG, can comment if trust poffs :) *)
@@ -51,20 +51,20 @@ let launch_db_and_lfs path_meta argv_fuse =
       else Right (uninteract_adv_transducer (obj_to_filename id) conv));  (* IMPL *)
       (* else AdvTrans (uninteract_adv_transducer (obj_to_filename id))); ##SPEC *)
 
-    
+
     (* old: simple persistence
        let (data:(int * Lfs.world)) = get_value (path_meta ^ "/ocaml_world") in
-       (Lfs.w := snd data; 
+       (Lfs.w := snd data;
        Common._counter := fst data
        )
        old: no persistence
-       (Lfs.w := Lfs.default_world; 
-       Common._counter := 2; 
-       ); 
+       (Lfs.w := Lfs.default_world;
+       Common._counter := 2;
+       );
     *)
     (* rescue: let init_not_reload = false in let _ = (Common._counter := 300000; Common._counter2 := 300000 * 20) in *)
     let init_not_reload = not (Sys.file_exists (path_meta ^ "/counter")) in
-    if init_not_reload 
+    if init_not_reload
     then Common._counter := 2 (*  inode must be at least > 1, to avoid conflict with root inode = 1. as file id are inode id => same constraint , TODO freeobj *)
     else (Common._counter  := get_value (path_meta ^ "/counter");
 	  Common._counter2 := get_value (path_meta ^ "/counter2");
@@ -98,7 +98,7 @@ let launch_db_and_lfs path_meta argv_fuse =
     let files_assoc = (caching (new oassocdbm [] filesdb id id)) in
     let extfiles_assoc = (caching (new oassocdbm [] extfilesdb  (fun oset -> oset#toseti) (fun set -> new oseti set)     ) ) in (*  OPT5 *)
         (* IFNOT OPT5  let extfiles_assoc = (caching (new Bdbo.oassocbtree [] extfilesdb  (fun oset -> oset#tosetb) (fun set -> new osetb set)     ) ) in *)
-        
+
 
     (* pof *)
     let _count = ref 0 in                                                                                                                                                                 (* IMPL *)
@@ -183,7 +183,7 @@ let launch_db_and_lfs path_meta argv_fuse =
 
 
 (************************************************************************************)
-let _ = 
+let _ =
   begin
     Lfs.copyright ();
     let arg1 = ref None in
@@ -196,15 +196,15 @@ let _ =
         "-nofsck",   Arg.Set Flag.nofsck, "  dont launch fsck";
         "-command",  Arg.Set Flag.exec_internal_command, "  launch only the internal command specified in lfsbdb_fuse.ml";
         "-notransact",  Arg.Set Flag.notransact, "  dont use transaction";
-      ] in 
-    let usage_msg = 
+      ] in
+    let usage_msg =
       ("Usage: " ^ basename Sys.argv.(0) ^ " [options] <LFS-meta-data-path> <mountpoint>\nOptions are:") in
     Arg.parse
       options
-      (fun s -> 
+      (fun s ->
         match !arg1 with
         | None -> arg1 := Some s
-        | Some arg1 -> 
+        | Some arg1 ->
             (arg2 := Some s;
              launch_db_and_lfs arg1 (Array.of_list ((Sys.argv.(0)::"-s"::"-o"::"max_read=16384,allow_other"::[s])))
             )
@@ -214,14 +214,14 @@ let _ =
     | (Some _, Some _) -> ()
     | _ -> Arg.usage options usage_msg
     );
-          
+
   end
 
 (*
-let _ = 
+let _ =
   Lfs.copyright ();
   match (Array.to_list Sys.argv ) with
-  | x::y::ys -> 
+  | x::y::ys ->
       begin
         Sys.chdir y;
         launch_db_and_lfs (Sys.getcwd()) (Array.of_list (x::"-s"::"-o"::"max_read=16384,allow_other"::ys))

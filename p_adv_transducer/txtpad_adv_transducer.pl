@@ -6,23 +6,23 @@ use warnings;
 
 sub maybe { my ($Uv) = @_;    (defined($Uv))  ?  ($Uv)  :  () ;}
 sub maybe2 { my ($Uv, $s) = @_;    (defined($Uv))  ?  ("$s$Uv")  :  () ;}
-sub take_until { my ($f, $xs) = @_; 
+sub take_until { my ($f, $xs) = @_;
     my @res = ();
-    foreach $a (@{$xs}) { 
-	if (&$f($a)) { return \@res } 
-	else { push @res, $a } 
+    foreach $a (@{$xs}) {
+	if (&$f($a)) { return \@res }
+	else { push @res, $a }
     }
     return \@res;
 }
 
-sub words { my ($s) = @_;  
-    my @words = (); 
-            
+sub words { my ($s) = @_;
+    my @words = ();
+
     while($s =~ /([\w\d_]+)/g) {
 	my $x = $1;
         push @words,$x;
 	#push @words,$x if ((length($x) > 3)||($x=~ /[A-Z][A-Z]/)); #if put > 2, then pass from 1 to 4sec
-	#push @words,$x if length($x) <= 3; 
+	#push @words,$x if length($x) <= 3;
         #zarb cos if use >3 or <= 3 alone, then fast, but when want both very slow
     }
     \@words;
@@ -37,7 +37,7 @@ while(<STDIN>) {
     push @data, $s;
 }
 my $i = 0;
-map { 
+map {
 
 #while(<STDIN>) {
     my $s = $_;
@@ -58,7 +58,7 @@ map {
 	$state->{index}  = [@zs];
     }
 
-    if($s =~ /^\s*(\w+):/) { 
+    if($s =~ /^\s*(\w+):/) {
         my $aux = $s;
         my @aux = ();
         while($aux =~ /^\s*(\w+):(.*)/) {
@@ -77,18 +77,18 @@ map {
     elsif(!defined($state->{deadline})) {
 	my $para = take_until(sub { my ($e) = @_; (!defined($e)) ? 1 : ($e =~ /^\s*$/) }, [ @data[$i..$i+300] ]);
 	my @aux = ();
-	map { 
+	map {
             if($_ =~ /deadline:(.*)/) { push @aux, "index:deadline_$1" }
-            #map { push @aux, "paracontain:$_" } @{words($_)}   
+            #map { push @aux, "paracontain:$_" } @{words($_)}
         } @{$para};
 	$state->{deadline} = [@aux];
     }
 
     ##########################################
-    my $res = 
+    my $res =
       [
        @aspects,
-       #maybe($state->{resetwithnewline}), 
+       #maybe($state->{resetwithnewline}),
        (defined($state->{resetwithnewline}) ? @{$state->{resetwithnewline}} : ()),
 
        (defined($state->{index}) ? @{$state->{index}} : ()),

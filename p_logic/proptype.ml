@@ -3,7 +3,7 @@
  *)
 
 type atom = string
-type formula = 
+type formula =
   | Top    (* true *)
   | Bottom (* false  redundant with Not Top *)
 

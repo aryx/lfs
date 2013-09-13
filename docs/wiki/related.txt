@@ -1,4 +1,4 @@
-===== Related work ===== 
+===== Related work =====
 
 
 Search tools
@@ -13,5 +13,4 @@ Past research filesystems that could have been a source of inspiration:
   * HAC
   * Nebula
 
-==== LFS vs ==== 
- 
+==== LFS vs ====

@@ -70,7 +70,7 @@ see http://www.irisa.fr/LIS/home_html and those LFS related
 [[http://www.irisa.fr/LIS/common/biblio/Author/PADIOLEAU-Y.html| bibtex entries]]
 and [[http://aryx.kicks-ass.org/~pad/software/project-lfs/papers/|pdf articles]]
 
-===== People ===== 
+===== People =====
 
   * [[http://www.irisa.fr/lande/ridoux/page.pro.e.html|Olivier Ridoux]]
   * [[http://www.irisa.fr/lande/ferre|Sebastien Ferre]]
@@ -85,7 +85,7 @@ If you want to donate money to support LFS, go to [[http://aryx.kicks-ass.org/~p
 
 ===== Your comments =====
 
-You can freely edit the following pages [[comments]], [[feedbacks]], 
+You can freely edit the following pages [[comments]], [[feedbacks]],
 [[lfs-users]]
 
 ===== Acknowledgements =====
@@ -108,13 +108,13 @@ Short history
 Feature history
   * [[changes]]
 
-===== Related work ===== 
+===== Related work =====
 
 Note that most of those related work were made after LFS (2003)
 
   * [[http://en.wikipedia.org/wiki/Spotlight_(software)|Apple Spotlight]]
   * [[http://en.wikipedia.org/wiki/Beagle_(software)|Beagle]] and [[http://svn.gnome.org/svn/beagle/trunk/beaglefs/README|Beaglefs]]
-  * [[http://www.tagsistant.net/|tagsistant]] and [[http://nascent.freeshell.org/programming/TagFS/|tagfs]] 
+  * [[http://www.tagsistant.net/|tagsistant]] and [[http://nascent.freeshell.org/programming/TagFS/|tagfs]]
 
 See also [[related]].
 

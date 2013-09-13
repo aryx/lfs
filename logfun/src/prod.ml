@@ -63,7 +63,7 @@ module Make (Param : PARAM) (L1 : T) (L2 : T) =
       | Other (x1,x2) -> L1.isvalue x1 && L2.isvalue x2
 
     let parse = parser
-      | [<x1 = Syntax.parse_tokens_and Param.toks_pre L1.parse; 
+      | [<x1 = Syntax.parse_tokens_and Param.toks_pre L1.parse;
           x2 = Syntax.parse_tokens_and Param.toks_sep L2.parse ?? "Syntax error in the second part of a pair, after: " ^ Syntax.stringizer (L1.print x1);
 	  _ = Syntax.parse_tokens Param.toks_suf ?? "Syntax error: missing end of a pair: " ^ Syntax.stringizer Param.toks_suf
          >] -> Other (x1, x2)
@@ -78,7 +78,7 @@ module Make (Param : PARAM) (L1 : T) (L2 : T) =
 
     let bot () = Bot
 
-    let entails f g = 
+    let entails f g =
       match f, g with
       | Bot, _ -> true
       | Other (x1,x2), Bot ->
@@ -166,7 +166,7 @@ module Make (Param : PARAM) (L1 : T) (L2 : T) =
 	  let t2 = L2.axiom x2 y2_opt in
 	  LSet.union t1 t2
 
-    let gen f g hs = 
+    let gen f g hs =
       match f, g with
       | Bot, _
       | _, Bot -> LSet.empty ()
@@ -207,7 +207,7 @@ module Make (Param : PARAM) (L1 : T) (L2 : T) =
 		    ) res hs2
 		) (LSet.empty ()) (L1.gen f1 g1 hs1) in
             LSet.union xs1 xs2
-	      
+
 
     let simpl = function
       | Bot -> [<>]

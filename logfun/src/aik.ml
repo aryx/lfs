@@ -70,7 +70,7 @@ module Make (Param : PARAM) (L : T) =
       | O d, K x -> L.entails d x
       | _, _ -> false
 
-    let conj f g = 
+    let conj f g =
       match f, g with
       | Bot, _ -> Bot
       | _, Bot -> Bot

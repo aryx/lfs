@@ -15,7 +15,7 @@ my @aux = ();
 
 while(<FILE>) {
     if(/artist=(.*)/i) { push @aux, "artist:$1" }
-    if(/genre=(.*)/i) { 
+    if(/genre=(.*)/i) {
 	my @genres = split /\//, $1;
 	map { push @aux, "genre:$_" } @genres;
     }

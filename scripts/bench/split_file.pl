@@ -22,11 +22,11 @@ while(<FILE>) {
     if($cur_line == $numline) {
 	close(CURRENT);
 	my $next = $cur_f_idx+1;
-        
+
 	`cp genSplit$cur_f_idx genSplit$next`; # if want cumulative
 	$cur_f_idx++;
 	open(CURRENT, ">> genSplit$cur_f_idx") or die $!;
 	$cur_line = 0;
-    } 
+    }
 }
 close(CURRENT);

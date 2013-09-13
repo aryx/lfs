@@ -1,8 +1,8 @@
 open Common
 
 (* ---------------------------------------------------------------------- *)
-type glimpse_search = 
-  | GlimpseCaseInsensitive 
+type glimpse_search =
+  | GlimpseCaseInsensitive
   | GlimpseWholeWord
 val default_glimpse_search : glimpse_search list
 
@@ -15,7 +15,7 @@ val glimpseindex_files : filename list -> glimpsedir -> unit
 
 
 (* ---------------------------------------------------------------------- *)
-val glimpse : 
+val glimpse :
   string -> ?options:glimpse_search list -> glimpsedir -> filename list
 val grep : 'a -> 'b
 

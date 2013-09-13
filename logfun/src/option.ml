@@ -10,7 +10,7 @@ module type PARAM =
 
 module Make (Param : PARAM) (X : T) =
   struct
-    module UnitNone = 
+    module UnitNone =
       Unit.Make
 	(struct
 	  let toks = Param.toks_none

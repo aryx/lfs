@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 
-#full logic for string: full regexp, 
+#full logic for string: full regexp,
 #  how ? pad: comparer des langages (comparer des automates)
 #  decidable? cachera: yes
 #  algo? cachera: intersection, complement
@@ -15,7 +15,7 @@
 # regexp_logic.pl 'a+' 'a*'  => yes
 # regexp_logic.pl 'a*' 'a+'  => no
 
-# need the FSA utilities from Gertjan van Noord 
+# need the FSA utilities from Gertjan van Noord
 #  available at: http://www.let.rug.nl/~vannoord/Fsa
 
 #TODO: perl regexp to fsa regexp
@@ -40,12 +40,12 @@ my $b = $ARGV[1];
 
 my $res = `grep '% final states' /tmp/fsa_result`;
 
-if ($res eq "[], % final states\n") 
+if ($res eq "[], % final states\n")
   { print "yes" } # empty automaton => yes
-else { 
+else {
     my $res = `grep 'end final states' /tmp/fsa_result`;
-    if ($res eq "], % end final states\n") 
+    if ($res eq "], % end final states\n")
       { print "no" }
-    else 
+    else
       { print "pb, seems not valid regexp" }
 }

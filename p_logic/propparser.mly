@@ -10,7 +10,7 @@ open Proptype
 %type <Proptype.formula> main
 
 %left AND OR IMP
-%nonassoc NOT 
+%nonassoc NOT
 %%
 main:
     expr EOF		                { $1 }

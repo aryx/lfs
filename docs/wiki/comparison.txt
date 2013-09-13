@@ -4,7 +4,7 @@
 
 ===== LFS vs unix 'locate' =====
 
-===== LFS vs Apple Spotlight ===== 
+===== LFS vs Apple Spotlight =====
 
 It's not a filesystem so you can not use some traditionnal tools over
 Spotlight queries. The navigation capabilities of Spotlight are also
@@ -25,7 +25,7 @@ starting directory for the search.
 
 This problem does not exist in LFS because LFS considers directories as properties
 too and is not just a finding tool, you can also navigate. Once you want
-to care about directories, about navigation, then it's not as simple as 
+to care about directories, about navigation, then it's not as simple as
 beagleFS which is just a frontend to beagle (but a nice one).
 
 

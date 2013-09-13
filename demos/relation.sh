@@ -6,7 +6,7 @@ sh -x $src/demos/basicenv.sh
 # alain + mado
 #  => pad
 #  => dedef
-#  => severine    +  wilfied 
+#  => severine    +  wilfied
 #        => noemi
 #        => maxence
 

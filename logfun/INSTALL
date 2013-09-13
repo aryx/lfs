@@ -95,11 +95,11 @@ A research report is also provided as the file 'doc/ResearchReportInria4457.pdf'
 ------
 
 To write an application based on a logic, you first have to define
-it like in example programs in subdirectory 'examples'. You can then 
+it like in example programs in subdirectory 'examples'. You can then
 use it as any OCaml module.
 
-To compile it, reuse the makefile in subdirectory 'examples'. (The 
-libraries 'unix', 'nums', and 'str' come with the standard distribution 
+To compile it, reuse the makefile in subdirectory 'examples'. (The
+libraries 'unix', 'nums', and 'str' come with the standard distribution
 of Objective Caml.)
 
 If in some directory, you have a program <name>.ml, and the example

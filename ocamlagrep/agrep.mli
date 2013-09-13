@@ -45,7 +45,7 @@ val pattern: ?transl:string -> string -> pattern
 exception Syntax_error of int
        (** Exception thrown by {!Agrep.pattern} when the given pattern
            is syntactically incorrect.  The integer argument is the
-           character number where the syntax error occurs. *)        
+           character number where the syntax error occurs. *)
 
 val pattern_string: ?transl:string -> string -> pattern
        (** [Agrep.pattern_string s] returns a pattern that matches exactly

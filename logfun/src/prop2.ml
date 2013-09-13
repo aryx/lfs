@@ -41,7 +41,7 @@ module Make (Param : PARAM) (A : T) =
 	 })
 
 
-    type t = 
+    type t =
       |	Not of t
       |	And of t LSet.t
       |	Or of t LSet.t
@@ -52,7 +52,7 @@ module Make (Param : PARAM) (A : T) =
 (* classification of formulas for the subsomption *)
     type cat = Alpha of t list | Beta of t list | Pos of A.t | Neg of A.t | TPos of string | TNeg of string
 
-    let rec classif : t -> cat = function 
+    let rec classif : t -> cat = function
       |	Not (Not q) -> classif q
       |	Not (And l) -> Beta (List.map (fun x -> Not x) l)
       |	Not (Or l) -> Alpha (List.map (fun x -> Not x) l)
@@ -209,7 +209,7 @@ module Make (Param : PARAM) (A : T) =
 
     let axiom_pos : A.t -> delta_neg -> bool =
       fun pos (cpt,map_negs) ->
-	try 
+	try
 	  if try A.entails pos (A.bot ()) with Not_found -> false then raise Proved;
 	  M.iter
 	    (fun _ negs ->

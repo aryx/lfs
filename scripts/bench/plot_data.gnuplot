@@ -1,4 +1,4 @@
-#go in /tmp and execute: 
+#go in /tmp and execute:
 #   gnuplot ~/work/lfs/code/txt/bench/plot_data.gnuplot
 #for backup data: cd /tmp; cp [A-Z]* gen* /tmp/ready/xxx
 
@@ -49,13 +49,13 @@ pause -1
 set term postscript eps enhan color
 set output "mondessin.ps"
 set size 0.8, 0.8
-replot 
+replot
 
 
 #old:
-#plot "plot.data" title "L=1" with linespoints , "plot2.data" title "L=2" with linespoints 
+#plot "plot.data" title "L=1" with linespoints , "plot2.data" title "L=2" with linespoints
 #plot "resul" title "L=1" with linespoints
-#plot "CDPARTS" title "cd parts" with linespoints , "LS" title "ls" with linespoints, "LS2" title "ls2" with linespoints 
-#plot "CDOBJ" title "cd parts" with linespoints , "LSOBJ" title "ls" with linespoints 
-#plot  "LS" title "ls" with linespoints 
+#plot "CDPARTS" title "cd parts" with linespoints , "LS" title "ls" with linespoints, "LS2" title "ls2" with linespoints
+#plot "CDOBJ" title "cd parts" with linespoints , "LSOBJ" title "ls" with linespoints
+#plot  "LS" title "ls" with linespoints
 

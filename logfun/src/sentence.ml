@@ -121,7 +121,7 @@ module Make (Param : PARAM) =
     let sub f g = if entails f g then raise Not_found else f
 
     let features = function
-      | Is s -> (true,(top ()))::List.fold_left 
+      | Is s -> (true,(top ()))::List.fold_left
            (fun l -> function
            | (vis,(_,"",_)) -> (vis,(Is s))::l
            | (vis,(b,s',e)) -> (vis,(Contains (b,s',e)))::l

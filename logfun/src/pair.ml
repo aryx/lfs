@@ -68,7 +68,7 @@ module Make (L1 : Logic.T) (L2 : Logic.T) =
         LSet.union xs1 xs2
 
     let parse = parser
-      [<x1 = L1.parse; 
+      [<x1 = L1.parse;
         x2 = L2.parse ?? "Syntax error in the second part of a pair, after: " ^ Syntax.stringizer (L1.print x1)
        >] -> (x1, x2)
 

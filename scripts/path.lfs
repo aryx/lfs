@@ -7,8 +7,8 @@ my $file = $ARGV[0];
 sub usage { "usage: path.lfs <file>\n" }
 
 
-my ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size, 
-    $atime, $mtime, $ctime, $blksize, $blocks) = 
+my ($dev, $ino, $mode, $nlink, $uid, $gid, $rdev, $size,
+    $atime, $mtime, $ctime, $blksize, $blocks) =
     stat $file;
 my $o = $nlink;
 opendir(DIR, "inode:$o/.int/") or die "cant opendir $!";

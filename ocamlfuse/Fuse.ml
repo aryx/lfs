@@ -4,16 +4,16 @@
   OCamlFuse is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation (version 2 of the License).
-  
+
   OCamlFuse is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-  
+
   You should have received a copy of the GNU General Public License
   along with OCamlFuse.  See the file LICENSE.  If you haven't received
   a copy of the GNU General Public License, write to:
-  
+
   Free Software Foundation, Inc.,
   59 Temple Place, Suite 330, Boston, MA
   02111-1307  USA
@@ -32,8 +32,8 @@ let get_context : unit -> context = Fuse_bindings.fuse_get_context
 
 type xattr_flags = AUTO | CREATE | REPLACE
 
-type statfs = 
-    { 
+type statfs =
+    {
       f_bsize : int;
       f_blocks : int;
       f_bfree : int;
@@ -57,7 +57,7 @@ type operations =
       link : string -> string -> unit;
       chmod : string -> int -> unit;
       chown : string -> int -> int -> unit;
-      truncate : string -> int64 -> unit; 
+      truncate : string -> int64 -> unit;
       utime : string -> float -> float -> unit;
       fopen : string -> Unix.open_flag list -> unit;
       read : string -> string -> int64 -> int;
@@ -66,7 +66,7 @@ type operations =
       flush : string -> unit;
       statfs : string -> statfs;
       fsync : string -> bool -> unit; (* Untested *)
-      listxattr : string -> string list;      
+      listxattr : string -> string list;
       getxattr : string -> string -> string;
       setxattr : string -> string -> string -> xattr_flags -> unit;
       removexattr : string -> string -> unit;
@@ -90,13 +90,13 @@ let op_names_of_operations ops =
       Fuse_bindings.truncate = Fuse_lib.named_op_2 ops.truncate;
       Fuse_bindings.utime = Fuse_lib.named_op_3 ops.utime;
       Fuse_bindings.fopen = Fuse_lib.named_op_2 ops.fopen;
-      Fuse_bindings.read = Fuse_lib.named_op_3 
+      Fuse_bindings.read = Fuse_lib.named_op_3
 			     (fun path cstring off ->
 				let string = String.create (cstring_length cstring) in
 				  let v = ops.read path string off in
 				    ml2c_copy_string string cstring;
 				    v);
-      Fuse_bindings.write = Fuse_lib.named_op_3 
+      Fuse_bindings.write = Fuse_lib.named_op_3
 			      (fun path cstring off ->
 				 let string = String.create (cstring_length cstring) in
 				   c2ml_copy_string cstring string;
@@ -105,15 +105,15 @@ let op_names_of_operations ops =
       Fuse_bindings.flush = Fuse_lib.named_op ops.flush;
       Fuse_bindings.statfs = Fuse_lib.named_op ops.statfs;
       Fuse_bindings.fsync = Fuse_lib.named_op_2 ops.fsync;
-      Fuse_bindings.listxattr = Fuse_lib.named_op 
+      Fuse_bindings.listxattr = Fuse_lib.named_op
 				  (fun path ->
-				     let s = ops.listxattr path in 
-				       (s,List.fold_left 
-					  (fun acc s -> 
-					     acc + 1 + (String.length s)) 
+				     let s = ops.listxattr path in
+				       (s,List.fold_left
+					  (fun acc s ->
+					     acc + 1 + (String.length s))
 					  0 s));
       Fuse_bindings.getxattr = Fuse_lib.named_op_2 ops.getxattr;
-      Fuse_bindings.setxattr = Fuse_lib.named_op_4 
+      Fuse_bindings.setxattr = Fuse_lib.named_op_4
 				 (fun path name cstring flags ->
 				    let string = String.create (cstring_length cstring) in
 				      c2ml_copy_string cstring string;
@@ -121,7 +121,7 @@ let op_names_of_operations ops =
       Fuse_bindings.removexattr = Fuse_lib.named_op_2 ops.removexattr;
   }
 
-let default_operations = 
+let default_operations =
   {
     getattr = undefined;
     getdir = undefined;
@@ -147,7 +147,7 @@ let default_operations =
     listxattr = undefined;
     getxattr = undefined;
     setxattr = undefined;
-    removexattr = undefined; 
+    removexattr = undefined;
   }
 
 let main argv ops =

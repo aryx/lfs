@@ -2,12 +2,12 @@ open Common
 open Common_transducer
 
 (* fake mp3 transducer, just to test *)
-let c_transducer = fun s -> 
+let c_transducer = fun s ->
   let xs = lines_with_nl s in
-  xs +> fold (fun acc s -> 
+  xs +> fold (fun acc s ->
     if s =~ "^\\([A-Za-z_]*\\)[ ]*(" then
       acc#add (matched1 s)
-    else 
+    else
 
       if s =~ "^[^ \t].*[^A-Za-z]\\([A-Za-z_]+\\)[ ]*(" then
       acc#add (matched1 s)

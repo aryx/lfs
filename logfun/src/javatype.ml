@@ -190,7 +190,7 @@ module Modifier =
 	(4,([Ident "native"],[6]));
 	(5,([Ident "synchronized"],[6]));
 	(6,([Ident "modifier"],[]))
-      ]	
+      ]
     end)
 
 module Make =

@@ -85,7 +85,7 @@ module Make (Param : PARAM) (E : T) =
       fun l ->
 	aux (List.fold_right S.add l S.empty) S.empty
 
-	
+
     open Param
     let (++) toks p = Syntax.parse_tokens_and toks p
     let (~~) toks = Syntax.parse_tokens toks

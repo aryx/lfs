@@ -123,7 +123,7 @@ module Make (Param : PARAM) =
 		parse_aux t' str
 	      with Not_found ->
 		raise Stream.Failure)
-	  
+
     let parse str =
       parse_aux tree_id str
 

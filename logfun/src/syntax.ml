@@ -207,7 +207,7 @@ let print_tokens : t_list -> unit =
 
 let print_string : string -> unit =
   fun s ->
-    pp_print_string Format.std_formatter s 
+    pp_print_string Format.std_formatter s
 
 let print_int : int -> unit =
   fun n ->
@@ -353,11 +353,11 @@ let parse_option_string ?(default="") n = parser
 
 (* parsing of proposition-like language, where operations and atoms are parameterized *)
 
-type 'a spec_prop = { 
+type 'a spec_prop = {
     all : string; none : string; a : string; an : string; o : string; n :  string;
     taut : 'a; cont : 'a; neg : 'a -> 'a; conj : 'a -> 'a -> 'a; disj : 'a -> 'a -> 'a;
       atom : t_stream -> 'a
-  } 
+  }
 
 let wrong_prop spec s = "Syntax error: '(', '" ^ spec.n ^ "', '" ^ spec.all ^ "', '" ^ spec.none ^ "' or atom expected after '" ^ s ^ "'"
 let wrong_term spec s = "Syntax error: '(', '" ^ spec.n ^ "' or atom expected after '" ^ s ^ "'"
@@ -384,7 +384,7 @@ and parse_fact spec = parser
 (* generic functions about strings *)
 (* ------------------------------- *)
 
-let rec split (normalize, separator, stopword) (s : string) = 
+let rec split (normalize, separator, stopword) (s : string) =
       split2 (normalize, separator, stopword) s 0 "" []
 and split2 (normalize, separator, stopword) s i w ws =
       if i>=String.length s then addword (normalize, separator, stopword) w ws

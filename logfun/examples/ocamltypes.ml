@@ -91,7 +91,7 @@ module MultisetFun =
     end)
 module SumFun =
   Sum.Make
-    (struct 
+    (struct
       let toks_top = None
       let toks_a1 = [LT] (* arguments of functions *)
       let toks_a2 = [GT] (* results of functions *)
@@ -179,11 +179,11 @@ module Plugins =
     let parse : string -> Type.t =
       fun s ->
 	Type.parse (Syntax.from_string s)
-	  
+
     let entails : string -> string -> bool =
       fun s1 s2 ->
 	Type.entails (parse s1) (parse s2)
-	  
+
     let isvalue : string -> bool =
       fun s ->
 	Type.isvalue (parse s)

@@ -2,17 +2,17 @@ open Bdb
 
 open Printf
 
-(* 
+(*
 note:
  as indicated in minsky version of ocamlbdb, if use transaction with a cursor then
  the cursor must be closed before commit
 *)
 
 (* inspired by mkfs.ml from lex stein *)
-(* 
-let _ = Unix.system ("rm -f /tmp/test/*") 
+(*
+let _ = Unix.system ("rm -f /tmp/test/*")
 *)
-let env = Env.create [] 
+let env = Env.create []
 let _ = Env.env_open env "/tmp/test" [Env.DB_CREATE;Env.DB_INIT_LOG;Env.DB_INIT_LOCK; Env.DB_INIT_MPOOL;Env.DB_INIT_TXN ;Env.DB_RECOVER] (Int32.of_int 0)
 
 let t = ref (Txn.txn_begin env None [])
@@ -21,7 +21,7 @@ let newt () = t := (Txn.txn_begin env None [])
 let trans () = None
 let trans () = Some !t
 
-let main1 () = 
+let main1 () =
   let db = Db.create env [] in
   let _ = try Db.db_open db None "/tmp/test/db" "/db" Db.DB_BTREE [Db.DB_CREATE] 0 with _ -> () in
   let _ = print_endline "here" in
@@ -33,15 +33,15 @@ let main1 () =
   let _ = (try (Printf.printf "%s\n" (Db.get db None "xxxx" [])) with _ -> print_endline "pb") in
 *)
 
-  let _ = 
+  let _ =
     for i = 100 downto 1 do
       let _ = Db.put db None (sprintf "%d" i) (sprintf "%d" i) [] in ()
       (* let _ = Db.put db None (Marshal.to_string i []) (Marshal.to_string i []) [] in ()*)
     done
   in
-    
+
   let dbc = Cursor.db_cursor db None [] in
-  let rec aux dbc = 
+  let rec aux dbc =
     try (
       let a = Cursor.dbc_get dbc [Cursor.DB_NEXT] in
       (Printf.printf "%s --> %s\n" (fst a) (snd a); flush stdout;
@@ -53,22 +53,22 @@ let main1 () =
   let _ = aux dbc in
 
 (*
-  let _ = 
+  let _ =
     for i = 0 to 100000 do
       Db.put db None (Marshal.to_string "xxx" []) (Marshal.to_string i [Marshal.Closures]) []
     done in
   *)
-  
+
 
 (*  let _ = Printf.printf "%s\n" (Db.get db None (Marshal.to_string "xxx" [])) in *)
 
-  
+
   let _ = Db.close db [] in
   ()
 
 
 (* test having complex structure as value, via marshalling *)
-let main2 () = 
+let main2 () =
   let db = Db.create env [] in
   let _ = try Db.db_open db None "/tmp/test/db2" "/db2" Db.DB_BTREE [Db.DB_CREATE] 0 with _ -> () in
 
@@ -79,7 +79,7 @@ let main2 () =
   let _ = Db.put db None "v"   (fmar [2]) [] in
 
   let dbc = Cursor.db_cursor db None [] in
-  let rec aux dbc = 
+  let rec aux dbc =
     try (
       let a = Cursor.dbc_get dbc [Cursor.DB_NEXT] in
       (Printf.printf "%s --> " (fst a);
@@ -96,16 +96,16 @@ let main2 () =
   let _ = Env.close env [] in
 
   ()
-  
 
 
 
 
-let test_transaction () = 
+
+let test_transaction () =
   let db = Db.create env [] in
-  let print_db trans = 
+  let print_db trans =
     let dbc = Cursor.db_cursor db (trans ()) [] in
-    let rec aux dbc = 
+    let rec aux dbc =
     try (
       let a = Cursor.dbc_get dbc [Cursor.DB_NEXT] in
       (Printf.printf "%s --> " (fst a);
@@ -143,14 +143,14 @@ let test_transaction () =
 
 
 
-(*  
+(*
   let pid1 = Unix.getpid () in
-  let _ = Sys.set_signal Sys.sigalrm (Sys.Signal_handle 
-                                         (fun _ -> 
+  let _ = Sys.set_signal Sys.sigalrm (Sys.Signal_handle
+                                         (fun _ ->
                                            let pid = Unix.getpid () in
                                            let _ = Printf.printf "preparring the kill of %d and %d\n" pid1 pid in
                                            let _ = flush stdout in
-                                           
+
                                            Sys.command ("kill -9 " ^ (string_of_int pid));
                                            ()
                                            )) in
@@ -163,16 +163,16 @@ let test_transaction () =
 
 (*  Txn.abort t; raise x *)
 
-  while true do 
+  while true do
     ()
   done;
   Db.close db [];
   Env.close env [];
-  end  
-  
-  
+  end
 
 
-let _ = test_transaction ()  
-       
+
+
+let _ = test_transaction ()
+
 

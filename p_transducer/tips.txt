@@ -1,4 +1,4 @@
-there is on the web already some kind of transducers, 
+there is on the web already some kind of transducers,
 sometimes called filters, summarizer, ...
 
 get inspiration or borrow the code from the plugins of

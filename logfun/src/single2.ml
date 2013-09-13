@@ -59,7 +59,7 @@ module Make (Param : PARAM) (L : T) =
 	      ns = Syntax.parse_star (Syntax.parse_tokens_and Param.toks_alt L.parse);
 	      _ = Syntax.parse_tokens Param.toks_end>] -> O (k,n::ns)
 	  | [<_ = Syntax.parse_tokens Param.toks_end>] -> O (k,[])
-		
+
     let print = function
       | C x -> Param.toks_certain @ L.print x
       | P x -> Param.toks_possible @ L.print x

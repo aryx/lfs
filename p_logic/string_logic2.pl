@@ -23,6 +23,6 @@ while (<STDIN>) {
         print_bool($p1 eq $p2) if (!is_formula($p1) && !is_formula($p2));
         print_bool($p1 =~ /^$p2/) if (is_formula($p2) && !is_formula($p1));
     }
-    
+
 
 }

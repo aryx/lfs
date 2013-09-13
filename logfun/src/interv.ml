@@ -88,7 +88,7 @@ module Make (Param : PARAM) (Val : T) =
 	  else if Val.entails y x then Val y
 	  else failwith "Bug in the logic argument of Interv: compare x y = 0 ==> x |= y or y |= x."
       |	_ -> a
-	
+
     let min_of_max a b =
       let res = compare_bound a b in
       if res < 0 then a
@@ -99,7 +99,7 @@ module Make (Param : PARAM) (Val : T) =
 	  else if Val.entails y x then Val y
 	  else failwith "Bug in the logic argument of Interv: compare x y = 0 ==> x |= y or y |= x."
       |	_ -> a
-	
+
     let max_of_max a b =
       let res = compare_bound a b in
       if res < 0 then b
@@ -110,7 +110,7 @@ module Make (Param : PARAM) (Val : T) =
 	  else if Val.entails y x then Val x
 	  else failwith "Bug in the logic argument of Interv: compare x y = 0 ==> x |= y or y |= x."
       |	_ -> a
-	
+
     let min_of_min a b =
       let res = compare_bound a b in
       if res < 0 then a
@@ -207,8 +207,8 @@ module Make (Param : PARAM) (Val : T) =
 
     let print_interval = function
       | (NegInf,PosInf) -> [Dot; Dot]
-      | (NegInf,NegInf) -> [Ident "min"] 
-      | (PosInf,PosInf) -> [Ident "max"] 
+      | (NegInf,NegInf) -> [Ident "min"]
+      | (PosInf,PosInf) -> [Ident "max"]
       | (NegInf,Val b) -> Dot :: Dot :: PP_tilda :: Val.print b
       | (Val a,PosInf) -> Val.print a @ [PP_tilda; Dot; Dot]
       | (Val a,Val b) ->
@@ -218,8 +218,8 @@ module Make (Param : PARAM) (Val : T) =
 
     let print_verbose = function
       | (NegInf,PosInf) -> [PP_tilda; Ident "in"; PP_tilda; Dot; Dot]
-      | (NegInf,NegInf) -> [PP_tilda; Equal; PP_tilda; Ident "min"] 
-      | (PosInf,PosInf) -> [PP_tilda; Equal; PP_tilda; Ident "max"] 
+      | (NegInf,NegInf) -> [PP_tilda; Equal; PP_tilda; Ident "min"]
+      | (PosInf,PosInf) -> [PP_tilda; Equal; PP_tilda; Ident "max"]
       | (NegInf,Val b) -> PP_tilda :: LT :: PP_tilda :: Val.print b
       | (Val a,PosInf) -> PP_tilda :: GT :: PP_tilda :: Val.print a
       | (Val a,Val b) ->

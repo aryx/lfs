@@ -10,7 +10,7 @@
 
 ==== File (transducer) plugins ===
 
-Transducers take meta data from the files read while building the database with build.opt. There are several plugins included but you may create new ones for more file types. 
+Transducers take meta data from the files read while building the database with build.opt. There are several plugins included but you may create new ones for more file types.
 Transducers are basically perl scripts that execute auxiliar programs like 'ogginfo' over input files and process the output to provide meta data.
 This is an example of transducer, it's a simplified version of the ogg_transducer inside p_transducer folder. It generates the information of artist, genre, title, date and album of a single ogg file.
     #!/usr/bin/perl
@@ -19,7 +19,7 @@ This is an example of transducer, it's a simplified version of the ogg_transduce
     my @aux = ();
     while(<FILE>) {
         if(/artist=(.*)/i) { push @aux, "artist:$1" }
-        if(/genre=(.*)/i) { 
+        if(/genre=(.*)/i) {
             my @genres = split /\//, $1;
             map { push @aux, "genre:$_" } @genres;
         }

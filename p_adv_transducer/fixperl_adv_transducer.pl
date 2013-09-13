@@ -14,7 +14,7 @@ while(<STDIN>) {
     push @data, $s;
 }
 my $i = 0;
-map { 
+map {
     my $s = $_;
     my @aspects = ();
 
@@ -34,13 +34,13 @@ map {
 #    $state->{bloc} = undef when $s =~ /^\s*(#.*)?$/;
 #    if($s =~ /^(\s+)[\#\s]/) {
 #	 my $current_indent = length($1);
-#	 if (defined($state->{last_if_indent}) && $current_indent == $state->{last_if_indent}) { 
+#	 if (defined($state->{last_if_indent}) && $current_indent == $state->{last_if_indent}) {
 #	     $state->{stateif} = "else";
 #	     if($s =~ /^(\s*)}/)       { $state->{currentif} = ["blocifnotthen:$state->{if}"]}
 #	     fi($s =~ /(\s*)else\s*{/) { $state->{currentif} = ["blocifnotthen:$state->{if}"]}
 #	     fi($s =~ /(\s*)}\s*else\s*{/) { $state->{currentif} = ["blocifnotthen:$state->{if}"]}
 #	     else {
-#		 $state->{if} = undef; $state->{last_if_indent} = undef; $state->{currentif} = undef; 
+#		 $state->{if} = undef; $state->{last_if_indent} = undef; $state->{currentif} = undef;
 #	     }
 #	 }
 #	 fi(defined($state->{last_if_indent}) && $current_indent < $state->{last_if_indent}) {
@@ -48,27 +48,27 @@ map {
 #	 fi(defined($state->{last_if_indent}) && $current_indent > $state->{last_if_indent}) {
 #	     $state->{currentif} = ["blocifthen:$state->{if}"] when $state->{stateif} eq "then";
 #	     $state->{currentif} = ["blocifnotthen:$state->{if}","blocifelse:$state->{if}"] when $state->{stateif} eq "else";
-#	     
+#
 #	 }
 #	 else { }
 #    }
-#    
-#    if(!(defined($state->{if})) && ($s =~ /(\s+).*if\((.+?)\)/)) { 
+#
+#    if(!(defined($state->{if})) && ($s =~ /(\s+).*if\((.+?)\)/)) {
 #	 $state->{if} = "$2";
 #	 $state->{last_if_indent} = length($1);
 #	 $state->{currentif} = ["blocifheader:$state->{if}", "blocifnotthen:$state->{if}"];
 #	 $state->{stateif} = "then";
 #    };
-#   
+#
 #
 #    # TODO4: could put this in generic
 #    if (!defined($state->{bloc}) && !($s =~ /^\s*(#.*)?$/)) {
 #	 $state->{bloc} = words($s) +> uniqs() +> sorts() +> mapf(Fun($e) { "bloc:$e" });
 #    }
-    
+
     #TODO2: type, const, ...
 
-    my $res = 
+    my $res =
       [
        @aspects,
        maybe($state->{function}),

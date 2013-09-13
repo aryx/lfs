@@ -8,7 +8,7 @@ diff -r 01f072760885 logfun/makefile
 @@ -16,6 +16,8 @@ OCAMLFLAGS= -pp "camlp4o pa_op.cmo" $(IN
  OCAMLFLAGS= -pp "camlp4o pa_op.cmo" $(INCLUDES)    # add other options for ocamlc here
  OCAMLDOCFLAGS= $(OCAMLFLAGS) -d ocamldoc
- 
+
 +
 +
  # The list of object files
@@ -18,8 +18,8 @@ diff -r 01f072760885 logfun/makefile
  STRUCTURE = interval.$(CMO) multiset.$(CMO)
  LOGIC = iset.$(CMO) bottom.$(CMO) single.$(CMO) id.$(CMO) aik.$(CMO) prop.$(CMO) prop2.$(CMO) enum.$(CMO)
  SYNTAX = prefix.$(CMO) suffix.$(CMO) bracket.$(CMO)
--GEN2 = option.$(CMO) vector.$(CMO) openinterval.$(CMO) 
-+GEN2 = option.$(CMO) vector.$(CMO)  openinterval.$(CMO) 
+-GEN2 = option.$(CMO) vector.$(CMO) openinterval.$(CMO)
++GEN2 = option.$(CMO) vector.$(CMO)  openinterval.$(CMO)
  GEN3 = prelist.$(CMO) mltype.$(CMO) javatype.$(CMO) date_pattern.$(CMO)
  GEN4 = segment.$(CMO) motif.$(CMO)
  ALL = $(COMMON) $(OLD) $(ATOM) $(ALGEBRA) $(STRUCTURE) $(LOGIC) $(SYNTAX) $(GEN2) $(GEN3) $(GEN4)
@@ -40,7 +40,7 @@ diff -r 01f072760885 logfun/src/atom.ml
 +++ b/logfun/src/atom.ml	Sat May 24 06:35:00 2008 +0000
 @@ -12,7 +12,7 @@ module Make (Param : PARAM) : Logic.T =
      include Default
- 
+
      let props () =
 -      {no_props "Atom" with
 +      {(no_props "Atom") with
@@ -52,7 +52,7 @@ diff -r 01f072760885 logfun/src/attr.ml
 +++ b/logfun/src/attr.ml	Sat May 24 06:35:00 2008 +0000
 @@ -16,7 +16,7 @@ module Make (Param : PARAM) : Logic.T =
      include Default
- 
+
      let props () =
 -      {no_props "Attr" with
 +      {(no_props "Attr") with
@@ -75,20 +75,20 @@ diff -r 01f072760885 logfun/src/bracket.ml
 --- a/logfun/src/bracket.ml	Sat May 24 04:24:09 2008 +0000
 +++ b/logfun/src/bracket.ml	Sat May 24 06:35:00 2008 +0000
 @@ -9,7 +9,7 @@ module type PARAM =
- 
+
  module Make (Param : PARAM) (L : T) =
    struct
 -    module M = Id L
 +    module M = Id(L)
      include M
- 
+
      let parse = parser
 diff -r 01f072760885 logfun/src/card.ml
 --- a/logfun/src/card.ml	Sat May 24 04:24:09 2008 +0000
 +++ b/logfun/src/card.ml	Sat May 24 06:35:00 2008 +0000
 @@ -8,7 +8,7 @@ module Make =
      include Default
- 
+
      let props () =
 -      {no_props "Card" with
 +      {(no_props "Card") with
@@ -100,7 +100,7 @@ diff -r 01f072760885 logfun/src/date.ml
 +++ b/logfun/src/date.ml	Sat May 24 06:35:00 2008 +0000
 @@ -7,7 +7,7 @@ module Make =
      include Default
- 
+
      let props () =
 -      {no_props "Date" with
 +      {(no_props "Date") with
@@ -113,10 +113,10 @@ diff -r 01f072760885 logfun/src/date_pattern.ml
 @@ -60,7 +60,7 @@ module Make (Param : PARAM) =
      module Month = MyTop (MyEnum MyAtom)
      module Year = MyTop (MyEnum (MyInterval MyInt))
- 
+
 -    module Date = MyProd Day (MyProd Month Year)
 +    module Date = MyProd(Day)(MyProd(Month)(Year))
- 
+
      include Date
    end
 diff -r 01f072760885 logfun/src/enum.ml
@@ -136,7 +136,7 @@ diff -r 01f072760885 logfun/src/float.ml
 +++ b/logfun/src/float.ml	Sat May 24 06:35:00 2008 +0000
 @@ -7,7 +7,7 @@ module Make =
      include Default
- 
+
      let props () =
 -      {no_props "Float" with
 +      {(no_props "Float") with
@@ -160,7 +160,7 @@ diff -r 01f072760885 logfun/src/int.ml
 +++ b/logfun/src/int.ml	Sat May 24 06:35:00 2008 +0000
 @@ -7,7 +7,7 @@ module Make =
      include Default
- 
+
      let props () =
 -      {no_props "Int" with
 +      {(no_props "Int") with
@@ -195,30 +195,30 @@ diff -r 01f072760885 logfun/src/iset.ml
 --- a/logfun/src/iset.ml	Sat May 24 04:24:09 2008 +0000
 +++ b/logfun/src/iset.ml	Sat May 24 06:35:00 2008 +0000
 @@ -3,7 +3,7 @@ open Logic
- 
+
  module Make (E : T) =
    struct
 -    module M = Id E
 +    module M = Id(E)
      include M
- 
+
      let props =
 diff -r 01f072760885 logfun/src/javatype.ml
 --- a/logfun/src/javatype.ml	Sat May 24 04:24:09 2008 +0000
 +++ b/logfun/src/javatype.ml	Sat May 24 06:35:00 2008 +0000
 @@ -132,11 +132,11 @@ module Object =
    MyBottom (SingleObject Class)
- 
+
  module Atom =
 -  TopAtom (MySum Primitive Object)
 +  TopAtom (MySum(Primitive)(Object))
- 
+
  module Array =
    MyProd
 -    Atom
 +    (Atom)
      (PrelistArray UnitArray)
- 
+
  module Kind =
 @@ -197,11 +197,11 @@ module Make =
    MyTop (MySum
@@ -239,13 +239,13 @@ diff -r 01f072760885 logfun/src/mltype.ml
 --- a/logfun/src/mltype.ml	Sat May 24 04:24:09 2008 +0000
 +++ b/logfun/src/mltype.ml	Sat May 24 06:35:00 2008 +0000
 @@ -143,14 +143,14 @@ module TopDescr =
- 
+
  (* ---------- *)
- 
+
 -module Var = TopVar MyAtom
 +module Var = TopVar(MyAtom)
  module Constr = MyAtom
- 
+
  module Val (Type : T) : T =
    MySum
      (PrefixVar Var)
@@ -253,20 +253,20 @@ diff -r 01f072760885 logfun/src/mltype.ml
 -       (MyProd Constr (VectorArgs Type))
 +       (MyProd(Constr)(VectorArgs Type))
         (MyBracket Type))
- 
+
  module Tuple (Type : T) =
 diff -r 01f072760885 logfun/src/motif.ml
 --- a/logfun/src/motif.ml	Sat May 24 04:24:09 2008 +0000
 +++ b/logfun/src/motif.ml	Sat May 24 06:35:00 2008 +0000
 @@ -23,8 +23,8 @@ include Logic.Default
- 
+
  module IntervParam = struct let verbose = true end
- 
+
 -module Len = Openinterval.DotDot Intpow.Make
 -module Dist = Openinterval.DotDot Floatpow.Make
 +module Len = Openinterval.DotDot(Intpow.Make)
 +module Dist = Openinterval.DotDot(Floatpow.Make)
- 
+
  type e = int * int
    (* interval for elastic segments *)
 diff -r 01f072760885 logfun/src/multiset.ml
@@ -297,37 +297,37 @@ diff -r 01f072760885 logfun/src/prefix.ml
 --- a/logfun/src/prefix.ml	Sat May 24 04:24:09 2008 +0000
 +++ b/logfun/src/prefix.ml	Sat May 24 06:35:00 2008 +0000
 @@ -8,7 +8,7 @@ module type PARAM =
- 
+
  module Make (Param : PARAM) (L : T) =
    struct
 -    module M = Id L
 +    module M = Id(L)
      include M
- 
+
      let parse = parser
 diff -r 01f072760885 logfun/src/prelist.ml
 --- a/logfun/src/prelist.ml	Sat May 24 04:24:09 2008 +0000
 +++ b/logfun/src/prelist.ml	Sat May 24 06:35:00 2008 +0000
 @@ -36,8 +36,8 @@ module Make (Param : PARAM) (X : T) =
- 
+
      module MyTopOption (X : T) =
        struct
 -	module O = MyOption X
 -	module T = MyTop O
 +	module O = MyOption(X)
 +	module T = MyTop(O)
- 
+
  	include T
- 
+
 @@ -47,7 +47,7 @@ module Make (Param : PARAM) (X : T) =
        end
- 
- 
+
+
 -    module rec Prelist : T = MyTopOption (MyProd X Prelist)
 +    module rec Prelist : T = MyTopOption (MyProd(X)(Prelist))
- 
+
      include Prelist
- 
+
 diff -r 01f072760885 logfun/src/prod.ml
 --- a/logfun/src/prod.ml	Sat May 24 04:24:09 2008 +0000
 +++ b/logfun/src/prod.ml	Sat May 24 06:35:00 2008 +0000
@@ -368,14 +368,14 @@ diff -r 01f072760885 logfun/src/segment.ml
 --- a/logfun/src/segment.ml	Sat May 24 04:24:09 2008 +0000
 +++ b/logfun/src/segment.ml	Sat May 24 06:35:00 2008 +0000
 @@ -14,8 +14,8 @@ module Make (A : LOG) =
- 
+
  (* private definitions *)
- 
+
 -    module Pos = Openinterval.DotDot A  (* interval for Start and End of segments *)
 -    module Len = Openinterval.DotDot A.Diff  (* interval for length of segments *)
 +    module Pos = Openinterval.DotDot(A)  (* interval for Start and End of segments *)
 +    module Len = Openinterval.DotDot(A.Diff)  (* interval for length of segments *)
- 
+
      type bound = NegInf | PosInf | Val of A.t
      type interv = bound * bound  (* invariant: in (a,b) one has (compare a b <= 0) *)
 diff -r 01f072760885 logfun/src/sentence.ml
@@ -383,7 +383,7 @@ diff -r 01f072760885 logfun/src/sentence.ml
 +++ b/logfun/src/sentence.ml	Sat May 24 06:35:00 2008 +0000
 @@ -18,7 +18,7 @@ module Make (Param : PARAM) =
      include Default
- 
+
      let props () =
 -      {no_props "Sentence" with
 +      {(no_props "Sentence") with
@@ -419,7 +419,7 @@ diff -r 01f072760885 logfun/src/substring.ml
 +++ b/logfun/src/substring.ml	Sat May 24 06:35:00 2008 +0000
 @@ -18,7 +18,7 @@ module Make (Param : PARAM) =
      include Default
- 
+
      let props () =
 -      {no_props "Substring" with
 +      {(no_props "Substring") with
@@ -427,21 +427,21 @@ diff -r 01f072760885 logfun/src/substring.ml
         st = isok;
         st' = isok;
 @@ -147,7 +147,7 @@ module Make (Param : PARAM) =
- 
+
  module Verb (Param : PARAM) =
    struct
 -    include Make Param
 +    include Make(Param)
- 
+
      let parse =
        let begins_with s s' = begins_with s s' in
 @@ -171,7 +171,7 @@ module Verb (Param : PARAM) =
- 
+
  module Star (Param : PARAM) =
    struct
 -    include Make Param
 +    include Make(Param)
- 
+
      let rec parse = parser
        | [<'Star; f = parse_after_star>] -> f
 diff -r 01f072760885 logfun/src/sum.ml
@@ -461,7 +461,7 @@ diff -r 01f072760885 logfun/src/taxo.ml
 +++ b/logfun/src/taxo.ml	Sat May 24 06:35:00 2008 +0000
 @@ -82,7 +82,7 @@ module Make (Param : PARAM) =
      include Default
- 
+
      let props () =
 -      {no_props "Taxo" with
 +      {(no_props "Taxo") with
@@ -473,7 +473,7 @@ diff -r 01f072760885 logfun/src/time.ml
 +++ b/logfun/src/time.ml	Sat May 24 06:35:00 2008 +0000
 @@ -7,7 +7,7 @@ module Make =
      include Default
- 
+
      let props () =
 -      {no_props "Time" with
 +      {(no_props "Time") with
@@ -497,7 +497,7 @@ diff -r 01f072760885 logfun/src/unit.ml
 +++ b/logfun/src/unit.ml	Sat May 24 06:35:00 2008 +0000
 @@ -12,7 +12,7 @@ module Make (Param : PARAM) =
      include Default
- 
+
      let props () =
 -      {no_props "Unit" with
 +      {(no_props "Unit") with
@@ -513,6 +513,6 @@ diff -r 01f072760885 logfun/src/vector.ml
  	end)
 -    module rec Tuple : T = MyOption (MyProd X Tuple)
 +    module rec Tuple : T = MyOption(MyProd(X)(Tuple))
- 
+
      include Tuple
- 
+

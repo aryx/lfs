@@ -1,10 +1,10 @@
 #!/usr/bin/perl
 
-#require: perl mp3 API, which require in turns Compress-Zlib perl API, 
+#require: perl mp3 API, which require in turns Compress-Zlib perl API,
 #  tagged,  zlib (quite standard), and zlib-devel package (not very standard)
 
 # could as for ogg call an mpg123info program but he does not exist
-# could parse the ouput of mpg123 but need in that case install latest mpg321, 
+# could parse the ouput of mpg123 but need in that case install latest mpg321,
 # libmad, libid3tag, ...
 
 use MP3::Info;
@@ -19,14 +19,14 @@ my $path = $ARGV[0];
 #note that this code is quite slow
 #it seems that it takes time to get the metadata from the mp3 (perhaps cos need decompress stuff ?)
 
- 
+
 my $tag = MP3::Tag->new($path);
 if($tag) {
     $tag->get_tags();
     if (exists $tag->{ID3v1}) {
 	my $last = $tag->{ID3v1};
-	push @aux, 
-	  ("title:"  .  $last->song, 
+	push @aux,
+	  ("title:"  .  $last->song,
 	   "artist:" .  $last->artist,
 	   "album:"  .  $last->album,
 	   "comment:" . $last->comment,

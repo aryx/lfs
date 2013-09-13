@@ -1,10 +1,10 @@
-path.cmi: ../lfs_core/lfs.cmi 
-pathparser.cmi: ../lfs_core/lfs.cmi 
+path.cmi: ../lfs_core/lfs.cmi
+pathparser.cmi: ../lfs_core/lfs.cmi
 path.cmo: pathparser.cmi pathlexer.cmo ../lfs_core/lfs.cmi \
-    ../commons/common.cmi path.cmi 
+    ../commons/common.cmi path.cmi
 path.cmx: pathparser.cmx pathlexer.cmx ../lfs_core/lfs.cmx \
-    ../commons/common.cmx path.cmi 
-pathlexer.cmo: pathparser.cmi 
-pathlexer.cmx: pathparser.cmx 
-pathparser.cmo: ../lfs_core/lfs.cmi pathparser.cmi 
-pathparser.cmx: ../lfs_core/lfs.cmx pathparser.cmi 
+    ../commons/common.cmx path.cmi
+pathlexer.cmo: pathparser.cmi
+pathlexer.cmx: pathparser.cmx
+pathparser.cmo: ../lfs_core/lfs.cmi pathparser.cmi
+pathparser.cmx: ../lfs_core/lfs.cmx pathparser.cmi

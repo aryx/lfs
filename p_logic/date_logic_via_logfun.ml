@@ -17,20 +17,20 @@ module MyDate = Date_pattern.ForYoann
 module MyPlugin = Logic.Plugin (MyDate)
 
 let main () =
- try 
+ try
   while true do
     let x = read_line () in
     let y = read_line () in
-    if 
+    if
       (if y = "IS_FORMULA?"
       then not (MyPlugin.isvalue x)
       else MyPlugin.entails x y
       )
-    then print_endline "yes" 
+    then print_endline "yes"
     else print_endline "no"
   done
- with 
-  | End_of_file -> () 
+ with
+  | End_of_file -> ()
 
 
 let _ = main()

@@ -18,14 +18,14 @@ install <packagename>) :
 
 You can compile the fuse kernel module, but nowadays the kernels of
 most distributions directly support fuse so the following step is
-optional. 
+optional.
 
-So if you really want to compile yourself the fuse 
+So if you really want to compile yourself the fuse
 kernel module install first:
  - module-assistant
  - kernel-headers-2.4.27 (or kernel-headers-2.4.27-2-386  or similar)
 
-then install: 
+then install:
  - fuse-source
 
 then issue as root the (cryptic) command:
@@ -37,10 +37,10 @@ you are indeed in the fuse group by running the "/usr/bin/groups"
 command)
 
 If you want other users on your machine to access your mounted fuse
-filesystem then you can optionaly create a file /etc/fuse.conf and add 
+filesystem then you can optionaly create a file /etc/fuse.conf and add
 the following line
     user_allow_other
-You must then relaunch (or launch) fuse with  
+You must then relaunch (or launch) fuse with
 the command  "rmmod fuse; modprobe fuse".
 
 
@@ -61,10 +61,10 @@ To enable some LFS plugins, you can install:
  - gprolog
 
 To enable the GUI for mp3 and photos provided with LFS, install:
- - lablgtk 
+ - lablgtk
    warning: the lablgtk package as some point conflicted with the berkeley db
-   development package (libdb4.3-dev) so then you needed to first compile 
-   the LFS source (requiring the libdb4.3-dev package), and then install 
+   development package (libdb4.3-dev) so then you needed to first compile
+   the LFS source (requiring the libdb4.3-dev package), and then install
    the lablgtk package and compile the GUI (LFS binaries dont need the
    libdb4.3-dev package to run (but need it to compile)) and then take care
    then to reinstall libdb4.3-dev if you want to recompile LFS.

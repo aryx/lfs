@@ -1,7 +1,7 @@
 (** Segments over values from the sub-logic. *)
 
 (** Signature required for the sub-logic of values. *)
-module type LOG = 
+module type LOG =
   sig
     include Logic.T
     module Diff : Logic.T
@@ -42,7 +42,7 @@ module Make (A : LOG) =
 	  else if A.entails y x then Val y
 	  else failwith "Bug in the logic argument of Interv: compare x y = 0 ==> x |= y or y |= x."
       |	_ -> a
-	
+
     let min_of_max a b =
       let res = compare_bound a b in
       if res < 0 then a
@@ -53,7 +53,7 @@ module Make (A : LOG) =
 	  else if A.entails y x then Val y
 	  else failwith "Bug in the logic argument of Interv: compare x y = 0 ==> x |= y or y |= x."
       |	_ -> a
-	
+
     let max_of_max a b =
       let res = compare_bound a b in
       if res < 0 then b
@@ -64,7 +64,7 @@ module Make (A : LOG) =
 	  else if A.entails y x then Val x
 	  else failwith "Bug in the logic argument of Interv: compare x y = 0 ==> x |= y or y |= x."
       |	_ -> a
-	
+
     let min_of_min a b =
       let res = compare_bound a b in
       if res < 0 then a
@@ -76,7 +76,7 @@ module Make (A : LOG) =
 	  else failwith "Bug in the logic argument of Interv: compare x y = 0 ==> x |= y or y |= x."
       |	_ -> a
 
-    
+
     let get_pos tok_comp a = match tok_comp, a with
     | Token.GT, NegInf -> Pos.top ()
     | _, NegInf -> Pos.parse (Syntax.of_list [Token.Equal; Token.Ident "min"])
@@ -181,7 +181,7 @@ module Make (A : LOG) =
        (*Is i :: *) (* Contains i :: *) (true,In (NegInf,PosInf)) ::
        (* features_segment i @ *)
        features (Start (get_start (Is i))) @
-       features (End (get_end (Is i))) @ 
+       features (End (get_end (Is i))) @
        features (Length (get_length (Is i)))
     | Contains i -> []
     | In i -> [true,In (NegInf,PosInf)]

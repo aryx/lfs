@@ -7,15 +7,15 @@ There are 3 versions and 3 ways to use LFS:
    but far less interesting from the user point of view because it is
    not a filesystem.
 
- - The full filesystem version of LFS. This version is a real filesystem, 
+ - The full filesystem version of LFS. This version is a real filesystem,
    which give access to the advantages of a filesystem, allowing the user to:
     - store real datas (such as music files, programs, ...),
-    - use a real shell providing advanced features (such as completion, 
+    - use a real shell providing advanced features (such as completion,
       globbing, ...),
-    - use traditional application over LFS (such as mp3 player, emacs, 
+    - use traditional application over LFS (such as mp3 player, emacs,
       explorer, ...),
    This version is more difficult to install as it requires to work
-   with the Linux kernel. 
+   with the Linux kernel.
 
  - The filesystem version of LFS as a "semi-real" filesystem where LFS
    just acts as a wrapper giving another view of your current
@@ -48,7 +48,7 @@ kernel-headers, the gcc/binutils toolsuite, ...
 ------------------------------------------------------------------------------
 Install:
 
-   configure 
+   configure
    make depend
    make
    make coredemo
@@ -67,7 +67,7 @@ Install:
  You will need some knowledge of ocaml. The file demo.ml contains
  examples of interaction.
 
- To compile the filesystem version (real and semi-real mode) type: 
+ To compile the filesystem version (real and semi-real mode) type:
      make all
  but you have first to install Fuse. You can either:
   FIXME
@@ -93,14 +93,14 @@ To use of the semi real mode of LFS (most people will want that):
   The first time you use LFS, you have to initialise LFS meta-data with:
      cd LFS-0.5/
      source env.sh
-     ./build-db.opt -lfs_metapath /your/meta_date_place  /path/that/you/want/to/index 
+     ./build-db.opt -lfs_metapath /your/meta_date_place  /path/that/you/want/to/index
 
   Then to "mount" LFS run the command:
      ./mount.lfs -semi_real_mode /your/meta_data_place /your/mount_point/
      cd /your/mount_point/
      ls
 
-  Use the following command for unmounting LFS: 
+  Use the following command for unmounting LFS:
        fusermount -u /your/mount_point/
 
 
@@ -115,22 +115,22 @@ To use the real mode of LFS (most people will prefer the safer semi-real mode):
   Then you can use LFS:
 
    run the command:
-      mount.lfs -real_mode /your/meta_data_place /your/mount_point/; 
+      mount.lfs -real_mode /your/meta_data_place /your/mount_point/;
       cd /your/mount_point/
-   Use the command: 
+   Use the command:
        umount.lfs /your/mount_point/ for unmounting.
 
   Example of session:
    mkdir a
    mkdir b
    mkdir c
-   touch a/b/fab 
+   touch a/b/fab
    touch c/b/fbc
    cd b
-   ls 
+   ls
       --> see a/ c/
    cd a
-   ls 
+   ls
       --> see fab
 
 

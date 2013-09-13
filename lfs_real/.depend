@@ -1,58 +1,58 @@
-ioplugins.cmi: ../lfs_core/lfs.cmi ../commons/common.cmi 
-lfs_bdb.cmi: lfs_persistent.cmi 
-lfs_extensions.cmi: 
+ioplugins.cmi: ../lfs_core/lfs.cmi ../commons/common.cmi
+lfs_bdb.cmi: lfs_persistent.cmi
+lfs_extensions.cmi:
 lfs_fuse.cmi: lfs_persistent.cmi ../lfs_core/lfs.cmi \
-    ../ocamlfuse/Fuse_bindings.cmi ../commons/common.cmi 
-lfs_gdbm.cmi: lfs_persistent.cmi 
-lfs_persistent.cmi: 
-lfs_real.cmi: ../lfs_core/lfs.cmi ../commons/common.cmi 
+    ../ocamlfuse/Fuse_bindings.cmi ../commons/common.cmi
+lfs_gdbm.cmi: lfs_persistent.cmi
+lfs_persistent.cmi:
+lfs_real.cmi: ../lfs_core/lfs.cmi ../commons/common.cmi
 lfs_semireal.cmi: ../commons/oassoc.cmi lfs_persistent.cmi \
-    ../lfs_core/lfs.cmi ../commons/common.cmi 
-ioplugins.cmo: ../lfs_core/lfs.cmi ../commons/common.cmi ioplugins.cmi 
-ioplugins.cmx: ../lfs_core/lfs.cmx ../commons/common.cmx ioplugins.cmi 
+    ../lfs_core/lfs.cmi ../commons/common.cmi
+ioplugins.cmo: ../lfs_core/lfs.cmi ../commons/common.cmi ioplugins.cmi
+ioplugins.cmx: ../lfs_core/lfs.cmx ../commons/common.cmx ioplugins.cmi
 lfs_bdb.cmo: ../commons/ocollection/oseti.cmo \
     ../commons/ocollection/osetb.cmo ../commons/ocollection/ograph2way.cmi \
     ../commons/ocollection/oassocbdb.cmi \
     ../commons/ocollection/oassoc_buffer.cmi lfs_persistent.cmi \
     ../lfs_core/lfs.cmi ../globals/flag_lfs.cmo ../commons/common.cmi \
-    ../ocamlbdb/bdb.cmo lfs_bdb.cmi 
+    ../ocamlbdb/bdb.cmo lfs_bdb.cmi
 lfs_bdb.cmx: ../commons/ocollection/oseti.cmx \
     ../commons/ocollection/osetb.cmx ../commons/ocollection/ograph2way.cmx \
     ../commons/ocollection/oassocbdb.cmx \
     ../commons/ocollection/oassoc_buffer.cmx lfs_persistent.cmx \
     ../lfs_core/lfs.cmx ../globals/flag_lfs.cmx ../commons/common.cmx \
-    ../ocamlbdb/bdb.cmx lfs_bdb.cmi 
+    ../ocamlbdb/bdb.cmx lfs_bdb.cmi
 lfs_extensions.cmo: ../commons/ocamlextra/suffix_tree_ext.cmi \
     ../commons/ofullcommon.cmo lfs_real.cmi lfs_fuse.cmi ../lfs_core/lfs.cmi \
     ../globals/flag_lfs.cmo ../commons/ocamlextra/dynArray.cmi \
-    ../commons/common.cmi ../ocamlagrep/agrep.cmi lfs_extensions.cmi 
+    ../commons/common.cmi ../ocamlagrep/agrep.cmi lfs_extensions.cmi
 lfs_extensions.cmx: ../commons/ocamlextra/suffix_tree_ext.cmx \
     ../commons/ofullcommon.cmx lfs_real.cmx lfs_fuse.cmx ../lfs_core/lfs.cmx \
     ../globals/flag_lfs.cmx ../commons/ocamlextra/dynArray.cmx \
-    ../commons/common.cmx ../ocamlagrep/agrep.cmx lfs_extensions.cmi 
+    ../commons/common.cmx ../ocamlagrep/agrep.cmx lfs_extensions.cmi
 lfs_fuse.cmo: ../lfs_path/path.cmi ../commons/ocollection/osetb.cmo \
     ../commons/ofullcommon.cmo lfs_real.cmi lfs_persistent.cmi \
     ../lfs_core/lfs.cmi ../ocamlfuse/Fuse.cmi ../globals/flag_lfs.cmo \
-    ../commons/common.cmi ../commons/backtrace.cmo lfs_fuse.cmi 
+    ../commons/common.cmi ../commons/backtrace.cmo lfs_fuse.cmi
 lfs_fuse.cmx: ../lfs_path/path.cmx ../commons/ocollection/osetb.cmx \
     ../commons/ofullcommon.cmx lfs_real.cmx lfs_persistent.cmx \
     ../lfs_core/lfs.cmx ../ocamlfuse/Fuse.cmx ../globals/flag_lfs.cmx \
-    ../commons/common.cmx ../commons/backtrace.cmx lfs_fuse.cmi 
-lfs_gdbm.cmo: ../commons/common.cmi lfs_gdbm.cmi 
-lfs_gdbm.cmx: ../commons/common.cmx lfs_gdbm.cmi 
-lfs_inotify.cmo: 
-lfs_inotify.cmx: 
-lfs_persistent.cmo: lfs_persistent.cmi 
-lfs_persistent.cmx: lfs_persistent.cmi 
+    ../commons/common.cmx ../commons/backtrace.cmx lfs_fuse.cmi
+lfs_gdbm.cmo: ../commons/common.cmi lfs_gdbm.cmi
+lfs_gdbm.cmx: ../commons/common.cmx lfs_gdbm.cmi
+lfs_inotify.cmo:
+lfs_inotify.cmx:
+lfs_persistent.cmo: lfs_persistent.cmi
+lfs_persistent.cmx: lfs_persistent.cmi
 lfs_real.cmo: ../commons/oset.cmi ../lfs_core/lfs.cmi ioplugins.cmi \
-    ../globals/flag_lfs.cmo ../commons/common.cmi lfs_real.cmi 
+    ../globals/flag_lfs.cmo ../commons/common.cmi lfs_real.cmi
 lfs_real.cmx: ../commons/oset.cmx ../lfs_core/lfs.cmx ioplugins.cmx \
-    ../globals/flag_lfs.cmx ../commons/common.cmx lfs_real.cmi 
+    ../globals/flag_lfs.cmx ../commons/common.cmx lfs_real.cmi
 lfs_semireal.cmo: ../commons/oset.cmi ../commons/ocollection/oassocdbm.cmi \
     ../commons/oassoc.cmi lfs_persistent.cmi lfs_bdb.cmi ../lfs_core/lfs.cmi \
     ioplugins.cmi ../globals/flag_lfs.cmo ../commons/common.cmi \
-    lfs_semireal.cmi 
+    lfs_semireal.cmi
 lfs_semireal.cmx: ../commons/oset.cmx ../commons/ocollection/oassocdbm.cmx \
     ../commons/oassoc.cmx lfs_persistent.cmx lfs_bdb.cmx ../lfs_core/lfs.cmx \
     ioplugins.cmx ../globals/flag_lfs.cmx ../commons/common.cmx \
-    lfs_semireal.cmi 
+    lfs_semireal.cmi

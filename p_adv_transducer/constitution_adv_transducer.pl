@@ -4,7 +4,7 @@ sub maybe { my ($Uv) = @_;    (defined($Uv))  ?  ($Uv)  :  () ;}
 
 my $state = {};
 
-#if have to see forward then uncoment this  and replace 
+#if have to see forward then uncoment this  and replace
   my @data = ();
   while(<STDIN>) {
       my $s = $_;
@@ -12,22 +12,22 @@ my $state = {};
   }
   my $i = 0;
 
-map { 
+map {
 #while(<STDIN>) {
     my $s = $_;
     my @aspects = ();
 
     if(/ARTICLE/) { push @aspects, "synchro"; $state = {}; }
-    if(/ARTICLE (.*)-(\d+)/) { 
+    if(/ARTICLE (.*)-(\d+)/) {
         my ($part, $num) = ($1, $2);
         my $next = $data[$i+2];
         my $title = ($next =~ /^\s+(.*?)\s*$/) ? $1 : "notitle";
         $state->{article} = ["section:$part-$num", "title:$title"];
-        
-    }
-    
 
-    my $res = 
+    }
+
+
+    my $res =
       [
        @aspects,
 #       maybe($state->{PUT_HERE}),

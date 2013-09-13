@@ -10,7 +10,7 @@ OCAML_LIBS=`ocamlc -where`
 #pad: use ocamlmklib ? and get rid of -custom
 
 ##############################################################################
-all: bdb.cma 
+all: bdb.cma
 all.opt: bdb.cmxa
 opt: all.opt
 
@@ -25,10 +25,10 @@ bdb_stubs.o: bdb_stubs.c
 	gcc $(CFLAGS) -I$(BDB_INCLUDE) -I$(OCAML_LIBS) \
 		-L$(BDB_LIBS) -c bdb_stubs.c
 
-libcamlbdb.a: bdb_stubs.o 
+libcamlbdb.a: bdb_stubs.o
 	rm -rf libcamlbdb.a
 	ar rc libcamlbdb.a bdb_stubs.o
-	ranlib libcamlbdb.a 
+	ranlib libcamlbdb.a
 
 bdb.cmo: bdb.ml
 	ocamlc -c bdb.ml
@@ -39,7 +39,7 @@ bdb.cma: bdb.cmo libcamlbdb.a
 
 clean:
 	rm -f bdb.cma bdb.cmxa libcamlbdb.a bdb_stubs.o bdbtop bdb_stubs.c \
-	bdb_stubs.a bdb.a bdb.ml *.cmo *.cmi *.cmx *.o bdb.o bdb.cmx 
+	bdb_stubs.a bdb.a bdb.ml *.cmo *.cmi *.cmx *.o bdb.o bdb.cmx
 
 ##############################################################################
 bdb.cmx: bdb.ml
@@ -56,7 +56,7 @@ bdbo.cmo: bdbo.ml
 	ocamlc -c -I .. bdbo.ml
 
 bdbo.cmx: bdbo.ml
-	ocamlopt bdbo.ml -I .. 
+	ocamlopt bdbo.ml -I ..
 
 test.exe: test.ml bdb.src bdb_stubs.c
 	ocamlc -c test.ml
@@ -66,7 +66,7 @@ test2.exe: test.ml bdb.src bdb_stubs.c
 	ocamlopt -c -thread test.ml
 	ocamlopt -thread bdb.cmxa -ccopt "-L$(BDB_LIBS)" unix.cmxa -o $@ test.cmx
 
-clean2: 
+clean2:
 	rm -f test test.cm* test.o
 
 depend::

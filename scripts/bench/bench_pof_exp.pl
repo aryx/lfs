@@ -145,15 +145,15 @@ map {
 #    my @xs = `wc -l $DATA/$mount/$current`;
 #      #not correct with multi
 #    print INFO "$xs[0]";
-#    print INFO "metasize (Ko)\n"; 
+#    print INFO "metasize (Ko)\n";
 #    my @xs = `cd /sfl-meta/$mount/; du -c children parents extparts* iprop_prop prop_iprop partsinfo* `;     #not extfiles
 #    map { print INFO "$_"; } @xs;
 #    my @xs = `cat /sfl-meta/$mount/stat_context`;
 #    map { print INFO "$_"; } @xs;
 #    print INFO "\n\n";
-    
 
-} 
+
+}
 (
 #  {src=> "impl.mlx", mount=>"code",  demo=>"pof-code.sh", dest=>"lfs.mlx",
   #  {src=> "pervasives.mli", mount=>"code",  demo=>"pof-code.sh", dest=>"pervasives.mli",
@@ -165,7 +165,7 @@ map {
    special => "cd /tmp; rm -rf all_code; cp -a /home/pad/work/lfs/code/ all_code; cd all_code; make clean; rm -rf RCS ocamlbdb txt todo; find -type l -exec rm {} \\; ; chown pad -R *;  cp -a * /sfl/code/mine/.relaxed",
    #old: special => "cd /home/pad/work/lfs/code; cp -a Common.pmx common.mlx    LfsOcamlOrig.mlx LfsPerl.pmx  spec.mlx impl.mlx     /sfl/code/mine/.relaxed/",
 
-   LS1 => "function:/'section:Le shell'/", 
+   LS1 => "function:/'section:Le shell'/",
    LS2 => "function:/'section:Plug-ins'/",
    LS3 => "functype:/", # contain:
    LS4 => "'function:mkdir|function:cd'/field:/",
@@ -176,10 +176,10 @@ map {
   },
 
   {src=> "thesis.tex", mount=>"thesis",  demo=>"pof-latex.sh", dest=>"thesis.tex",
-   LS1 => "chapter:Principes/title:/", 
+   LS1 => "chapter:Principes/title:/",
    LS2 => "chapter:Extensions/title:/",
    LS3 => "title:/", # contain:   note:
-   LS4 => "chapter:Extensions/.strict/", 
+   LS4 => "chapter:Extensions/.strict/",
    VIEW => "'title:Les transducteurs avancés'/!comment:/",
    MODIF => "'s/normaux/normauxx/g'",
    VIEW2 => "title:Résumé/",
@@ -187,7 +187,7 @@ map {
   },
 
  {src=> "thesis.bib", mount=>"bibtex",  demo=>"pof-bibtex.sh", dest=>"thesis.bib",
-   LS1 => "year:/year:1988/author:/", 
+   LS1 => "year:/year:1988/author:/",
    LS2 => "year:/year:1989/author:/",
    LS3 => "author:/",
    LS4 => "'typeref:Book|typeref:book'/.strict/author:/title:/",
@@ -198,7 +198,7 @@ map {
   },
 
  {src=> "foo.c", mount=> "tutorial_pof",  demo=>"pof-naivec.sh", dest=>"foo.c",
-   LS1 => "function:f/", 
+   LS1 => "function:f/",
    LS2 => "function:f2/", #contain:
    LS3 => "function:/", #contain:
    LS4 => "'function:f|function:f2'/",
@@ -215,7 +215,7 @@ map {
    special => "cp $SRC/p_transducer/c_transducer4 transducer:c/; cp -a $DATA/ab/* mine/.relaxed/",
  #  special => "cp $SRC/p_transducer/c_transducer.pl transducer:c/; cp -a $DATA/ab/fscript/*.c mine/.relaxed/",
  # special => "cp $SRC/p_transducer/c_transducer.pl transducer:c/; cp -a $DATA/total-ab.c mine/.relaxed/",
-   LS1 => "function:Eshell/", 
+   LS1 => "function:Eshell/",
    LS2 => "function:Eshell/", #contain:
    LS3 => "function:/", #contain:
    LS4 => "'function:Eshell|function:Exit'/",
@@ -227,7 +227,7 @@ map {
 
 
  {src=> "foo.c", mount=> "tutorial_pof",  demo=>"pof-naivec.sh", dest=>"foo.c",
-   LS1 => "function:f/", 
+   LS1 => "function:f/",
    LS2 => "function:f2/", #contain:
    LS3 => "function:/", #contain:
    LS4 => "'function:f|function:f2'/",
@@ -243,8 +243,8 @@ map {
   #special => "cp $SRC/p_transducer/c_transducer.pl transducer:c/; cp -a $DATA/linux/src-last/*.c mine/.relaxed/",
   special => "cp $SRC/p_transducer/c_transducer4 transducer:c/; cp -a $DATA/linux/src-last/*.c mine/.relaxed/",
   #special => "cp $SRC/p_transducer/c_transducer.pl transducer:c/; cp -a $DATA/linux/total-linux.c mine/.relaxed/",
-  #full source ? but have diplicate file 
-   LS1 => "function:do_fork/", 
+  #full source ? but have diplicate file
+   LS1 => "function:do_fork/",
    LS2 => "contain:do_fork/function:", #contain:
    LS3 => "function:/", #contain:
    LS4 => "'function:do_fork|function:do_fork'/",
@@ -258,7 +258,7 @@ map {
 
   # bench were done with old version of pof => normal if different number
   {src=> "pof_article.tex", mount=>"tex",  demo=>"pof-latex.sh", dest=>"pof_article.tex",
-   LS1 => "section:Principles/title:/", 
+   LS1 => "section:Principles/title:/",
    LS2 => "section:Extensions/title:/",
    LS3 => "title:/", # contain:
    LS4 => "'title:Updating|title:Indexing'/title:/.strict",
@@ -273,7 +273,7 @@ map {
 
 
  {src=> "ridoux.bib", mount=>"bibtex",  demo=>"pof-bibtex.sh", dest=>"ridoux.bib",
-   LS1 => "year:/year:1988/author:/", 
+   LS1 => "year:/year:1988/author:/",
    LS2 => "year:/year:1989/author:/",
    LS3 => "author:/",
    LS4 => "'typeref:Book|typeref:book'/.strict/author:/title:/",
@@ -293,7 +293,7 @@ map {
 
 
   {src=> "100_000.bib", mount=>"bibtex1",  demo=>"pof-bibtex.sh", dest=>"100_000.bib",
-   LS1 => "year:/year:1988/author:/", 
+   LS1 => "year:/year:1988/author:/",
    LS2 => "year:/year:1989/author:/",
    LS3 => "author:/",
    LS4 => "'typeref:Book|typeref:book'/.strict/author:/title:/",
@@ -322,7 +322,7 @@ map {
 
 
   {src=> "Lfs.pmi", mount=> "code",  demo=> "pof-perl.sh", dest=> "Lfs.pmi",
-   LS1 => "section:Contents/function:/", 
+   LS1 => "section:Contents/function:/",
    LS2 => "section:Create/function:/",
    LS3 => "function:/",
    LS4 => "'function:read|function:write'/",

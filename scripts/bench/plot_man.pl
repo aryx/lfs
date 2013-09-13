@@ -11,10 +11,10 @@ print "$file\n";
 my $SRC = "/home/pad/work/lfs/code";
 
 #TODO
-#synopsis: 
+#synopsis:
 # type des synoptis
 # options
-# 
+#
 #extract info that glimpse cant
 # such as section, ...
 
@@ -43,7 +43,7 @@ map {
     my $forbiddens = [qw(the of a to for and in an or from on with s as)]; # get from testing and sorting most cited increment
     if($current =~ /^(\w+)(.*)\((\d)\)\s*-\s*(.*)$/) { #for section have |\w|\d\w+
 	my ($name, $misc, $section, $s) = ($1, $2, $3, $4);
-	if(!exists($done->{$name})) {  
+	if(!exists($done->{$name})) {
 #	    $done->{$name} = "done";
 	    $i++;
 	    my $words = mapf(sub { my ($s) = @_; "keyword:$s" }, filter (sub { my ($s) = @_; !(mems($s, $forbiddens))}, words($s)));
@@ -61,11 +61,11 @@ map {
 	    print CP ($time2 - $time);    print CP "\n";
 	    $total+= ($time2 - $time);
 #    exit if $i==300;
-	    
+
 	}
 
-    } else { 
-	#pr2 "not a valid entry: $_" 
+    } else {
+	#pr2 "not a valid entry: $_"
     }
 
 #    exit;

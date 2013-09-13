@@ -4,7 +4,7 @@ When you build your meta data with the -build_db_gentoo option, /var/db/pkg/*/CO
     This will show you all the files of the package lfs, in the category sys-fs that are in /usr.
 
     cd /lfs/package:lfs/ext:h/.ext
-    This will show you all the .h files inside the lfs package, if we don't restrict to the sys-fs category it will show both .h files of sys-fs/lfs 
+    This will show you all the .h files inside the lfs package, if we don't restrict to the sys-fs category it will show both .h files of sys-fs/lfs
     and of app-doc/lfs (Linux from scratch).
 
     cd /lfs/category:sys-fs/usr/include

@@ -169,7 +169,7 @@
   \item path\dotfill 41
   \item plugins\dotfill 15
     \subitem advanced transducer\dotfill \see{advanced transducer}{15}
-    \subitem logic deduction engine\dotfill 
+    \subitem logic deduction engine\dotfill
 		\see{logic deduction engine}{15}
     \subitem transducer\dotfill \see{transducer}{15}
   \item propagation (of modifications)\dotfill 19

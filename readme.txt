@@ -14,7 +14,7 @@ On the other hand, query brings flexibility and expressivity but lacks
 the advantages of navigation. To make it easy to manipulate the
 contents of those documents, those systems come with separate tools such
 as advanced text editors or integrated development environments (IDE) which
-suffer too from the same limitation. 
+suffer too from the same limitation.
 
 We propose a new paradigm for information system, the "Logic File
 System" (LFS), that offers expressive organisation, retrieval
@@ -60,6 +60,6 @@ Authors:
 
 
 ------------------------------------------------------------------------------
-FAQ: 
+FAQ:
 Q. I enjoy so much LFS, is there any LFS t-shirt ?
 A. not yet, stay tuned...

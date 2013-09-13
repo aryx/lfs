@@ -6,21 +6,21 @@
 
 ==== Use ====
 
-=== Can we run utilies in LFS directories, like grep ? === 
+=== Can we run utilies in LFS directories, like grep ? ===
 
 Yes you can. You can run all commands, like:
 
-    $ grep kmalloc '/lfs/ext:c/drivers|net/.ext/'*.c 
+    $ grep kmalloc '/lfs/ext:c/drivers|net/.ext/'*.c
 
 The only limitations for the default mode of LFS ("semi real mode") is
-that you can only edit or read the contents of files. You can not delete, or 
+that you can only edit or read the contents of files. You can not delete, or
 move files around. For that thing you will have to do those actions under your traditional
-filesystem, not under the LFS view of your traditional filesystem.  
+filesystem, not under the LFS view of your traditional filesystem.
 
 === What if a query contain files with the same name ? ===
 
-LFS will append some (virtual) <xx> suffix to the files, as in 
- 
+LFS will append some (virtual) <xx> suffix to the files, as in
+
     $ ls /lfs/ext:txt/.ext/
     foo.txt bar.txt TODO.txt  TODO<1>.txt   TODO<2>.txt ...
 

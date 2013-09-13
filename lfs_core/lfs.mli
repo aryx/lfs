@@ -30,21 +30,21 @@ type filename = string
 type filecontent = string
 type partcontent = string
 
-(* LFS can work in two modes:  
- *   - core LFS: all is in memory, which is convenient to debug, test, 
- *     experiment new features, 
+(* LFS can work in two modes:
+ *   - core LFS: all is in memory, which is convenient to debug, test,
+ *     experiment new features,
  *   - real LFS: files are on the disk (but possibly not the index)
- * update: in fact there is now a third mode, semi-real LFS which is 
+ * update: in fact there is now a third mode, semi-real LFS which is
  *  really similar to the real mode, it's just that the files are not
  *  stored in a meta-lfs/.
- * 
+ *
  * Depending on the mode, some field value may be interpreted in different way:
- * - the value contain directly the content (in core LFS), 
+ * - the value contain directly the content (in core LFS),
  * - the value contain an identifier from where we will be able
  *   to get the path to a disk file (in real LFS).
- * 
- * So have in mind fakecontent = filecontent when work in core LFS. 
- * If want print some beautiful code,  s/fake/file, and s/core.*__(.+)/$1/  
+ *
+ * So have in mind fakecontent = filecontent when work in core LFS.
+ * If want print some beautiful code,  s/fake/file, and s/core.*__(.+)/$1/
  * By default LFS work in core mode. To switch to real mode, see the end
  * of this file that tells how to customize LFS.
  *)
@@ -82,7 +82,7 @@ type plugin =
 val make_default_world: unit -> unit
 
 (* some functions can be made more efficient if do less checks *)
-val lfs_check : bool ref 
+val lfs_check : bool ref
 val lfs_allow_cd_parts : bool ref
 
 val pwd:     unit -> formula
@@ -101,8 +101,8 @@ val mvdir:   string -> path -> string -> unit
 
 val read:    filename -> filecontent
 val write:   filename_or_id  -> filecontent -> unit
-(* todo: change what follows = filecontent argument is in fact used 
- * only when it is a view => 
+(* todo: change what follows = filecontent argument is in fact used
+ * only when it is a view =>
  *)
 
 val ln: filename -> string -> filename -> unit
@@ -124,25 +124,25 @@ val is_vattr: property -> bool
 val value_vattr: property -> property
 val attr_vattr: property -> property
 
-type misc_options = { 
+type misc_options = {
   ls_mode:    ls_mode;
   mkdir_mode: mkdir_mode;
   cd_mode:    cd_mode;
   view_mode:  view_mode;
-} 
-  and ls_mode    = 
-    | Strict | Relaxed 
-    | Ext | Int 
-    | Best | CA 
-    | Classic | Parents  
+}
+  and ls_mode    =
+    | Strict | Relaxed
+    | Ext | Int
+    | Best | CA
+    | Classic | Parents
    (* less: could also do ExtBoth, FileNumbers of int, ...  *)
   and mkdir_mode = Normal | Compat
   and cd_mode    = AllowJump | NoJump
-  and view_mode  = 
-    | SingleV of property 
+  and view_mode  =
+    | SingleV of property
     | OrV  of property * property
     | NotV of property
-    | SpecialV 
+    | SpecialV
 
 val default_ls_mode : ls_mode ref
 
@@ -174,9 +174,9 @@ type world = {
   partsfile : (idpart, idfile) oassoc;
 
   (* used only in core LFS (or to put solver in builtin) *)
-  plugins : (idfile, plugin) assoc; 
+  plugins : (idfile, plugin) assoc;
 
-  pwd_history : (formula * whichmode * misc_options) stack; 
+  pwd_history : (formula * whichmode * misc_options) stack;
 }
 
  and whichmode = Files | Parts
@@ -235,7 +235,7 @@ val core_get_fcontent__id           : (fakecontent -> filecontent) ref
 val core_get_size_fcontent__slength : (fakecontent -> string)      ref
 val core_get_date_fcontent__today   : (fakecontent -> Unix.tm)      ref
 val core_set_fcontent__fst          : (fakecontent * objet -> fakecontent) ref
-val core_update_fcontent__fst       : 
+val core_update_fcontent__fst       :
   ((unit -> filecontent) * idfile -> fakecontent) ref
 
 (* can use this hook to create/del some real data on disk *)
@@ -251,10 +251,10 @@ type itransducer     = fakecontent -> iproperty set
 type adv_itransducer = partcontent list -> iproperty set list
 
 (* the plugin can be on a disk somewhere *)
-val hook_find_alogic : 
+val hook_find_alogic :
   (idfile -> logic) ref
-val hook_find_transducer :  
-  (idfile -> property -> (property -> iproperty option) -> 
+val hook_find_transducer :
+  (idfile -> property -> (property -> iproperty option) ->
     ((transducer, adv_itransducer) either)) ref
 
 
@@ -283,9 +283,9 @@ type context = {
 val context: world -> context
 
 val ext: formula -> context -> objet oset
-val dirs: formula -> misc_options -> context -> (property * int) oset 
+val dirs: formula -> misc_options -> context -> (property * int) oset
 
-(* effect!: on w, cos of iprop (cant keep all the strings in mem, 
+(* effect!: on w, cos of iprop (cant keep all the strings in mem,
  * and in descr when use disk) *)
 val check_and_add_property: property -> iproperty option
 
@@ -303,8 +303,8 @@ val relation_parse_path : (string -> path) ref
 
 val hook_is_special_prop : (property -> (property -> bool) -> bool) ref
 
-val hook_compute_ext : 
-  ((property * context) -> ((property * context) -> objet oset) -> 
+val hook_compute_ext :
+  ((property * context) -> ((property * context) -> objet oset) ->
     objet oset) ref
 
 val hook_action_add_prop : (property -> unit) list ref

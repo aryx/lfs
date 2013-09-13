@@ -1,5 +1,5 @@
 SRCSPEC= lfs.ml plugins.ml demo.ml
-SRCCORE= lfs.ml spec.ml 
+SRCCORE= lfs.ml spec.ml
 SRCREALMEM=lfsmem_fuse.ml
 
 #spec:
@@ -9,25 +9,25 @@ SRCREALMEM=lfsmem_fuse.ml
 
 coredemo: $(SRCCOREDEMO:.ml=.cmx)
 	$(OCAMLOPT) -o $@ $(SYSLIBSCORE:=.cmxa) $(SRCCOREDEMO:.ml=.cmx)
-clean:: 
+clean::
 	rm -f coredemo
 
 
 coredemo.top: $(SRCCOREDEMO:.ml=.cmo)
-	$(OCAMLMKTOP) -o $@ $(LIBSCORE:=.cma) $(SRCCOREDEMO:.ml=.cmo) 
-clean:: 
+	$(OCAMLMKTOP) -o $@ $(LIBSCORE:=.cma) $(SRCCOREDEMO:.ml=.cmo)
+clean::
 	rm -f coredemo.top
 
 
 lfsmem: $(SRCREALMEM:.ml=.cmx)
 	$(OCAMLOPT) -o $@ $(LIBSCORE:=.cmxa) \
 	   -ccopt -Locamlfuse Fuse.cmxa -cclib -lfuse -cclib -lcamlidl \
-	   $(SRCREALMEM:.ml=.cmx) 
-clean:: 
+	   $(SRCREALMEM:.ml=.cmx)
+clean::
 	rm -f lfsmem
 
 
 specdemo: $(SRCSPEC:.ml=.cmx)
 	$(OCAMLOPT) -o $@ $(LIBSSPEC:=.cmxa) $(SRCSPEC:.ml=.cmx)
-clean:: 
+clean::
 	rm -f specdemo

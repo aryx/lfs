@@ -62,15 +62,15 @@ PYSYSLIBS=python.cma
 
 #ocamlmpi
 MYMPISRC=distribution.ml
-MPIINCLUDES=-I ../ocamlmpi -I ../../ocamlmpi -I +ocamlmpi 
+MPIINCLUDES=-I ../ocamlmpi -I ../../ocamlmpi -I +ocamlmpi
 MPISYSLIBS=mpi.cma
 
-#pcre 
+#pcre
 #REGEXPINCLUDES=-I +pcre
 MYREGEXPSRC=regexp.ml
 REGEXPINCLUDES=-I ../ocamlpcre/lib  -I ../../ocamlpcre/lib
 
-#sexplib 
+#sexplib
 MYSEXPSRC=sexp_common.ml
 SEXPINCLUDES=-I ../ocamlsexp -I ../ocamltarzan/lib-sexp -I ../../ocamltarzan/lib-sexp
 #binprot
@@ -101,9 +101,9 @@ INCLUDES=$(INCLUDEDIRS:%=-I %) $(INCLUDESEXTRA)
 OPTFLAGS=
 #-thread
 
-# The OPTBIN variable is here to allow to use ocamlc.opt instead of 
+# The OPTBIN variable is here to allow to use ocamlc.opt instead of
 # ocaml, when it is available, which speeds up compilation. So
-# if you want the fast version of the ocaml chain tools, set this var 
+# if you want the fast version of the ocaml chain tools, set this var
 # or setenv it to ".opt" in your startup script.
 OPTBIN ?= #.opt
 

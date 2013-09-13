@@ -354,7 +354,7 @@ module Tester (L : T) =
       | "sub", [f; g] -> print_f_undef (fun () -> L.sub f g)
       | "features", [f] ->
 	  List.iter
-	    (fun (vis,x) -> 
+	    (fun (vis,x) ->
 	      print_string (if vis then "show " else "hide ");
 	      print_f x)
 	    (L.features f)
@@ -449,11 +449,11 @@ module Plugin (L : T) :
     let parse : string -> L.t =
       fun s ->
 	L.parse (Syntax.from_string s)
-	  
+
     let entails : string -> string -> bool =
       fun s1 s2 ->
 	L.entails (parse s1) (parse s2)
-	  
+
     let isvalue : string -> bool =
       fun s ->
 	L.isvalue (parse s)

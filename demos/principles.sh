@@ -5,14 +5,14 @@ root=`pwd`
 src=/home/pad/c-lfs/
 
 if [ ! -r $src/p_logic ]
-    then echo "It seems that $src is not the directory where resides LFS source. 
+    then echo "It seems that $src is not the directory where resides LFS source.
 You must adjust in this file the src variable.
 ";
     exit
 fi
 
 if [ ! -r $root/.relaxed ]
-    then echo "It seems that $root is not a directory where LFS is mounted. 
+    then echo "It seems that $root is not a directory where LFS is mounted.
 You must launch this script from a mounted LFS path.
 ";
     exit
@@ -47,7 +47,7 @@ cd "$root/port/USA";
 ls;
 # => [ "music/"; "movie/"; "art/";  "miami.jpg"; "san-diego.jpg"]));
 
-cd "$root"'/capital|movie/!seaside'; 
+cd "$root"'/capital|movie/!seaside';
 ls;
 # => ["washington.jpg"]));
 
@@ -83,7 +83,7 @@ ls;
 # => ["san-diego.jpg"; "art/"]);
 cd "art";
 ls;
-# => ["movie/"; "music/"]);    
+# => ["movie/"; "music/"]);
 
 cd "$root"/'USA&music';
 touch "chicago.jpg";
@@ -133,8 +133,8 @@ ls;
 # => ["year:2001/"; "year:2002/"]);
 cd "$root/year:";
 ls;
-# => ["year:2000/"; "year:>2000/"]);    
-	     
+# => ["year:2000/"; "year:>2000/"]);
+
 #    assert(interval_logic (Prop "2001")  (Prop ">2000") = true);
 #    assert(interval_logic (Prop ">2000") (Prop "2001")  = false);
 
@@ -163,12 +163,12 @@ cd "mymusic";
 mkdir "artist:";
 mkdir "genre:";
 printf "tag_genre=Disco\ntag_artist=BeeGees\ndataaaa" > "staying_alive.mp3"
-printf "tag_genre=Pop\ntag_artist=JoeDassin\ndata" > "ete_indien.mp3"    
+printf "tag_genre=Pop\ntag_artist=JoeDassin\ndata" > "ete_indien.mp3"
 ls
 # => [ "genre:Disco/"; "genre:Pop/"; "artist:BeeGees/"; "artist:JoeDassin/"; "name:ete_indien/";  "name:staying_alive/"; "size:39/"; "size:42/" ] );
 
 #    cd_ "genre:Disco";
-#    assert(mp3_transducer (read "staying_alive.mp3") $=$ 
+#    assert(mp3_transducer (read "staying_alive.mp3") $=$
 #	   set [Prop "artist:BeeGees"; Prop "genre:Disco"]);
 
 
@@ -179,7 +179,7 @@ cd "myprograms"
 
 printf 	"int f(int x) {\nint y;\nassert(x > 1);\ny = x;\nfprintf(stderr, \"x = %d\", x);\nreturn y * 2\n}\nint f2(int z) {\nreturn z * 4\n}" > foo.c
 #cat foo.c
-# => 
+# =>
 #	     [ "int f(int x) {";
 #	       "int y;";
 #	       "assert(x > 1);";
@@ -241,7 +241,7 @@ cat foo.c | sed -e s/y/z/ > /tmp/foo.c
 cat /tmp/foo.c > foo.c
 cd "$root/myprograms/parts"
 cat foo.c
-# => 
+# =>
 #	     [ "int f(int x) {";
 #	       "int z;";
 #	       "assert(x > 1);";
