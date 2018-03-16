@@ -14,12 +14,11 @@ BATTERY_INCLUDED=ocamlagrep ocamlfuse ocamlbdb  logfun
 PLUGINSSUBDIRS=p_logic p_transducer p_adv_transducer
 EXTRADIRS=gui
 
-MAKESUBDIRS=$(BATTERY_INCLUDED) commons globals  lfs_core lfs_path lfs_real
-INCLUDEDIRS=$(BATTERY_INCLUDED) commons globals  lfs_core lfs_path lfs_real
+MAKESUBDIRS=$(BATTERY_INCLUDED) globals  lfs_core lfs_path lfs_real
+INCLUDEDIRS=$(BATTERY_INCLUDED) external/commons external/commons_ocollection globals  lfs_core lfs_path lfs_real
 ALLSUBDIRS=$(MAKESUBDIRS) $(PLUGINSSUBDIRS) $(EXTRADIRS)
 
-INCLUDES=$(INCLUDEDIRS:%=-I %) -I commons/ocamlextra
-
+INCLUDES=$(INCLUDEDIRS:%=-I %)
 
 
 # Basic libs. 
@@ -31,17 +30,12 @@ SYSLIBS3=Fuse
 
 SYSLIBS=$(SYSLIBS1) $(SYSLIBS2) $(SYSLIBS3)
 
-ifeq ($(FEATURE_BACKTRACE), 1)
-BTCMD= $(MAKE) backtrace -C commons
-BTCMDOPT= $(MAKE) backtrace.opt -C commons
-BTCMA=commons/commons_backtrace.cma
-else
-endif
+#TODO
+#      commons/commons_bdb.cma commons/commons_gdbm.cma \
+#      commons/commons_features.cma \
 
-
-LIBS1=commons/commons.cma globals/globals.cma \
-      commons/commons_bdb.cma commons/commons_gdbm.cma \
-      commons/commons_features.cma \
+LIBS1=external/commons/commons.cma \
+      globals/globals.cma \
       lfs_core/lfs_core.cma lfs_path/lfs_path.cma 
 LIBS2=lfs_real/lfs_real.cma
 # no fuse dependency
@@ -90,12 +84,13 @@ all.opt: rec.opt $(PROGS)
 opt: all.opt
 top: mount.top
 
+#TODO
+#	$(MAKE) -C commons bdb
+#	$(MAKE) -C commons gdbm
+#	$(MAKE) features -C commons 
+
 rec:
-	$(MAKE) -C commons all
 	$(MAKE) -C ocamlbdb
-	$(MAKE) -C commons bdb
-	$(MAKE) -C commons gdbm
-	$(MAKE) features -C commons 
 	set -e; for i in $(MAKESUBDIRS); do $(MAKE) -C $$i all; done 
 rec.opt:
 	$(MAKE) -C commons all.opt
