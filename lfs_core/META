@@ -1,0 +1,4 @@
+description = "Stuff"
+requires = "unix num"
+archive(byte) = "lfs_core.cma"
+archive(native) = "lfs_core.cmxa"
