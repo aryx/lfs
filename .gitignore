@@ -1,0 +1,5 @@
+*.cm*
+*.annot
+*.o
+*.a
+.depend
