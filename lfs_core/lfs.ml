@@ -1,4 +1,7 @@
+open Common
 open Ofullcommon
+open Printf
+let (push: 'a -> 'a stack -> 'a stack) = fun x xs -> x::xs
 
 let copyright () = pr2 
 "LFS, the Logic File System -- Yoann Padioleau.
@@ -250,14 +253,14 @@ let (stat_world: world -> unit) = fun w ->
 
   let count_extr = w.files#tolist +> List.map (fun (idf, file) -> 
     List.length file.extrinsic)
-    +> Common.sum in
+    +> Common2.sum in
   let count_intr = w.files#tolist +> List.map (fun (idf, file) -> 
     List.length file.intrinsic) 
-    +> Common.sum in
+    +> Common2.sum in
   let count_part = w.partsfile#tolist +> List.map (fun (idp, idf) -> 
     (((w.parts +> assoc idf).parts_info#assoc idp).pdescription 
       +> List.length)) 
-    +> Common.sum in
+    +> Common2.sum in
 
   eprintf "Attr/line: %d (files), %d (parts), %d (extrinsic), %d (intrinsic) \n" 
     ((count_extr + count_intr)   /! (w.files#length))
@@ -292,7 +295,7 @@ let rec (check_world: world ->  unit) = fun w ->
    *)
 
   pr2 "Checking logic cache";
-  Common.execute_and_show_progress (w.prop_iprop#length) (fun k ->
+  Console.execute_and_show_progress true (w.prop_iprop#length) (fun k ->
    w.prop_iprop#iter (fun (p, ip) -> 
     try 
       k ();
@@ -305,7 +308,7 @@ let rec (check_world: world ->  unit) = fun w ->
   );
 
   pr2 "Checking validity of extensions";
-  Common.execute_and_show_progress (w.extfiles#length) (fun k ->
+  Console.execute_and_show_progress true (w.extfiles#length) (fun k ->
    w.extfiles#iter (fun (p, oi) -> 
     k ();
     try oi#invariant () 
@@ -319,7 +322,7 @@ let rec (check_world: world ->  unit) = fun w ->
   pr2 "Checking inlining of extensions";
   (* note: do also the following invariant = union extension children
    * include in extension parent (cos inline => bigger parents) *)
-  Common.execute_and_show_progress (0) (fun k ->
+  Console.execute_and_show_progress true (0) (fun k ->
    let rec dfs = function 
     | [] -> ()
     | p::ps -> 
@@ -379,12 +382,12 @@ let rec (check_world: world ->  unit) = fun w ->
   let iprop_to_int = function Iprop i -> i in
   
   pr2 "Checking prop_iprop";
-  Common.execute_and_show_progress (w.prop_iprop#length) (fun k ->
+  Console.execute_and_show_progress true (w.prop_iprop#length) (fun k ->
    w.prop_iprop#iter (fun (p, ip) -> 
     k ();
     try 
       let ip' = w.prop_iprop#assoc p in
-      Common.assert_equal ip' ip;
+      Common2.assert_equal ip' ip;
       let _parents =  w.graphp#predecessors ip in
       let _children = w.graphp#successors ip in 
       let _ext = w.extfiles#assoc ip in
@@ -396,12 +399,12 @@ let rec (check_world: world ->  unit) = fun w ->
   );
 
   pr2 "Checking iprop_prop";
-  Common.execute_and_show_progress (w.iprop_prop#length) (fun k ->
+  Console.execute_and_show_progress true (w.iprop_prop#length) (fun k ->
     w.iprop_prop#iter (fun (ip, p) -> 
       k();
       try 
         let p' = w.iprop_prop#assoc ip in
-        Common.assert_equal p' p;
+        Common2.assert_equal p' p;
         let _parents =  w.graphp#predecessors ip in
         let _children = w.graphp#successors ip in 
         let _ext = w.extfiles#assoc ip in
@@ -412,13 +415,13 @@ let rec (check_world: world ->  unit) = fun w ->
   );
 
   pr2 "Checking some equality of global numbers (cardinality, ...)";
-  if !max_iprop > !Common._counter2
+  if !max_iprop > !Common2._counter2
   then begin
-    pr2 (spf "check_world: pb counter2 is not good, (max = %d) != (counter2 = %d)" !max_iprop !Common._counter2);
-    Common._counter2 := !max_iprop;
-    pr2 (spf "check_world: I am adjusting it, now here is the value of counter2 %d" !Common._counter2);
+    pr2 (spf "check_world: pb counter2 is not good, (max = %d) != (counter2 = %d)" !max_iprop !Common2._counter2);
+    Common2._counter2 := !max_iprop;
+    pr2 (spf "check_world: I am adjusting it, now here is the value of counter2 %d" !Common2._counter2);
   end;
-  hook_action_check_world +> Common.run_hooks_action w;
+  hook_action_check_world +> Common2.run_hooks_action w;
   ()
 and hook_action_check_world = ref [fun p  -> log3 "hook"]
 
@@ -432,7 +435,7 @@ let (new_object: unit -> objet)     = fun () ->
 let (new_object_part: unit -> objet)     = fun () -> 
   (*Obj*) (counter3 ())  (* todo: freeObj *)
 
-let _ = Common._counter3 := 2
+let _ = Common2._counter3 := 2
 
 (* note: if want go to test old version with only prop (to see if 
  * really opt), make new_iprop take in param property and make 
@@ -934,7 +937,7 @@ let (update_view: filecontent -> parts_info -> ((int, idpart list) assoc) -> fil
  fun newcontent info marks -> 
   (* opti: slow tout ca, en plus map c lent *)
   newcontent 
-    +> Common.lines_with_nl
+    +> Common2.lines_with_nl
     +> map (fun  s -> 
       if s =~ mark_regexp________
       then 
@@ -956,11 +959,11 @@ let (create_parts2: idfile -> file -> adv_itransducer -> conversion_func -> part
 
   let parts = Common.profile_code "Lfs.create_parts 1" (fun () -> 
     (* futur: not lines but tokens *)
-    Common.lines_with_nl (!core_get_fcontent__id file.fcontent))
+    Common2.lines_with_nl (!core_get_fcontent__id file.fcontent))
   in 
 
   let part_prop = Common.profile_code "Lfs.create_parts 2" (fun () -> 
-    parts +> trans +> Common.zip parts +> Common.index_list )
+    parts +> trans +> Common2.zip parts +> Common.index_list )
   in
 
   (* If use pure data-structure, must get the table that are up to date. 
@@ -1086,7 +1089,7 @@ let (reindex_parts:  idfile -> filecontent -> (file * parts_info) -> adv_itransd
   (* TODO use newx and Array.get *)
   let parts = !must_index +> map (fun i -> nth newlines i) in 
   let part_prop = Common.profile_code "Lfs.reindex_parts trans" (fun () -> 
-    parts +> trans +> Common.zip parts +> (fun x -> Common.zip x !must_index)
+    parts +> trans +> Common2.zip parts +> (fun x -> Common2.zip x !must_index)
   )
   in
 
@@ -1580,10 +1583,10 @@ let (value_vattr: property -> property) = fun (Prop s) ->
 let (attr_vattr: property -> property) = fun (Prop s) -> 
   Prop (regexp_match s ("\\(" ^ regexp_attr ^ "\\)"))
 
-let _ = Common.example (is_attr  (Prop "toto:"))
-let _ = Common.example (is_vattr (Prop "toto:tata"))
-let _ = Common.example (value_vattr (Prop "toto:tata") = (Prop "tata"))
-let _ = Common.example (attr_vattr  (Prop "toto:tata") = (Prop "toto:"))
+let _ = Common2.example (is_attr  (Prop "toto:"))
+let _ = Common2.example (is_vattr (Prop "toto:tata"))
+let _ = Common2.example (value_vattr (Prop "toto:tata") = (Prop "tata"))
+let _ = Common2.example (attr_vattr  (Prop "toto:tata") = (Prop "toto:"))
 
 (* Cant take just the context, or would need context_of_files, so 
  * take the world as a parameter now.
@@ -1628,12 +1631,12 @@ and (hook_find_alogic: (idfile -> logic) ref) = ref
 
 let transducer_system filename = 
   (fun content -> set [ 
-    Prop ("name:" ^ (Common.fileprefix filename)); 
-    Prop ("ext:" ^  (Common.filesuffix filename));
+    Prop ("name:" ^ (Common2.fileprefix filename)); 
+    Prop ("ext:" ^  (Common2.filesuffix filename));
     Prop ("size:" ^ (!core_get_size_fcontent__slength content));
     Prop ("date:" ^ (
       let time = !core_get_date_fcontent__today content in
-      Common.string_of_unix_time_lfs time
+      Common2.string_of_unix_time_lfs time
     ));
   ] )
 
@@ -1659,7 +1662,7 @@ let adv_transducer_system conv filename file =
 let rec (find_trans: world -> (property -> iproperty option) -> property -> string -> ((transducer, adv_itransducer) either) set) = 
  fun w conv ((Prop sprop) as prop) suffix ->
   if suffix = "" 
-  then Common.empty_list
+  then Common2.empty_list
   else begin
     (* because the transducer: property may now be managed by a logic,
      * transducer:ml may not exist but still have a plugin cos have a
@@ -1863,7 +1866,7 @@ let sanitize_lfs2 s =
 let sanitize_lfs s =
   Common.profile_code "Lfs.sanitize" (fun () -> sanitize_lfs2 s)
 
-let _ex1 = Common.example(sanitize_lfs "TODO<24>.txt" = "TODO_inf_24_sup_.txt")
+let _ex1 = Common2.example(sanitize_lfs "TODO<24>.txt" = "TODO_inf_24_sup_.txt")
 
 
 (*---------------------------------------------------------------------------*)
@@ -1988,7 +1991,7 @@ let (check_and_add_property: property -> iproperty option) = fun p ->
         then ip 
         else begin
           (* let _ = Timing() in *)
-          hook_action_add_prop +> Common.run_hooks_action p;
+          hook_action_add_prop +> Common2.run_hooks_action p;
           w := {!w with 
             graphp = graph;
             iprop_prop = !w.iprop_prop#add (ip, p); 
@@ -2025,7 +2028,7 @@ let (check_and_add_property: property -> iproperty option) = fun p ->
       | Not_found -> 
         (* let _ = Timing() in *)
         let ip = new_iprop () in
-        hook_action_add_prop +> Common.run_hooks_action p;
+        hook_action_add_prop +> Common2.run_hooks_action p;
         w := {!w with 
           graphp = (!w.graphp#add_node ip)#add_arc (iattr, ip);
           iprop_prop = !w.iprop_prop#add (ip, p); 
@@ -2084,7 +2087,7 @@ let (ls2: unit -> ((property * int) set * idfile set)) = fun () ->
 
     | _ when options.ls_mode = CA -> 
         let directories' = (dirs pwd {options with ls_mode = Strict} ctx) in
-        let candidates = directories'#tolist +> sort (fun (p1,i1) (p2,i2) -> - (compare i1 i2)) in
+        let candidates = directories'#tolist +> List.sort (fun (p1,i1) (p2,i2) -> - (compare i1 i2)) in
         let candidates = candidates +> map (fun (p,i) -> (p, i, 
              (try (ctx.extensions#assoc (ctx.conv_prop#assoc p)) with Not_found -> empty_ext ()) $**$ ois)) in
 
@@ -2396,13 +2399,13 @@ let (mkdir: string -> unit) = fun name ->
                                  
   let ps = properties_of_formula pwd +> List.map !w.prop_iprop#assoc  in
   let ps = 
-    if (Common.thd3 (top !w.pwd_history)).mkdir_mode = Compat 
+    if (thd3 (top !w.pwd_history)).mkdir_mode = Compat 
     then [(Prop "props-misc")] +> List.map !w.prop_iprop#assoc 
     else ps 
   in
   let ip = new_iprop () in
   
-  hook_action_add_prop +> Common.run_hooks_action p;
+  hook_action_add_prop +> Common2.run_hooks_action p;
   w := {!w with 
     graphp = (!w.graphp#add_node ip) +> (fun g -> 
       ps +> fold (fun g prop -> g#add_arc (prop, ip)) g
@@ -2447,8 +2450,8 @@ let (mkfile2: filename -> filecontent -> plugin option -> idfile) =
   let fcontent = !core_set_fcontent__fst (Core content, o) in
 
   Common.profile_code "Lfs.mkfile(hooks)" (fun () -> 
-  hook_action_add_file +> Common.run_hooks_action o;
-  hook_action_mkfile +> Common.run_hooks_action (o, name);
+  hook_action_add_file +> Common2.run_hooks_action o;
+  hook_action_mkfile +> Common2.run_hooks_action (o, name);
   );
 
   (* opti: call only system transducer, cos useless call transducer plugin
@@ -2515,8 +2518,8 @@ let (rm: filename_or_id -> idfile) = fun fid ->
   | Right o -> o 
   in
   let file = !w.files#assoc o in
-  hook_action_del_file +> Common.run_hooks_action o;
-  hook_action_rm +> Common.run_hooks_action o;
+  hook_action_del_file +> Common2.run_hooks_action o;
+  hook_action_rm +> Common2.run_hooks_action o;
   w:= {!w with 
     files   = !w.files#delkey o ;
     plugins = del_assoc o !w.plugins;
@@ -2796,7 +2799,7 @@ let (write: filename_or_id -> filecontent -> 'a) = fun fid newcontent ->
 
   match lfs_mode !w with
   | Files -> 
-      hook_action_change_file +> Common.run_hooks_action idfile;
+      hook_action_change_file +> Common2.run_hooks_action idfile;
       transduce_file idfile
   | Parts -> 
       let info = assoc idfile !w.parts in
@@ -2850,7 +2853,7 @@ let (write: filename_or_id -> filecontent -> 'a) = fun fid newcontent ->
         fcontent = !core_update_fcontent__fst (finalcontent, idfile);
         (* todo: intrinsic = finalcontent +> (transducer !w file.filename); but cant do it if use opt reindex_diff, so have to delay it too with computation of fullcontent *)
       } in
-      hook_action_change_file +> Common.run_hooks_action idfile;
+      hook_action_change_file +> Common2.run_hooks_action idfile;
       log2 (sprintf "add=%d, del=%d\n" (length toadd) (length todel));
 
       let extparts = !w.extparts in
