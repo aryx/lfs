@@ -3,3 +3,8 @@
 *.o
 *.a
 .depend
+/lfs_path/pathlexer.ml
+/lfs_path/pathparser.ml
+/lfs_path/pathparser.mli
+/lfs_path/pathparser.output
+/docs/user-manual/main.log
