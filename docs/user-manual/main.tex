@@ -1,0 +1,3318 @@
+\documentclass[twoside]{report}
+
+\setcounter{tocdepth}{2}
+\setcounter{secnumdepth}{2}
+
+\newcommand{\widthfig}{9.5cm}
+
+\setlength{\columnsep}{0.25in}
+\setlength{\marginparsep}{0cm}
+\setlength{\marginparwidth}{0cm}
+\setlength{\oddsidemargin}{0cm}
+\setlength{\textwidth}{16cm}
+\setlength{\evensidemargin}{0cm}
+%\setlength{\voffset}{-1cm}
+%\setlength{\textheight}{23cm}
+
+
+%\usepackage{times}
+
+\usepackage{latexsym}
+\usepackage{amssymb}
+\usepackage{rotating}
+\usepackage{epsfig}
+\usepackage{subfigure}
+\usepackage{graphicx}
+
+\usepackage{hhline}
+\usepackage{verbatim}
+\usepackage{url}
+\usepackage{multicol}
+
+\usepackage{makeidx}
+\usepackage{varioref}
+%\usepackage{glossary}
+\usepackage[pageref]{backref}
+
+\def\backref{{\footnotesize cited page(s)}~}
+
+
+
+\newcommand{\concept}[1]{{\em #1}}
+
+\newcommand{\important}[1]{{\em #1}}
+
+\newcommand{\propre}[1]{{\em #1}}
+
+\newcommand{\soft}[1]{\texttt{#1}}
+
+\newcommand{\file}[1]{\texttt{#1}}
+
+\newcommand{\sh}[1]{\texttt{#1}}
+
+\newcommand{\tab}[1]{\mbox{\texttt{#1}}}
+
+\newcommand{\fun}[1]{\mbox{\texttt{#1}}}
+
+\newcommand{\algo}[1]{\mbox{\textsf{#1}}}
+
+\newcommand{\idx}[1]{#1\index{#1}}
+
+
+\newcommand{\rot}[1]{\begin{sideways} #1 \end{sideways}}
+
+\newcommand{\eg}[0]{e.g.,~}
+\newcommand{\etc}[0]{\ldots}
+
+
+\makeindex
+
+\title{
+{\Large \bf Logic File System} \\ 
+~\\
+{\large User's manual}\\
+{\small release 0.3beta7}\\
+}
+
+\author{Yoann Padioleau\\
+%{\normalsize padiolea@irisa.fr, http://lfs.irisa.fr/\~pad}
+}
+
+
+\begin{document}
+\maketitle
+
+
+\index{pwd@\sh{pwd}|see{commands}}
+\index{cd@\sh{cd}|see{commands}}
+\index{ls@\sh{ls}|see{commands}}
+\index{mkfile@\sh{mkfile}|see{commands}}
+\index{touch@\sh{touch}|see{commands}}
+\index{rm@\sh{rm}|see{commands}}
+\index{mkdir@\sh{mkdir}|see{commands}}
+\index{rmdir@\sh{rmdir}|see{commands}}
+\index{mv@\sh{mv}|see{commands}}
+\index{cp@\sh{cp}|see{commands}}
+\index{ln@\sh{ln}|see{commands}}
+\index{mount@\sh{mount}|see{commands}}
+\index{fsck@\sh{fsck}|see{commands}}
+\index{mkfs@\sh{mkfs}|see{commands}}
+
+
+
+\chapter*{Overview}
+
+%dup: readme.txt, annonce.txt,  lfs.html,      thesis.tex
+
+Information systems provide a means for 
+\concept{organizing}, 
+\concept{retrieving} and 
+\concept{manipulating} information.  
+They are becoming more and more important with the
+advent of the numerical age, with the increasing variety and number of
+digital documents (e.g.,~music files, pictures, videos, emails, code sources, web pages). 
+%
+To search for those documents, 
+traditional information systems such
+as file systems and the web with its search engines
+provide both \concept{navigation} and 
+\concept{query} tools but do not allow combining them.
+On the one hand, navigation is intuitive and progressive but it implies a rigid 
+and single classification of data.
+On the other hand, query brings flexibility and expressivity but lacks the advantages of navigation.
+To make it easy to manipulate the contents of those documents, 
+those traditional information systems come with separate tools, such
+as advanced text editors or integrated development environments, but they suffer from the same limitations.
+
+We propose a new paradigm for information systems, the \concept{Logic File System} (LFS),
+that offers 
+expressive organization, retrieval combining both query and navigation, 
+and ease of manipulation of both files and contents of files in an integrated way
+at the file system level.
+
+To achieve this integration, this paradigm associates \concept{logical properties} to
+files and \concept{parts} of file, and 
+\concept{logical deduction} serves as the basis for navigation and
+querying. Under LFS \concept{paths are formulas}. Directories represent queries
+and determine set of files {and parts of file} whose description
+\concept{satisfies} the formula. The root directory represents the formula $\mathit{true}$, and
+sub-directories of a directory are determined by 
+the most general properties \concept{refining} the query, hence combining
+navigation and query.
+File contents are determined by those parts of the original file that satisfy the formula.
+This permits simultaneous read and write 
+accesses to different \concept{views} on a file, in order to
+help in separating a user's concerns.
+Properties can be attached to files % (files or parts of file)
+manually by a user and automatically via programs called \concept{transducers}.
+Properties can be ordered manually by a user to form \concept{taxonomies}
+or automatically via \concept{logic deduction engines}.
+Users can dynamically extend the system by providing their own logic deduction engines 
+and transducers.
+
+
+\tableofcontents
+
+\chapter*{Introduction}\addcontentsline{toc}{chapter}{Introduction}
+
+%historic
+% same kind of intro than ferre ?
+% done at irisa, cf papers, thesis.
+
+\section*{Advice for readers}
+%src: zeller - why program fails -  preface
+
+\subsection*{Typographics}
+
+To keep things simple, most examples in this manual use the standard
+input/ouput mechanism -- that is, the \concept{command line} 
+and the \concept{console}.
+In all of these examples, \verb+typewrite+ font stands for program output
+and user input. The command line prompt is denoted
+by a pourcentage sign (\%) preceded by a number.
+The following is a simple example. The user invokes the \sh{hello} program, which prints
+the text \verb+Hello, world!+ on the console.
+
+\begin{verbatim}
+[1] % ./hello
+Hello, world!
+[2] %
+\end{verbatim}
+
+\subsection*{Working environment}
+
+The concepts and techniques discussed in this manual do not depend on a particular
+working environment. To illustrate the techniques,
+though, I frequently use {command-line tools}, typical from the Linux/UNIX
+community. In addition to saving space, this is a matter of simplicity:
+the command-line tools provide a functional core similar to that found
+in almost all sophisticaed working environments (such as 
+file explorer, web browser). Therefore, you
+should have no trouble transferring the examples to your personal tools.
+
+%\section*{Plan}
+
+\section*{Availability}
+
+The complete LFS source and more information on LFS can be downloaded 
+at the following URL:
+\\
+\mbox{~}\hspace{0.5in}\verb+http://lfs.irisa.fr/~pad/soft/LFS/+
+ 
+
+%\section*{About this document}
+
+
+
+
+
+%\chapter{Motivations}
+%     
+%     %combine navig and query in a fs (adv dirs)
+%     %several points of view on file contents (adv files)
+%     
+%     \section{The need for advanced (virtual) directories}
+%     
+%     \begin{figure} 
+%     \centerline { \psfig{figure=figs/slides-hierarchy2.eps, width=\widthfig}}           % ;height=7.8cm}
+%     \caption{Hierarchical organization}
+%     \label{fig:advanced-files}
+%     \end{figure}
+%     %             \psfig{figure=figs/slides-hierarchy.eps,width=4.25in}
+%     % USA is spread => cd USA ? 
+%     %             \psfig{figure=figs/slides-hierarchy2.eps,width=4.25in}
+%     % de meme a meaning for  cd not USA ?, ...
+%     % (why want this ? cos when know, want exploiter knowledge)
+%     
+%     
+%     
+%     \begin{figure} 
+%     \centerline { \psfig{figure=figs/slides-boolean2.eps, width=\widthfig}}           % ;height=7.8cm}
+%     \caption{Boolean organization (Google)}
+%     \label{fig:advanced-files}
+%     \end{figure}
+%     %             \psfig{figure=figs/slides-boolean1.eps,width=4in}
+%     %             \psfig{figure=figs/slides-boolean2.eps,width=4in}
+%     %good for \myOrange{cd \underline{not} USA} and \myGreen{cd capital \underline{or} movie}
+%     %\makeinvisible{ \mbox{~}\hfill but, not incremental enough for \myBlue{cd USA} and \myRed{cd port \underline{and} USA} }
+%     
+%     
+%     %want merge ...
+%     
+%     
+%     \begin{figure} 
+%     \centerline { \psfig{figure=figs/soluce-lfs.eps, width=\widthfig}}           % ;height=7.8cm}
+%     \caption{LFS advanced directories}
+%     \label{fig:advanced-files}
+%     \end{figure}
+%     
+%     
+%     \begin{verbatim}
+%     [1] % cd /lfs
+%     [2] % cd port&USA/; ls
+%     art/
+%     miami.jpg  sandiego.jpg 
+%     [3] % cd art/; ls
+%     movie/ music/
+%     [4] % cd movie/; ls
+%     los-angeles.jpg
+%     [4] % cd /lfs/(capital|port)/!USA/
+%     [5] % ls
+%     hamburg.jpg
+%     \end{verbatim}
+%     
+%     
+%     \section{The need for advanced (virtual) files}
+%     
+%     \begin{figure} 
+%     \centerline { \psfig{figure=figs/motiv-pof.eps, width=\widthfig}}           % ;height=7.8cm}
+%     \caption{Hierarchies are everywhere}
+%     \label{fig:advanced-files}
+%     \end{figure}
+%     %             \psfig{figure=figs/motiv-pof.eps,height=7.8cm}
+%     
+%     \begin{figure} 
+%     \centerline { \psfig{figure=figs/pof-symbolic.eps, width=\widthfig}}           % ;height=7.8cm}
+%     \caption{LFS advanced files}
+%     \label{fig:advanced-files}
+%     \end{figure}
+%     
+%     \begin{verbatim}
+%     [1] % ls
+%     quadrillage/ couleur/
+%     entete/
+%     symbolic.doc
+%     [2] % ls couleur/
+%     bleu/ rouge/ vert/ jaune/
+%     quadrillage/ entete/
+%     symbolic.doc
+%     [3] % cd vert; ls
+%     brique/  abeille/
+%     entete/
+%     symbolic.doc
+%     [4] % emacs brique/symbolic.doc
+%     [5] % emacs !jaune/brique|vague/
+%               symbolic.doc
+%     [6] % cat entete&abeille/symbolic.doc
+%     \chapitre{abeille}
+%     \séction{rouge}
+%     \séction{vert}
+%     \séction{bleu}
+%     [6] % cat brique&rouge/symbolic.doc
+%     \séction{rouge}
+%     bla bla bla 
+%     les briques rouges 
+%     c'est beau.
+%     \end{verbatim}
+
+\chapter{Installing LFS}
+
+%dup: install.txt
+
+Follow the instructions given in the \file{install.txt} file
+from the LFS source. If you have a Debian system, the installation
+process is simpler. In that case follow the instructions
+given in the \file{install-debian.txt} file from the LFS source.
+
+%detar
+%configure; make; make install
+%not forced make install, but need adjust some scripts
+
+%mkfs
+% touch lfs_secu
+%mount
+
+%do basic.sh ?
+%dispo dans basic.sh
+
+\chapter{Tutorial}
+
+%dup: thesis.tex, principles.sh, demo.ml
+
+%dispo dans demo.ml, et principles.sh, peut donc tester soi meme a coté avec un clavier
+
+
+%more: suppose connaitre commandes shell. cf biblio ou par exemple Unix for impatient pour plus d'info
+
+\label{sec:usage}
+
+Here is an example of a shell session using LFS:
+
+\begin{verbatim}
+[1] % mkfs.lfs /home/pad/meta_lfs
+[2] % mount.lfs /home/pad/meta_lfs /lfs
+[3] % cd /lfs
+\end{verbatim}
+\index{commands!\sh{mount}}
+\index{commands!\sh{mkfs}}
+
+%options de mount ?
+%touch lfs_secu before mkfs.lfs
+
+
+Command~\sh{1} initialises a place on the disk where the data structures used by LFS internally will
+reside. Command~\sh{2} ``mount'' this structure, via LFS, under the mountpoint \sh{/lfs}, which means 
+that every commands issued under this mountpoint will be managed by LFS.
+%toomuch: normalement periph, genre /dev/hda2, mais tech LFS differente
+%less: and their effect will modify internally 
+%less: data structures stored physically under \sh{/home/pad/meta_lfs}.
+%totranslate: 
+%LFS is a tool that works under the file system interface.
+% En effet, LFS est un outil qui fonctionne via l'interface des systèmes de fichier, et
+% comme il modifie la sémantique habituelle des opérations d'un système de fichier, il modifie
+% par effet de bord la sémantique des commandes qui utilisent ces opérations.
+\index{mounting}
+\index{mountpoint}
+
+\section{On files}
+
+%totranslate:? Nous allons voir dans cette section comment organiser, chercher et manipuler des fichiers à l'aide de LFS.
+%less:et esperons montrer que meilleur facon, cooler, que ce qu'on a vu ou ce que connait reader jusqu'ici
+
+\subsection{Organise files}
+
+\begin{verbatim}
+[4] % mkdir art
+[5] % mkdir music
+[6] % mkdir movie
+[7] % mkdir port
+[8] % mkdir seaside
+[9] % mkdir USA
+[10] % mkdir capital
+\end{verbatim}
+\index{commands!\sh{mkdir}}
+
+
+Commands~\sh{4} to \sh{10} create directories as in a traditionnal file system.
+A directory under LFS has to be viewed as a \concept{property} that a file can have.
+\index{property}
+
+
+\begin{verbatim}
+[11] % cp /pictures/los-angeles.jpg   
+     /lfs/art/movie/port/seaside/USA/
+[12] % cp /pictures/washington.jpg    
+     /lfs/USA/capital/
+[13] % cp /pictures/miami.jpg         
+     /lfs/port/seaside/USA/
+[14] % cp /pictures/boston.jpg        
+     /lfs/art/music/port/seaside/USA/
+[15] % cp /pictures/hamburg.jpg       
+     /lfs/port/
+[16] % cp /pictures/san-diego.jpg     
+     /lfs/port/seaside/USA/
+[17] % cp /pictures/new-york.jpg      
+     /lfs/art/music/port/seaside/USA/
+\end{verbatim}
+\index{commands!\sh{mkfile (touch)}}
+\index{examples!pictures}
+
+\begin{figure} 
+\centerline { \psfig{figure=figs/context-simple2.eps, width=\widthfig}}           
+\caption{A context}
+\label{fig:simple-context}
+\end{figure}
+
+Commands~\sh{11} to \sh{17} copy pictures of city maps under LFS, 
+associating properties of interest to each file. 
+For example, as Boston is in the USA, is a port, is on the seaside and is
+a city where art and music are important, we give it the properties
+\sh{USA}, \sh{seaside}, \sh{port}, \sh{music} and \sh{art}.
+Those properties represent the \concept{description} of a file.
+\index{description}
+
+Note that as opposed 
+to a hierarchical file system, \sh{USA} needs not be a sub-directory of \sh{art}, nor \sh{seaside} be a
+sub-directory of \sh{music}. The slash
+(\sh{/}) must be read as a conjunction, hence it is commutative, and so 
+\sh{music/port} is equivalent to \sh{port/music}. 
+%totranslate:
+% L'utilisateur peut associer de multiples propriétés à un fichier sans être obligé
+% d'ordonner ces propriétés en répertoires et sous-répertoires, ce qui conduirait
+% à une décomposition rigide et une navigation forcément limitée. 
+\index{slash}
+\index{hierarchy!limitations}
+\index{filesystem!classical, hierarchical!limitations}
+
+The state of this 
+organization is well-represented by a $\mathit{file}\times\mathit{property}$ matrix,
+which forms the \concept{context}, 
+see Figure~\ref{fig:simple-context} for an illustration.  
+\index{context}
+\index{matrix!$\textit{file}\times\textit{property}$}
+%\index{matrice|see{contexte}}
+
+%less: pour l'instant proche modele boolean. mais va s'enrichir.
+
+\subsection{Retrieve files}
+\label{sec:ls-port-usa}
+
+\begin{verbatim}
+[18] % cd port/USA
+[19] % ls
+music/   movie/    art/
+miami.jpg    san-diego.jpg
+\end{verbatim}
+\index{commands!\sh{cd}}
+\index{commands!\sh{ls}}
+
+
+Command~\sh{18} changes the current working directory (variable \sh{PWD} in some shells,
+for \propre{Process Working Directory})
+to \sh{/lfs/port/USA}. This path
+corresponds internally to a \concept{logical query}, in this case $port \wedge USA$.
+Creating a file in this directory will have for effect to associate those 2 properties to it.
+The result of the \sh{ls} command~\sh{19} has 2 parts. The first part is made of 
+sub-directories, 
+\sh{music/}, \sh{movie/} and \sh{art/},
+corresponding to properties that actually \concept{refine} the
+current query, without making it empty (see Figure~\ref{fig:simple-ls}).
+For instance nor 
+the property \sh{seaside} is proposed, because all files having 
+\sh{port} and \sh{USA} have also this property, neither the propery \sh{capital}, 
+because none of the files having \sh{port} and \sh{USA} have this property. 
+LFS propose to navigate only \concept{relevant hints}. We call those sub-directories
+\concept{increments}.
+The second part of command~\sh{19} is
+made of files, \sh{miami.jpg} and \sh{san-diego.jpg},
+whose description \concept{satisfy} the current query and 
+which could not be disambiguate further by sub-directories
+(that is files which are completly qualified by the current query,
+see Figure~\ref{fig:simple-ls} for an illustration).
+%Note that both files have not only the \sh{port} and \sh{USA} properties, they have
+%also the \sh{seaside} property but as all the file having 
+%this is how LFS combine query and navigation: flexibility, intuitivity
+\index{working directory}
+\index{PWD}
+\index{logical query}
+\index{$\wedge$}
+\index{current query}
+\index{refinment}
+\index{query refinment}
+\index{increments}
+\index{satisfaction}
+\index{relevant hints}
+
+%subtil:
+%user can create file with same name, provided that ..., so we ensure that
+% there always exist a difference, and so there will be no clash in a directory
+
+\begin{figure} 
+\centerline { \psfig{figure=figs/context-ls-simple.eps, width=\widthfig}}           
+\caption{Computation of \sh{ls}}
+\label{fig:simple-ls}
+\end{figure}
+
+
+\begin{verbatim}
+[20] % cd /lfs/capital|movie/!seaside
+[21] % ls
+washington.jpg
+\end{verbatim}
+\index{commands!\sh{cd}}
+\index{commands!\sh{ls}}
+
+Command~\sh{20} illustrates the possibilities of the query language,
+combining 
+%boolean
+\concept{negation} (written \sh{!}) and \concept{disjunction} (written
+\sh{|}). 
+% footnote:  en faut faut escape => mettre des '' autour car sinon croit que pipe (\index{pipe}
+% dans la suite et dans toute cette thes les a omis pour pas surcharger ex.
+The slash can be read as a conjunction, so the path
+\sh{/lfs/capital|movie/!seaside} corresponds logically to 
+\mbox{$(capital \vee movie) \wedge \neg seaside$}.
+In fact, the user can also use \sh{\&} in place of \sh{/} to express conjonction. 
+%totranslate:
+%but have not same effect
+%\footnote{
+%  La différence étant juste que de \sh{/a/b/c}, la commande
+%  \sh{cd ..} ramène au chemin \sh{/a/b}, alors que de \sh{/a/b\&c}, elle
+%  ramène à \sh{/a}.
+%}.
+Under LFS \concept{path are logic formulas}, and
+after each query, whatever its complexity, LFS will 
+compute relevant hints that refine the query, hence combining
+query and navigation.
+In this last example there
+is obsiously no relevant hint proposed because the query restricts the possibility to only 
+one file.
+%expressivity
+\index{\sh{/}!conjonction LFS}
+\index{slash}
+\index{\sh{\symbol{124}}}
+\index{\sh{\symbol{33}}}
+\index{$\wedge$}
+\index{$\vee$}
+\index{$\neg$}
+\index{\sh{\&}}
+\index{formula}
+\index{query}
+\index{navigation}
+\index{negation}
+\index{disjonction}
+\index{conjonction}
+\index{logic!boolean} % even if not talked in text
+
+%bof: evident en fait
+%bof: The \sh{PWD} evolves incrementally. Given a property~\sh{x}, doing
+%bof: \sh{cd x} in a \sh{PWD} \sh{p}, changes the \sh{PWD} into $\mbox{\sh{p}}\wedge\mbox{\sh{x}}$.
+%bof: A logic path must always be composed with the
+%bof: \sh{PWD}, taking into account relative and absolute paths, and special
+%bof: names like \sh{".."}.
+%bof: E.g.,~doing \sh{cd /y} sets \sh{PWD} to~\sh{y}.  
+%bof: %We could have decided to override the preceding $PWD$; e.g.,~from a
+%bof: %$PWD$ $p1$, command $cd ~x$ leads to a place where the $PWD$ is now
+%bof: %only $x$, but since we often do incremental query by adding
+%bof: %incrementally keywords until we get the answer we expected, it would
+%bof: %be tiresome to repeat the previously mentionned keywords.
+
+\subsection{Manipulate files}
+
+
+\begin{verbatim}
+[22] % pwd
+/lfs/capital|movie/!seaside
+[23] % ls
+washington.jpg
+[24] % rm washington.jpg
+\end{verbatim}
+\index{commands!\sh{rm}}
+
+
+%totranslate:
+%Contrairement aux outils d'interrogation comme \sh{find}, le résultat
+%d'une requête logique sous LFS est de \important{première classe}, et forme un répertoire
+%\index{first class (result)}
+%\index{software!find@\sh{find}}
+%\index{find@\sh{find}!limitations}
+%comme les autres. Ainsi, l'utilisateur a toujours la possibilité d'exécuter 
+%des commandes sur ce résultat.
+Command~\sh{24} remove the file \sh{washington.jpg} from the organization as in a traditionnal file system.
+It removes a line in the $file \times property$ matrix.
+\index{commands!\sh{rm}}
+\index{commands!\sh{pwd}}
+\index{matrix!$\textit{file}\times\textit{property}$}
+
+
+\begin{verbatim}
+[25] % cd /lfs
+[26] % mkdir hot
+[27] % cd port/USA
+[28] % ls
+music/ movie/ art/
+miami.jpg  sandiego.jpg 
+[29] % mv miami.jpg ../hot/
+\end{verbatim}
+%note: can use mv *.c    note that  mv dir is different(not as in ferre)
+\index{commands!\sh{mv}}
+
+
+As files evolve, their descriptions evolve too, so one needs a way to
+update the description of a file. In hierarchical file systems, the
+place where a file is located is the current description of this file,
+and when one wants to modify its description, one just changes its
+location using command \sh{mv}.  This works in the same way with LFS.
+Command~\sh{26} create the new property \sh{hot} and command~\sh{29}
+``adjust'' the description of \sh{miami.jpg} removing the property
+\sh{USA} and adding the \sh{hot} property.
+Note that the \sh{seaside} property, even if not mentionned, is kept
+in the description of the file.
+%totranslate:
+%Il faut noter que
+%les propriétés comme \sh{seaside}, qui ne sont pas mentionnées dans la commande et 
+%qui pourtant font partie de la description du fichier sont gardées; elles font toujours partie 
+%de la description du fichier.
+
+%note that as at fs level, even when query, you can use shell features
+% such as completion, globbing => ease of manip, you can launch
+% treatment (read/update) on chosen files (thanks to flexible query)
+
+\subsection{Organise properties manually}
+\label{sec:ex-ls-complex}
+
+\begin{verbatim}
+[30] % cd /lfs
+[31] % rmdir movie
+[32] % rmdir music
+[33] % rmdir art
+\end{verbatim}
+\index{commands!\sh{rm}@\sh{rmdir}}
+
+
+Commands~\sh{31} to \sh{33} remove properties from the organization. 
+Those commands do not remove the files they contain; they just remove the properties
+and the associations between those properties and the files.
+They remove rows in the $file \times property$ matrix.
+\index{matrix!$\textit{file}\times\textit{property}$}
+
+
+
+%subtil:???
+%but when there is no more prop ? in fact all files by default have a hidden
+% property, the /, cf later
+
+\begin{verbatim}
+[34] % cd /lfs
+[35] % mkdir art
+[36] % mkdir art/music
+[37] % mkdir art/movie
+\end{verbatim}
+\index{commands!\sh{mkdir}}
+
+The preceding result of command~\sh{19} shows deficiencies in the organization of city maps under LFS. 
+Indeed LFS returns as navigation hints the 3 properties \sh{art}, \sh{music} and \sh{movie} but
+as music and movie are a form of art, there is some kind of redundancy to present those 
+3 properties, a redundancy that polluate the navigation answer.
+%With the current organization, the number of file names listed by a command \sh{ls}
+%is reduced, but there may be too many increments anyway.  For
+%instance, at the root directory, the system would list all the
+%property names.  
+The principle of navigation is obviously to propose
+properties that refine the query, but also to propose the most general
+properties,
+%E.g.,~assuming computer science documents, one would
+%like to classify the keywords so that the system first proposes the
+%main fields of computer science, e.g.,~{\em algorithms}, {\em databases},
+%{\em operating-systems}, and then the subfields, e.g.,~{\em UNIX}, {\em Linux},
+%{\em Windows}.
+enabling the user to navigate from the \concept{general} to 
+the \concept{specific}.
+So, Under LFS the user can manually organise the properties between them, 
+stating which one are general and which one
+are specific using the \sh{mkdir} command. 
+Commands~\sh{36} and ~\sh{37} state that \sh{movie} and \sh{music} 
+are \concept{sub-properties}
+of the ~\sh{art} property.
+\index{query refinment}
+\index{property!sub-property}
+\index{sub-property|see{property}}
+\index{property!general}
+\index{property!specific}
+
+%In fact the root of LFS, \sh{/lfs} in our case, is considered too as a property, and so \sh{art} is also a subconcept of \sh{/lfs}.
+
+%subtil:
+% cf rmdir pb, in fact all have /
+
+%subtil:
+% cant create same attr with same name in different, (but can unify them as a DAG)
+%  in section X we see how extend
+
+\begin{verbatim}
+[38] % cd /lfs/port&USA
+[39] % ls 
+sandiego.jpg boston.jpg 
+los-angeles.jpg new-york.jpg
+[40] % mv boston.jpg new-york.jpg music/
+[41] % mv los-angeles.jpg movie/
+[42] % ls
+art/ 
+sandiego.jpg
+[43] % cd art/
+[44] % ls
+movie/ music/
+\end{verbatim}
+\index{\sh{\&}}
+
+\begin{figure} 
+\centerline { \psfig{figure=figs/context-ls-taxo.eps, width=\widthfig}}           
+\caption{Computation of \sh{ls} in the presence of sub-properties}\label{fig:ls-withtaxo}
+\end{figure}
+%note: peut pas mettre axiome dans figure car pas encore vu.
+\index{property!sub-property}
+
+
+Command~\sh{42} shows the effect of the \concept{order} between properties on the result of navigation.
+Now, LFS propose the \concept{most general hints} that refine the query
+(see Figure~\ref{fig:ls-withtaxo} for an illustration).  
+The user can now create a hierarchy of properties: a \concept{taxonomy}.
+\index{order}
+\index{taxonomy}
+
+
+Note that the order between properties is used by the navigation but not imposed to the user;
+LFS do not re-introduce the disadvantages of hierarchical file
+systems, namely rigidity of navigation.
+Indeed, a user can formulate arbitrary complex logical queries 
+while at the same time keeping the possibility to navigate after those queries.
+%
+Morover those queries can also mention sub-properties without having
+to mention the general one. For instance in command~\sh{40} the user has not to mention
+the \sh{art} property when he wants to add the \sh{music} property to a file.
+% to a file automatically addthe more general properties, in that case \sh{art}.
+Finally, as LFS allow to associate many properties to a file, one has not to 
+order the different classifications between them, for example classifying music files first by genre and then 
+by artist and then by year, as in a traditionnal file system.
+Under LFS
+the user can keep orthogonal classifications clearly separated, 
+%par exemple en ayant des propriétés et sous-propriétés concernant
+%le genre d'une musique, d'autres propriétés et sous-propriétés concernant
+%les artistes.
+%Puis, après avoir associé différents types de propriétés
+%aux fichiers,
+and search for files using 
+different point of views, for example searching music files first by navigating in the 
+year classification and then in the genre classification, or the opposite.
+\index{request!logic}
+\index{property!sub-property}
+\index{classification!multiple}
+
+%links can do that too, but tree, and impose rigidity in the interface, no
+% misc query, and no compute of hints, trad fs and links are too physic/rigid in their interface
+
+%Le paradigme LFS combine ainsi le paradigme booléen et hiérarchique dans la même structure.
+
+% dire que c ca notre reponse au toy ex vu dans principes.
+%   peut mettre orga LFS avec axiomes, et dire que comme bool,  mais inspire by hierarchy
+%   puisque prop peut etre ordre axiomes/logiques,   et que a kan mem adapter ensuite algo
+%   avec notion incr (pourrait sur bool,  (en fait existe deja et verra plus loin, 
+%    mais arrete la justement,  justr attr:val,   a pas logique  
+%    et donc full navig powa general/specialisé
+%    qui est notre contrib.
+
+\begin{verbatim}
+[45] % cd /lfs
+[46] % cp /pictures/chicago.jpg 
+          /lfs/USA&music/
+[47] % ls
+art/ port/ USA/ seaside/ hot/
+[48] % cd art
+[49] % ls
+music/ movie/
+port/ seaside/
+\end{verbatim}
+
+Note that doing \sh{cd art/} and then \sh{ls} do not list only sub-properties of \sh{art} 
+as may indicate the result of command~\sh{44}. LFS list all the most general 
+properties that refine the query. That includes
+of course sub-properties of \sh{art} such as \sh{music} and \sh{movie} but also
+in other configurations such as in command~\sh{47}
+other properties such as \sh{port} and \sh{seaside}.
+Section~\ref{sec:ls-variations} presents some variations for the semantics of \sh{ls} 
+allowing to control more precisly the kind of subdirectories that will be listed after a query.
+\index{property!sub-property}
+%\index{property!complementary}
+
+
+\begin{verbatim}
+[50] % cd /lfs
+[51] % mkdir geography
+[52] % mv seaside/    geography/ 
+[53] % mv port/ USA/ capital/     
+          geography/
+\end{verbatim}
+\index{commands!\sh{mv}}
+
+% how  mv  a b   is handled  by  gnutools/libc/kernel 
+% if b exists then it is "implicitly" translated (by gnutools) in   mv  a  b/a
+% but with lfs even if b is not present in the current dir, it can be accessed 
+% so a user may do  mv a b   believing that it will rename a in b, but as b exist in fact
+% it will add an axiom, and so a surprise :( 
+% => better to force the user to be more "explicit" by adding noprop
+% when want do axiom, and by forbidding mv where the name does not change (who
+% in many cases will translate a mistake from the user)
+% update=in fact seems that I cant even be called when user do mv a b and b exist :)
+%   so in all case I am forced to have a noprop and to be explicit :)
+%   indeed mv a b is intercepted before and forbid,  cos 
+%   gnutools force look if there is a rep  b/a  and indeed there is one :) cos b/a is allowed
+
+As file description evolves, the order between properties may evolve too.
+% as we refine them,understand them more, ...
+Command~\sh{51} create the new property \sh{geography} and command~\sh{52}
+``adjust'' the order between \sh{seaside} and \sh{geography} making
+the first one a sub-property of the second one.
+Command~\sh{53} do the same for the properties \sh{port}, \sh{USA} and \sh{capital}.
+% rigolo car retrouve un pattern utilisé dans fs classic. mv de rep effectivement bouge les fichiers :)
+% ancien reflexe marche car lfs = generalisation,  donc bcp d'usage etait des instances d'usage general.
+
+%current limitations is cant remove an axiom (can only add)
+
+\subsection{Organise properties automatically}
+\label{sec:default-logic}
+
+\begin{verbatim}
+[54] % cd /lfs
+[55] % mkdir type:
+[56] % cp /pictures/misc.jpg 
+          /lfs/type:picture/
+[57] % cp /programs/foo.c    
+          /lfs/type:program/
+[58] %  ls
+type:/ art/ geography/ hot/
+[59] % ls type:/
+type:program/ type:picture/ 
+\end{verbatim}
+
+%choice:
+%use EXT: in place of EXT otherwise pb with multi user, could create a valued
+% attribute even when not wanted (morover with meta cool, cos allow different name
+% for the file and the attr)
+%avoid too the genre: and artist: which are empty => with view better to
+% see the file which have not a value
+
+The user can organise the properties, for a better navigation, by ordering them manually.
+LFS can also order some properties automatically if they have a specific form.
+When a property have the form of a \concept{valued attribute}, with the syntax \sh{attribute:value},
+and that \sh{attribute:} is an existing property,
+then the user can mention a valued-attribute without having to create it first.
+This is shown in commands~\sh{56} and \sh{57} with the \sh{type:picture} and \sh{type:program}
+valued-attributes,
+and the property \sh{type:} created with command~\sh{55}.
+Morover those valued-attribute properties are automatically made sub-properties
+of the corresponding attribute property as shown in command~\sh{59}.
+Indeed LFS propose first the general property \sh{type:} and then the more specific properties
+\sh{type:picture} and \sh{type:program}.
+\index{property!valued attribute}
+\index{property!attribute}
+\index{syntax}
+\index{syntax!valued attribute}
+\index{\sh{:}}
+%\index{\sh{:}|see{attribut valué}}
+\index{property!sub-property}
+
+\index{valued attribute|see{property}}
+\index{attribute|see{property}}
+
+\label{sec:plugin-logic}
+
+\begin{verbatim}
+[60] % mkdir plugins
+[61] % mkdir plugins/logic:
+[62] % mkdir year:
+[63] % cp /solver/int_logic 
+          /lfs/logic:year:/
+[64] % cp /pictures/vacation-corsica.jpg 
+          /lfs/year:2000/
+[65] % cp /pictures/vacation-england.jpg 
+          /lfs/year:2001/
+[66] % cp /pictures/vacation-france.jpg 
+          /lfs/year:2002/
+[67] % cd 'year:>2000'/
+[68] % ls
+year:2001/ year:2002/
+[69] % ls /lfs/year:
+year:2000/ year:>2000/
+\end{verbatim}
+%old: logic&year: 
+%note: c au moment ou cd que ajoute formule. etat taxo = donc trace de activite user.
+%note: sorte historique. mais bon pourrait changer et avoir mkdir year:>2002 et cd independant.
+\index{property!special!\sh{logic:}}
+
+\index{logic@\sh{logic:}|see{special property}}
+\index{transducer@\sh{transducer:}|see{special property}}
+\index{adv\_transducer@\sh{adv\_transducer:}|see{special property}}
+\index{synchro@\sh{synchro}|see{special property}}
+%\index{solver@\en{solver}|see{moteur de déduction logique}}
+%\index{parts@\sh{parts}|see{propriété spéciale}}
+
+
+In fact the very naive automatic ordering described above can be extended by the user
+via a \concept{plugin} mechanism.
+%totranslate:
+%En effet, un utilisateur aimerait entre la propriété générale, représentée par l'attribut seul,
+%et les propriétés spécifiques, représentées par les attributs valués, des propriétés intermédiaires.
+%Cela permettrait de classer encore un peu plus ces attributs valués, afin de bénéficier d'une meilleure
+%navigation.
+Indeed, for instance with string-valued attributes, a user would like to have
+intermediate categories representing the first character of the string
+allowing to classify
+those properties alphabetically for a better navigation.
+Commands~\sh{60} to \sh{63} show how to proceed to have integer-valued attributes
+representing years, allowing also interval coarse intermediate categories, ordered automatically. 
+First, command~\sh{61} create the property \sh{logic:} which have a special meaning for LFS.
+%totranslate:
+%\footnote{
+%  En fait, une option de \sh{mkfs.lfs} permet de créer par défaut 
+%  les propriétés \sh{logic:} et \sh{plugins}
+%  ce qui évite à l'utilisateur d'avoir à taper les commandes \sh{60} et \sh{61}.
+%}.
+  %if only the prop, then all files having this prop will be candidate for plugins :)
+To indicate what is the program that will manage the order between valued attributes,
+the user must then copy the program of 
+a \concept{logic deduction engine} 
+under LFS.
+\index{extensibility}
+\index{plugins}
+\index{plugins!logic deduction engine|see{logic deduction engine}}
+\index{plugins!transducer|see{transducer}}
+\index{plugins!advanced transducer|see{advanced transducer}}
+\index{logic!string (regexp)}
+\index{logic!integers (interval)}
+%\index{moteur de déduction logique|see{\en{plug-ins}}}
+%\index{transducteur
+\index{logic deduction engine}
+
+This program, which is a traditional file, must
+have the special property \sh{logic:} and the name of the property
+that will be managed by this engine, as shown in command~\sh{63}.
+%note: if only the prop, then all files having this prop will be candidate for plugins :)
+%note: en fait meme avec ca marche pas.
+This logic deduction engine allows to manipulate usual valued-attributes
+as shown in command~\sh{64} to \sh{66} but also other special properties mentionning intervals
+as shown in command~\sh{67}.
+Command~\sh{68} and \sh{69} show how those new properties have been accurately ordered
+and used by navigation, allowing to go from the general to the specific.
+Indeed LFS navigation principle is to propose the most general property refining the query, 
+and indeed \sh{year:>2000} is more general than \sh{year:2001} and \sh{year:2002}.
+
+%COMMENT ON SUPPRIME >2000 ?
+
+%in fact can also plugin in core,  and even easier if plugins is in caml
+% (gain in performance too when in core,  but we do not advise that method)
+
+
+The Figure~\ref{fig:taxoyear} illustrates the order between all those properties.
+%morover cool cos as proposed as navig, user can understand the syntax for query by example
+% does not require full erudition (another pb of query)
+%totranslate:
+%Il faut noter que cette taxinomie de propriétés n'est pas la structure de navigation, auquel
+%cas nous réintroduirions les limitations des systèmes hiérarchiques.
+%En particulier, \sh{movie} a beau ne pas être une sous-propriété de \sh{port}, il
+%se peut que \sh{movie} soit proposé comme sous-répertoire du répertoire \sh{/lfs/port}
+%car certain fichiers ayant la propriété \sh{port} auraient aussi la propriété \sh{movie}.
+
+%less: fait de voir >2000 chiant, car le ls pour certains est moins bo qu'avant
+
+\begin{figure} 
+\centerline { \psfig{figure=figs/taxo-simple.eps, width=\widthfig}}           
+\caption{A taxonomy of properties}\label{fig:taxoyear}
+\end{figure}
+%note: legende a ---> b:  a is more specific than b
+%note: peut aussi avoir DAG
+\index{taxonomy}
+
+\label{sec:interface-logic}
+
+\begin{verbatim}
+[70] % /solver/int_logic '2001' '>2000'
+yes
+[71] % /solver/int_logic '>2000' '2001'
+no
+\end{verbatim}
+%cheat: avant y'avait logic:year/int_logic
+%crossref: avec fastlogic section ? le fait via index remarque
+\index{interface!logic deduction engine}
+
+%TODOOOOOO
+%interface has changed with last opt (with fastcomm,  et avec fastlogic a change aussi)
+
+%X> logic&year:/int_logic '2000' '2000'
+%equal
+%X> logic&year:/int_logic '2000' '2001'
+%uncomparable
+%and error syntax aussi
+
+
+Command~\sh{70} and \sh{71} show the interface of a logic deduction engine. 
+The program
+takes 2 parameters corresponding to 2 properties, and return \sh{yes} when
+the first property is more specific or equal to the second one, and \sh{no} when the opposite.
+%note: en fait prend 2 valeurs (on omet l'attribute), mais bon c des sortes de prop aussi.
+%\sh{equal} when the 2 property have similar semantic and \sh{uncomparable} when
+%the 2 properties can't be ordered between them.
+%note that 2000 and 2001 could be comparable by another logic engine, but 
+% here when search for disco, we dont want that first propose 2000, then 2001
+% here we chose set inclusion order
+Those logic deduction engines are used internally by LFS for the navigation mechanism;
+they also have an influence on the query mechanism.
+Indeed the user is no more limited to boolean queries, but
+can formulate arbitraty query, providing that a logic deduction engine for this query
+have been defined. 
+\index{logic!boolean}
+\index{query}
+
+Note that those exotic properties, kind of \concept{formula-properties} 
+such as the one representing intervals
+are treated in the same way that basic properties,
+as shown in command~\sh{69}.
+They may also be used in the description of a file.
+%futur: gc
+This makes LFS \concept{generic} in regard to the logic.
+%less: noter que pas forcement bon d'assigner year:[1980..1990] a un fichier.
+%less: => en fait aimerait un &.
+%totranslate:
+%De plus, le fait de voir ces formules permet à l'utilisateur de deviner 
+%la syntaxe admise par le moteur de déduction logique.
+%Ainsi, sans connaissance a priori, un utilisateur peut formuler des requêtes complexes
+%par imitation en suivant l'exemple.
+%%less: à condition bien sur que ces formules est ete crees par quelqun. faut bootstrapper.
+%Un des problèmes de l'interrogation est qu'il requiert de l'érudition de la part
+%de l'utilisateur. LFS résoud ce problème puisqu'il combine interrogation et navigation.
+\index{genericity}
+\index{logic deduction engine}
+\index{query}
+\index{navigation}
+
+%arbitrary query and description
+
+% can see annex X for ex of the code of the solver
+
+%less: % 1980's cool formula, comme taxo cool car voit, cool car oblige pas a etre precis car parfois sait pas
+%less: % vague is cool, et avantage interro avec query
+%less: % disj, neg, taxo,   all forme de vague, et cool.
+%less: 
+%less: % la encore, ortho. si certains allow query on string,  we made it generic,
+%less: % we made it ortho cos can be used in query/descr,   and benefit also to navig as general/specific
+
+% vraiment bcp de logique. chaine .*to.*, type, int, date, secu. cf chapter 6
+% sinon kan arrive a algo et parle autant des moteurs, peut se demander 
+% a koi ca sert car peut parler de logique avant(
+% faut dire que avant fast_comm et fastlogiqc je p'en servais pas non plus des masses
+%   => j'en parlais pas non plus :)
+
+\subsection{Organise files automatically}
+\label{sec:plugin-transducer}
+
+\begin{verbatim}
+[72] % cd /lfs
+[73] % mkdir size:
+[74] % mkdir name:
+[75] % mkdir ext:
+[76] % mkdir mypictures
+[77] % cp /pictures/big.jpg mypictures/
+[78] % cp /pictures/small.jpg mypictures/
+[79] % ls ext:jpg/
+size:1Ko/ size:23Ko/
+name:big/ name:small/
+\end{verbatim}
+
+
+Being able to describe a file with valued attributes is a good thing, but it still requires
+a manual intervention
+to fill in the values.  
+This is not a good thing.
+E.g.,~consider a valued attribute \sh{size:} representing the size of a file, 
+its value change as soon as an application edit and modify this file.
+One cannot envisage to force the user to 
+maintain those values manually.
+Those kind of properties can be automatically inferred from the content of the files and
+LFS provide a means to automatically extract them.
+%(as in the Semantic File System~\cite{gifford:semantic:sosp:1991}).  
+%If attributes are new, they are created on-the-fly.  
+The system properties of a file, e.g.,its
+size (\sh{size:$x$}), its name (\sh{name:$x$}), his extension (\sh{ext:$x$},  
+the suffix of the filename), or 
+%(in fact \sh{ext:c} is extracted automatically from \sh{foo.c} 
+%and so the user have not to issue the command~\sh{X} described above).
+its last modification time (\sh{mtime:$x$}), 
+%not yet mtime
+are automatically extracted and added to the description of the file,
+%totranslate:
+%\footnote{
+%  Comme précédemment avec la propriété spéciale \sh{logic:}, l'option
+%  de \sh{mkfs.lfs} permet d'éviter à l'utilisateur d'avoir à taper les commandes 
+%  \sh{73} à \sh{75} en créant en standard ces propriétés.
+%}.
+%note: en fait mkfs.ext2 pareil avec le dir lost+found/
+%morelater: have also secu prop, but will need extra mechanism to be used really usefully
+%bof:(à condition bien-sûr, comme pour tout autre attribut valué, que l'attribut correspondant
+%bof: ait été créé avant).
+%bof: L'utilisateur déclare avec les commandes~\sh{73} à \sh{75} qu'il est 
+%bof: intéressé par l'extraction automatique des propriétés de taille, de nom et d'extension
+%The command~\sh{X} and \sh{X} state that the user are interested in the automatic extraction
+%of the \sh{size} and \sh{name} properties, commands \sh{X} to \sh{X} show
+%the effect of this automatic extraction.
+
+Command~\sh{79} shows the effect of those extractions when the user creates new files.
+\index{property!system}
+\index{property!extraction (automatic)}
+\index{extension (suffix of a filename)}
+
+
+\begin{verbatim}
+[80] % cd /lfs
+[81] % mkdir plugins/transducer:
+[82] % cp /transducer/mp3_transducer 
+          /lfs/transducer:mp3/
+[83] % mkdir mymusic
+[84] % cd mymusic
+[85] % mkdir  artist:  genre:
+[86] % cp /musics/staying_alive.mp3 .
+[87] % cp /musics/ete_indien.mp3 .
+[88] % ls
+genre:Disco/ genre:Pop/
+artist:BeeGees/ artist:JoeDassin/
+name:ete_indien/ name:staying_alive/
+size:3Mo100Ko/ size:4Mo200Ko/ 
+\end{verbatim}
+\index{\sh{transducer:}|see{property!special}}
+\index{property!special!\sh{transducer:}}
+\index{examples!musics (MP3)}
+\index{MP3}%|see{exemples}}
+%less: necessite connaitre un peu, pour les mkdir artist:.
+%less: mais bon plugin pourrait cree (mais bon how taxo, ...)
+%this impose condition on the format of prop, but dont care
+
+As for logic deduction engines, which allow the user
+to extend the logical features provided by the \concept{core} of LFS, 
+%the core automatic ordering 
+%functionnality of LFS, 
+the user can extend the automatic extraction facility of LFS
+by providing programs called \concept{transducers}.
+Commands~\sh{81} to \sh{82} show how to proceed to automatically extract music properties
+from \sh{MP3} music files.
+Command~\sh{81} create the property \sh{transducer:}, that as for the \sh{logic:}
+property has a special meaning for LFS.
+To indicate what is the program that will be in charge for the automatic extraction 
+of a kind of file, the user must copy the program of  \sh{transducer} under LFS.
+This program, which is a traditional file, must 
+have the special property \sh{transducer} and the property representing 
+the extension (the suffix of a filename)
+of those kind of file, for \sh{MP3} files the \sh{ext:mp3} property as shown
+in command~\sh{82}.
+Command \sh{88} shows the effect of this new automatic extraction when copying 
+\sh{MP3} files under LFS.
+%less: sorte de systeme de mime mais non pas via un fichier de ressource, mais via fs
+%less: better cos allow search program :) reflexif always good
+%history: pas l'appeler plugin.mp3 :) sinon boucle ? (en fait pourrait)
+%history:  cf le bug que j'avais eu dans impl.  en fait resolu en changeant interface prop transducer:mp3
+\index{extensibility}
+\index{core LFS}
+\index{transducer}
+\index{property!extraction (automatic)}
+\index{extension (suffix of a filename)}
+
+
+\begin{verbatim}
+[89] % /transducer/mp3_transducer cat staying_alive.mp3
+genre:Disco/artist:BeeGees
+\end{verbatim}
+%cheat: y'a genre:Disco devant staying alive
+\index{interface!transducer}
+%old = interface of trans take info from stdin, but more efficient that way
+% (and some transducers like to do some seek)
+
+\index{transducer!interface|see{interface}}
+\index{advanced transducer!interface|see{interface}}
+\index{logic deduction engine!interface|see{interface}}
+
+
+Command~\sh{89} shows the interface of a transducer. The program takes
+as a parameter
+a filename and return on its standard output 
+a list of strings separated by a \sh{/};  one string per property extracted from the file.
+{Note that those transducers are re-applied each time the content of a file change},
+maintaining coherency between the content and the description of a file.
+\index{\sh{/}!transducer output interface}
+\index{coherency}
+%\index{entrée standard}
+\index{standard output}
+
+% => couteux kan cree new file et modifie,   mais ca va :)
+
+%less: avec /, sur que rentre pas en conflit.  :) de toute facon a pas le droit au / donc :)
+
+% can see annex X for ex of the code
+
+%note that they are normal file and can subject to search :) for ex adding a new transducer
+% a user may want to base his code on existing one => can do cd plugin to see the solver :)
+
+
+%totranslate:
+%   La profusion de propriétés, spécialement d'attributs valués,
+%   fait que le résultat d'une requête peut parfois contenir
+%   de nombreux sous-répertoires, comme l'indique le résultat de la commande~\sh{88}.
+%   La Section~\vref{sec:ls-variations} présente de légères variations pour la sémantique de \sh{ls} 
+%   permettant de contrôler plus précisément le type des propriétés complémentaires à afficher
+%   \index{propriété!complémentaire}
+%   après une requête. Cela permet par exemple de n'afficher à la racine
+%   que les attributs \sh{genre:}, \sh{artist:}, \sh{name:} et \sh{size:}.
+%   L'utilisateur peut ensuite \guil{développer une branche}, par exemple avec
+%   la commande \sh{cd genre:/}, tout en gardant la possibilité plus tard d'ouvrir
+%   d'autres branches. 
+%   %
+%   Une autre variation permet d'afficher dans un répertoire
+%   tous les fichiers satisfaisant la requête. C'est parfois
+%   plus pratique, lorsque le nombre de fichier est petit, que le mode par défaut
+%   qui n'affiche pas les fichiers satisfaisant les 
+%   requêtes des sous-répertoires.
+%   
+%   Le scénario suivant illustre ces nouvelles possibilités
+%   en supposant l'existence de beaucoup plus de fichiers sous LFS et
+%   d'une organisation des propriétés légèrement différente:
+%   %note: ce qui remédiera à ces problèmes,   en meme tps veut pas dire que pb
+%   %less: ... commande1 = develipper spirit, et commande2 = affichier complement et ens file.
+%   
+%   %old: avec .mixed, plus besoin (by default infer best mode)
+%   %old: [1] % cd /lfs/...special_command.../; ls
+%   %old: [5] % cd ...special_command2.../; ls
+%   %old: genre:Disco/ genre:Rock/ genre:Pop/ ...
+%   %old: artist:Beatles/ artist:Bee Gees/ ...
+%   %old: album:/ note:/ year:/   size:/ name:/
+%   %old: staying_alive.mp3 
+%   %old: ete_indien.mp3 
+%   %old: yesterday.mp3 
+%   %old: ...
+%   
+%   \label{sec:session-orga-classic}
+%   %spirit: peut pas attendre trop  paske  dans secu par ex je fais  mv *.c secu:foo;rwl
+%   %spirit: le mec se demanderait comment se passe le ls apres.
+%   \begin{verbatim}
+%   [1] % cd /lfs/; ls
+%   system/ plugins/ 
+%   geography/ mymusic/ mypictures/
+%   [2] % cd system/; ls
+%   size:/ ext:/ name:/ type:/ 
+%   plugins/
+%   geography/ mymusic/ mypictures/
+%   [3] % cd ext:/; ls
+%   ext:jpg/ ext:mp3/ ext:c/ ext:txt/ ...
+%   size:/ name:/ type:/ 
+%   plugins/
+%   geography/ mymusic/ mypictures/
+%   [4] % cd ext:mp3/; ls
+%   size:/ name:/ mymusic/
+%   [5] % cd mymusic/; ls
+%   genre:/ artist:/ album:/ note:/ year:/
+%   size:/ name:/
+%   [6] % cd genre:/artist:/; ls
+%   genre:Disco/ genre:Rock/ genre:Pop/ ...
+%   artist:Beatles/ artist:Bee Gees/ ...
+%   album:/ note:/ year:/   size:/ name:/
+%   [7] % cd genre:Disco&year:<1970/; ls
+%   artist:Bee Gees/ 
+%   artist:DonnaSummer/ artist:KoolGang/
+%   year:1967/ year:1968/
+%   album:/ note:/  size:/ name:/
+%   staying_alive.mp3 
+%   love-to-love-you-baby.mp3
+%   beach.mp3
+%   [8] % mv staying_alive.mp3 
+%            note:excellent/ 
+%   [9] % cd !note:excellent/; ls
+%   note:moyen/ note:mauvais/
+%   artist:DonnaSummer/ artist:KoolGang/
+%   year:1968/ album:/  size:/ name:/ 
+%   love-to-love-you-baby.mp3
+%   beach.mp3
+%   \end{verbatim}
+%   
+%   %less: ergo, mais reste pareil. pertinence, general/specifc,   free query.
+%   
+%   %less: %  dire que avec ...special....  a interro et navig.  si liste encore
+%   %less: %  trop grande, alors user utilise rep pour restreindre
+%   %less: %   footnote: avec ls affichier file puis rep, comme ca pas perturbe par trop grand liste
+%   %less: %    pas / car trop,  mais peut etre declencher kan nb file certaine taille.
+%   %less: %   ridoux: en fait meme mecanisme que pof en fait, view = ext(pwd) et peut raffiner.
+
+
+\section{On file contents}
+\label{sec:pof}
+
+%plan:
+We have just seen how LFS allows the user to better organize, retrieve, and manipulate
+his files. We will now see how LFS proceed to offer those same services to manage
+the contents of files.
+
+%alt: what is possible for the organisation, retrieve and manip of files
+%alt: is also possible for the organisation, retrieve and manipulation of file contents
+
+% as we have can manage the content of directory with flexibility, virtual dirs,
+%  by selecting/point of view/... do the same with content of file, virtual files
+
+% can go further
+% can query/navigate/ file, can do same with content of file
+
+%????????
+% Another direction is to overcome the difference between directories
+% and files.
+% We would like to navigate in files in the same way as in
+% directories. E.g.,~one would like to navigate inside a BibTeX file, or
+% inside a program source file.
+% Then, a user could do \sh{cd !comment \& security} to get all the
+% \mbox{parts} of a source file that are not comments and that talk about
+% security.  
+% parts of a source file that are not comments and that talk about
+% security.  We could even imagine a way to generate a new file from the
+% current query (i.e.,~a {\em view} of the program), and we could even
+% allow the user to modify this view and to back-propagate the
+% modifications to the original file.  Note that there should be no {\em
+% view update problem} here, because answers to a query are actually
+% parts of the source file.  This direction of research can certainly
+% contribute to the software engineering domain, where aspect oriented
+% programming, and multi-view interactions are popular issues.
+
+\subsection{Organise file contents}
+\label{sec:plugin-advtransducer}
+
+\begin{verbatim}
+[90] % cd /lfs
+[91] % mkdir myprograms
+[92] % cp /programs/foo.c myprograms/
+[93] % cat -n myprograms/foo.c
+     1  int f(int x) {
+     2  int y;
+     3  assert(x > 1);
+     4  y = x;
+     5  fprintf(stderr, "x = %d", x);
+     6  return y * 2
+     7  }
+     8  int f2(int z) { 
+     9  return z * 4 
+    10  }
+[94] % cat myprograms/foo.c | 
+      /transducer/c_adv_transducer |
+      head -n 2
+function:f/var:x
+function:f/var:y
+\end{verbatim}
+\index{examples!programs (C)}
+\index{interface!advanced transducer}
+%\index{langage de programmation!C}
+
+
+% can see annex X for ex of the code
+% ex advanced transducer
+
+% transducer not call to return a property per file, but per line
+
+% as for the tower of info (web/site/line) we offer a special keyword
+%  to go from one world to the other: down (but could be more transparent :()
+%  where we get in precision (from 1000 to 500 feet, advantages and disavantages
+%   cos you dont get anymore a large view over your data (view provideded by filename)
+% you zoom in
+% we could imagine same with web, where each file = a site, and you zoom in
+%  but harder to impose :)
+%it is like mounting a file, consider it as a hard disk and can navigate in
+
+%concept: viewed file, view, view file,
+% part mode
+
+
+
+
+
+In addition to transducers which index whole files, LFS can also use
+transducers which index \concept{parts} of files. 
+In the current LFS prototype parts are lines, but the principles would be the same
+if those parts were paragraphs, or just words.
+%cheat: en fait ptet pas, en tous cas kan veut opt avec pb synch
+Command~\sh{93} shows the content of a C file.
+Command~\sh{94} show the interface of this new kind of transducers that we will call
+\concept{advanced transducers}.
+An advanced transducer takes on its standard input the content of a file, but
+returns this time on its standard output a list of strings (again separated by a \sh{/})
+line by line; a string per property extracted for this line.
+% impose restriction on prop format, but dont care,  should also escaping, ...
+%
+In this example
+the properties are
+``the definition of $f$ cover this line''  (\sh{function:$f$}), 
+``the $x$ variable is mentionned on this line'' (\sh{var:$x$}), 
+``this line has a debugging aspect (\sh{debugging}), 
+and ``this line an error mangagment aspect (\sh{error}). 
+\index{parts (of file)}\index{file!parts of file}
+\index{advanced transducer}
+\index{\sh{/}!advanced transducer output interface}
+%stdin, stdout
+
+
+\begin{figure} 
+  \centerline { \psfig{figure=figs/matrix.eps, width=\widthfig}}           
+  \caption{A file context}\label{fig:context-file}
+\index{context!of a file}
+\end{figure}
+%less:  ptet mettre cadrillage sur fonc, et couleur sur spec, ...  piqure de rappel :) !!!!!!
+%less:  ptet mettre une attribut  ``interface'' car comme ca toc.
+%less:    serait encore mieux si avait different nivo (genre class/methode)
+%less:    et vpor mes 2 navigs (ptet  a mettre sur ex chap:experim avec mon code? )
+
+
+\begin{verbatim}
+[95] % mkdir function:
+[96] % mkdir var:
+[97] % mkdir debugging
+[98] % mkdir error
+[99] % mkdir plugins/adv_transducer:
+[100] % cp /transducer/c_adv_transducer 
+           /lfs/adv_transducer:c/
+[101] % cd myprograms
+[102] % ls
+foo.c
+[103] % cd parts
+\end{verbatim}
+\index{\sh{adv\_transducer:}|see{property!special}}
+\index{property!special!\sh{adv\_transducer:}}
+%\index{\sh{parts}|see{propriété!spéciale}}
+%\index{propriété!spéciale!\sh{parts}}
+\index{commands!\sh{cd}@\sh{cd parts}}
+\index{parts@\sh{parts}|see{commands}}
+
+
+Commands~\sh{95} to \sh{98} create the properties the user wants to manipulate. 
+% has to be created only once !! in fact many are in basicenv.sh
+% but true that would be better if created by trans cos coupling
+Commands~\sh{99} and \sh{100} proceed in the same manner than for normal transducers.
+Those commands allows to indicate what advanced transducer will be in charge for the 
+manangment of C files.
+Command~\sh{103}, and more particuraly the property \sh{parts} has a special meaning for LFS.
+This command informs LFS that the kind of objects the user wants to manipulate
+is not anymore files, but parts of files.
+This command index, via the appropriate advanced transducers defined previously, 
+the set of files satisfying the preceding query, in our example the single file
+\sh{foo.c}.
+%subtil: multifile
+%less: en fait va pas trop detailler apres sur l'aspect multifile, sera plus dans chapter:extensions
+As for files, 
+the state of this organization is well represented 
+by a matrix, this time a $\textit{line}\times\textit{property}$ matrix, 
+forming what we call a  \concept{file context}
+(see Figure~\ref{fig:context-file} for an illustration).  
+%
+%Il faut noter que l'indexation n'est pas locale à une partie.
+%Par exemple, la ligne 7 a la propriété \sh{function:f}
+%car une déclaration d'une fonction~\sh{f} a été trouvée
+%6 lignes plus haute.
+%Un changement à la ligne 1 pourrait affecter les propriétés
+%des lignes 2 à 7.
+Command~\sh{103} will allow the user, as we will see, 
+to navigate not anymore \concept{among} files, but \concept{inside} files.
+We call \concept{original file} the file which serves as a work basis for the user
+(here file \sh{foo.c}).
+\index{object!file}
+\index{object!parts of file}
+\index{parts (of file)}\index{file!parts of file}
+\index{matrix!$\textit{line}\times\textit{property}$}
+\index{context!of file}
+\index{file!original}
+\index{original (original file)|see{ficle}}
+\index{indexing (property extraction)}
+
+
+
+\begin{verbatim}
+[104] % ls
+debugging/ error/
+function:f/ function:f2/
+var:/ 
+foo.c
+[105] % wc --line foo.c
+10 foo.c
+\end{verbatim}
+
+
+Command~\sh{104} has 2 effects. First, it creates a 
+\concept{view} of the original file, containing the parts of file 
+%corresponding to
+satisfying the current query.
+As no properties have been selected yet, 
+%the directory is the root,
+%of the mounted file system (\sh{/poffs} in the example)
+this view has exactly the same contents as the original
+file as shown in command~\sh{105}.
+Second, it presents sub-directories to the user (as \sh{function:f}, \sh{debugging}, \etc),
+corresponding to properties that refine the
+current view, without making it empty, as in the preceding section with files.
+\index{view}
+\index{view!creation}
+\index{refinment}
+
+%note that taxo created in files mode is the same than in parts mode
+
+%taille dir ?
+%struct: en a un peu dans experiml
+%struct:  noter que peut taille rep sous LFS designe le nombre de fichier satisfaisant ce repertoire, taille extension
+%struct:  peuvent fournir information interessantes. noter que marche pour tous, que ce soit mode fichier ou parties.
+%struct:  ex cool = ...
+
+%Note that dont have to create those dirs, they are automatically created,
+% if want more organised formula then can order them a posteriori
+%one can for example organise function:X under global function prop
+
+
+%choice:
+%could let the trans create the hier, but how associate, logic plugins, interface
+% of trans get more complicated, ... => prefer as for system.sh to have a separate script
+
+%old
+%\begin{verbatim}
+%X> cd /lfs/parts_organization
+%X> mkdir aspect/
+%X> mkdir aspect/debugging/
+%X> mkdir aspect/error/
+%X> mkdir region/
+%X> mkdir region/function
+%X> mkdir var
+%\end{verbatim}
+
+
+
+\subsection{Retrieve and select file contents}
+
+\label{sec:view-usage}
+
+\begin{verbatim}
+[106] % cd function:f/var:/; ls
+var:x/ var:y/
+debugging/ error/
+foo.c
+[107] % wc --line foo.c
+7 foo.c
+\end{verbatim}
+
+\begin{figure} 
+\centerline { \psfig{figure=figs/query-answer.eps, width=\widthfig}  }           
+\caption{Navigation in a file context} \label{fig:navig-content}
+\end{figure}
+%note:  but dans figure car voir pas function: et var:
+
+Command~\sh{106} refines the view, selecting
+the parts of the original file having the \sh{function:f} property and
+talking about variables.
+Again, command~\sh{106} and command~\sh{107} show how a new view have been
+created, containing this time less lines that the original file (7 and not anymore 10).
+As for files, command~\sh{106} 
+shows how the properties proposed to navigate are related to the current query.
+Indeed, under \sh{function:f/var:/}, the \sh{var:z} property is no longer listed as
+a sub-directory, as the current view (which contains only the code of the
+\sh{f} function) contains no line using variable \sh{z}
+Moreover,
+\sh{function:f} is not listed too because the corresponding view will be the
+same than the current view, and so will not refine it.
+%but just generates exactly the same view as thecurrent one.
+(see Figure~\ref{fig:navig-content} for an illustration).  
+\index{refinment}
+
+
+\begin{verbatim}
+[108] % cd !(debugging|error)
+[109] % ls
+var:x/ var:y/
+foo.c
+[110] % cat foo.c
+int f(int x) {
+int y;
+................:1
+y = x;
+................:2
+return y * 2
+................:3
+\end{verbatim}
+%less: pas cool car a cause de var:  voit plus la fin de la fonc :(
+\index{commands!\sh{read (cat)}}
+\index{\sh{\symbol{124}}}
+\index{\sh{\symbol{33}}}
+
+
+\begin{figure} 
+  \centerline { \psfig{figure=figs/query-answer2.eps, width=\widthfig}  }           
+  \caption{Creation of a view}
+  \label{fig:view-creation}
+\end{figure}
+
+Command~\sh{109} shows that the list of property that refine
+has been reduced to \sh{var:x} and \sh{var:y} (see Figure~\ref{fig:view-creation}).
+Command~\sh{110} shows the content of the corresponding view.
+Lines not satisfying the current query have been filtered out and
+replaced with special \concept{marks of absence}, like \sh{...........:1}.
+Those marks will make it possible to \concept{propagate} a modification made on a view 
+on the original file.
+\index{marks of absence}
+\index{absence|see{marks of absence}}
+\index{propagation (of modifications)}
+
+%totranslate:
+Because of LFS, the user can manipulate his file through different points of view.
+Depending on the task the user has to accomplish, he can select 
+this or this \concept{aspect} considered relevant for the realiazation of this task, or 
+on the contrary he can filter this or this aspect because it would polluate his work, his thinking.
+In the preceding example, the possibility to filter the debugging commands allow the user
+to concentrate more easily on the functionnality aspect without being bothered by irrelevant details.
+In the same manner, the user if he would like to get an idea of the functions could
+select via an appropriate view only the lines which include the functions prototypes and
+their specifications, making so easier process to understand globally the program.
+
+
+
+\subsection{Manipulate file contents}
+
+\begin{verbatim}
+[111] % cat foo.c | sed -e s/y/z > foo.c
+[112] % ls
+var:x/ var:z/
+foo.c
+\end{verbatim}
+\index{commands!\sh{write (sed)}}
+
+%Contrairement aux outils d'interrogation comme \sh{grep}, le résultat
+%d'une requête logique sous LFS est de \important{première classe}, une vue est un fichier
+%comme les autres. 
+Command~\sh{111} shows that the views are \concept{updatable views},
+and can be modified by any tools (here \sh{sed}).  The effect of this command is to
+replace all occurrences of \sh{y}, in the current view,
+with \sh{z}.
+%less: en meme tps permet operation de modif puissante. car des fois
+%less: veut M-%  mais uniquement sur section, 
+%less: ou que si X ou Y. avec LFS suffit d'avoir vue adequat et pas besoin
+%less: d'avoir a taper y or n, tape directement !.
+Command~\sh{112} shows how modifying the view affects the navigation process
+(compare with result of command~\sh{109}).
+\index{view!modification}
+
+%TODO make ref to the futur direction, work au nivo semantic
+
+%thanks again to the fact that we are at the shell level, ease of manip,
+% can use any tools, morover as powerful query => can do powerful manip
+% (done usually with complex tools) no need complex macro
+%  cos query will have restrict so that simple use of rectangle will do the job
+
+
+
+\begin{verbatim}
+12> pwd
+/lfs/myprograms/parts/function:f/
+   !(debugging|specification)/
+13> cd /lfs/myprograms/parts/
+14> cat foo.c
+int f(int x) {
+int z;
+assert(x > 1);
+z = x;
+fprintf(stderr, "x = %d", x);
+return z * 2
+}
+inf f2(int z) { return z * 4 }
+\end{verbatim}
+
+Finally, command~\sh{14} shows how modifying the view affects the other
+views, by propagating the modification.
+
+%ridoux: Note that $myfile$ is not locked, and may be considered under many different views at the same time.
+%pad: un peu kan meme :) en fait readers/writer
+
+
+
+
+\chapter{Principles}
+
+We will now precise the principles involved in the preceding running example.
+
+%for more info see spec.ml and thesis annexis
+
+\section{Organise}% information and properties}%{Describing}
+%must be understood even if have not seen the running example
+
+As the title says it, LFS is about logics and files:
+
+\begin{itemize}
+\item 
+A logic is defined by a language
+$F$, i.e.,~the syntax of its formulas, and an entailment relation that is usually
+written $\models$ representing logical deduction. 
+$f1\models f2$ means that if $f1$ is true, then
+$f2$ must be true too.  For instance, $a\wedge b\models a$ holds in
+propositional logic.  
+
+\item
+A file is made of 2 parts, a
+description and a content.
+Under traditionnal file system, 
+the description of a file is the path of the directory where reside the file
+and the name of this file.
+\end{itemize}
+
+LFS is a system combining logics and files,
+the langage $F$ provide what we need to describe files, 
+the entailment relation $\models$ provide what we need to search files.
+Indeed, given a description of a file represented by a formula $d$, 
+and a query represented by a formula $q$, LFS can determine
+if a file satisfy a query by checking if $d \models q$.
+Directories will be formula under LFS, and so will be used
+to describe and query files. They will also be used to navigate, 
+indeed the principle of navigation is to go from the general 
+to the specific, and again LFS can determine if a formula $f$ is more
+general than another formula $g$ by checking if $g \models f$.
+So a LFS organisation, or \concept{LFS context} consist of:
+\begin{enumerate}
+\item 
+A set of properties $\cal P$ expressed in a langage $F$ and governed by logic rules $\models$.
+%L
+\item 
+A set of objects $\cal O$, where each object $o$ have a description $d(o)$ 
+consisting of a set of properties of $\cal P$, and a content $c(o)$.
+\end{enumerate}
+
+% why special case on conjunction ? could associate one prop = conjonction of prop
+% in fact see below that better, make better and easier ls/mv
+
+% why have to talk about cal P ? navig = find formula that refine
+%  as infiniti of formula, prefer those that served to describe the file
+
+We talk about objects $o$ and not files, because 
+LFS works both on files and file contents, and so where an object $o$ can
+either represent a file, or a part of file.
+Indeed the content of a file can also be subdivided in differents parts,
+where each part can be seen as an object with a description and a content.
+
+%The managment of file contents suffer from the same problem that the 
+%managment of files, and so a solution working for files works for file contents too.
+%We say \concept{files world} when objects are files, and \concept{parts of file world}
+%when objects are parts of file,
+%a special command \sh{cd parts} can be used during navigation 
+%to go from the first to the second world. 
+%We need to make a difference in terminology because some commands behave 
+%slightly differently depending on the kind of object we manipulate.
+% files world = context +  a special property in d(o) the name: name(o)
+%  a special prop in parts: file(o) -> o'
+%why 2 worlds ? otherwise have some pbs, cant have files listed, ...
+
+The core logic of LFS is a simple set logic, properties are atoms,
+formulas are set of atoms, representing a conjunction of properties, 
+and the entailment relation is set inclusion, concretely:
+\begin{enumerate}
+\item
+\sh{mkdir a, mkdir b, mkdir c} add the properties $a$, $b$ and $c$ in $\cal P$.
+%force to create first, otherwise will create each time some dirs when create a file
+%  as there is a preceding lookup, for attr-value is different cos they have
+%  a specific form, whereas we dont want to forbid to create files with atom syntax
+\item
+\sh{touch a/b/c/o} add a file $o$ in $\cal O$ with description $d(o) =  a \wedge b \wedge c$, 
+and an empty content $c(o)$, the slash represents the conjonction.
+\item
+\sh{cd b/c} issue the query $ q = b \wedge c$, the preceding file $o$ will
+satisfy this query as $d(o) = a \wedge b \wedge c \models q = b \wedge c$.
+\end{enumerate}
+This core logic can be extended by the user,
+the principle is to let the user provide his own logic,
+%with its own langage $F$ and entailment relation $\models$,
+% can be extended via atoms, make them special
+allowing arbitrary formulas in file descriptions and queries,
+making LFS \concept{generic} in regard to the logic.
+%and extensible/flexible
+
+In fact, both the logic rules $\models$
+and the assignation of properties in to a file in $d(o)$
+can be extended, they can be managed manually by the user or automatically via programs
+as described respectively in Section~\ref{X} and \ref{X}.
+
+% manual/auto x logic/descr
+% manual/autocore/autoextended orga-prop/attribution-prop
+
+\subsection{Logics}
+
+Logics are usually made of axioms and inference rules.
+%defines order between prop,  will be used by navigation (and query)
+% a |= b ?? intuitively yes mean a is under b, a is more specific
+
+%axioms = explicit manual knowledge, inference rules = implicit automatic knowledge
+
+\subsubsection{Axioms}
+
+A user would like to order properties between them to form taxonomies, 
+to represent his knowledge about a domain. 
+For instance the property $Unix$ can be considered more specific than the 
+property $OperatingSystems$ as every document about Unix is also a document
+about operating systems.
+This means that if an object $o$ satisfy the query $Unix$,
+in logical terms if $d(o) \models Unix$, then it must also
+satisfy the query $OperatingSystems$, in logical terms 
+$d(o) \models OperatingSystems$.
+This transitivity is achieved by considering the
+taxonomic relations as axioms, e.g.,~$Unix \models OperatingSystems$.  
+%Note that the taxonomic relation is a {\em directed acyclic graph} (a {\em DAG}).
+% must be ? avoid loop ?
+% note that same error on files will not be taken again, attr can be
+%  child of more than one attr, multiple inheritance
+So, if a user does \sh{cd OperatingSystems}, then all files with property \sh{Unix} 
+will also satisfy this query. Morover the user will now be able with navigation
+to go from the general category $OperatingSystems$ to the specific $Unix$.
+
+Concretely, axioms are created using the \sh{mkdir} and \sh{cd} command:
+\sh{mkdir a; mkdir b;} \sh{cd a/b; mkdir ab} add the axioms $ab \models a$ and
+$ab \models b$ to the entailment relation.
+
+%E.g.,~doing
+%{\sh{cd /OperatingSystem/TradeMark}} {\sh{mkdir Unix}} 
+%makes \sh{Unix} 
+%a subconcept of \sh{OperatingSystem} (axiom
+%$\mbox{\sh{Unix}}\models\mbox{\sh{OperatingSystem}}$), and of
+%\sh{TradeMark} (axiom
+%$\mbox{\sh{Unix}}\models\mbox{\sh{TradeMark}}$; UNIX is a
+%registered trademark of The Open Group).  
+
+\subsubsection{Inference rules}
+
+There exists some domains, where the user should not need to provide axioms to order
+some properties. For instance with the domain of interval of integers, it is obvious
+that the property ``to be between 1 and 10'' is more general than the property ``to be
+between 2 and 5''. 
+This requires to incorporate an automatic theorem prover for this domain, 
+a logic engine consisting of inference rules for representing the $\models$ relation.  
+Even if some logics are undecidable
+(e.g.~predicate logic) or unpracticable (e.g.,~propositional
+logic), there are many useful and practicable logics that can be used: % as a file description language
+ e.g.,~a logic of types for program components, or a logic of intervals 
+for expressing dates.
+%logic of interval for int, logic of regexp, logic of date, logic of secu
+So under LFS properties can also be valued-attributes, and values can represent 
+arbitrary formulas of a domain, automatically managed by a dedicated logic engine.
+Note that the user can provide multiple logic engines, one for each domain of value,
+hence the ``s'' in \concept{Logics Files System}.
+
+To make the system extensible, the user can provide those logic engines via a plugin
+mechanism as described page~\ref{X}. A logic engine represent $\models$ and 
+so its interface is to take 2 formulas $f$ and $g$ and to answer the question $f \models g ?$.
+
+%core allow bootstrap
+
+%By default a naive logic engine is provided to manage an attribute that just add 
+
+\subsection{Files}
+
+The description of a file can be splitted in 2 parts, a subjective
+part, which allow the user to give his own view on a file,
+and an objective parts, which are properties infered from the file. 
+We call extrinsic properties the subjective part
+and intrinsic properties the objective part.
+%, because they are properties extern to the file, 
+%, because they are properties intern of the file.
+
+\subsubsection{Extrinsic properties}
+Many properties can not be infered from the content of a file, for instance
+the subjective quality of a music file. 
+Those properties can be assigned to 
+a file simply by selecting those properties via the path and create a file in this path.
+%descr can be adjusted, add attr or del attr from the description of the file, with the \sh{mv}
+%command as described in Section~\ref{X}, as opposed to intrinsic properties.
+
+\subsubsection{Intrinsic properties}
+
+Many properties can also be infered from the content of a file, for instance
+the size of a file. Those properties can be assigned to a file
+by designing special programs called \sh{transducers} which are in charge
+to extract from the file those properties.
+To make the system extensible, the user can also provide those \sh{transducers} via a plugin
+mechanism as described page~\ref{X}.
+%interface: c -> d
+%so to associate prop, simply copy a file on LFS, it will be automatically index
+% by the appropriate transducer.
+%as opposed to extr, cant use mv, otherwise inconsistency, 
+% only way descr can be adjusted, add attr or del attr from the description of the file, 
+% by changing content
+%=>
+Note that those properties must be recomputed each time the file is modified,
+so the need to split the description $d(o)$ of a file in 2 parts $dextr(o)$
+and $dintr(o)$, so that the recomputation of the second part
+do not erase the first part.
+
+%core allow bootstrap
+
+%\subsection{Indexing}
+%  Transducers(files/lines).
+
+%trans index file,  can have advanced, index parts of file => allow to navigate
+% select some set of parts as we select set of files
+
+%A file transducer for PofFS attaches a property to every part of a
+%file.  The definition of a part can be line-oriented; i.e.,~parts are
+%lines.  Alternatively, it can be structure-oriented; i.e.,~parts
+%correspond to nodes of the abstract syntax tree of the viewed file.
+%For the sake of simplicity, we will only develop the line-oriented
+%case in this article.  In fact, operating system issues do not depend
+%on this orientation.
+
+% for the moment lines, but ast possible, binary files (cd violon, or cd part3) possible
+%  separation of concern is everywhere :) montage video/audio many tracks, many
+%  angle of classification/query
+%(factorisation of the tools is good, less stuff to learn)
+
+%for zoom, trans can have state (to be interesting)
+% not needed for files cos really independant, here lines have not seens when isolated
+%% in fact with files too, a C file without the all project means ? but extr prop can give context
+
+%A transducer is a finite state machine, so that the indexing of a part
+%may depend on previous lines.  For example, remembering in what
+%function body a line lays, permits to add the property $function{:}f$
+%to the line.  This shows that even with the line-oriented approach structured data can be
+%analyzed.
+
+%means when modify => reindex all (as opposed to files which are independant), 
+% in fact as described later, by making trans and LFS cooperate, we can optimise 
+% what we need to reindex
+
+\section{Retrieve}
+
+Entailment can modelise 2 important notions: satisfaisability and order,
+which can be in turn associated to 2 search paradigms: query and navigation.
+Indeed, given a description of a file represented by a formula $d$, 
+and a query represented by a formula $q$, LFS can determine
+if a file satisfy a query by checking if $d \models q$.
+The principle of navigation is to go from the general 
+to the specific, and again LFS can determine if a formula $f$ is more
+general than another formula $g$ by checking if $g \models f$.
+The entailment relation is the basis to enable LFS to combine query and navigation,
+
+\subsection{Using Query}%\subsection{Viewing}
+
+A key notion is the {\em extension} of a logical formula $f$, which is the 
+set of all objects whose description satisfies the formula: 
+\mbox{$ext(f) = \{ o \mid o\in{\cal O}, d(o)\models f\}$}
+
+%the core |= is set inclusion of atoms
+% as said before atoms managed themselves by another |= manual (list of axioms) 
+% atoms can be valued attributes, arbitrary syntax and dedicated solver, user (adhoc |=) 
+% => can have arbitrary query (and so navig)
+
+%concretely a user issue the cd command
+
+%usenix: ex of resolution
+%with the axiom/prop/trivial inference step
+%  pwd = subconcept&year:>2001
+
+
+%in fact we extend Core query logic to more set operation
+The core query logic of LFS is 
+%In the current prototype, the logic
+%a restricted form of 
+%formulas must be presented in conjunctive normal form
+the logic of proposition. %logic of prop, in fact have a set semantic
+Formulas are either simple atoms
+(e.g.,~$a$), negations of formulas (e.g.,~$\neg a$), disjunctions of
+formulas (e.g.,~$a1\vee a2\vee a3$), or conjunctions of formulas
+(e.g.,~$(a1\vee a2)\wedge a3\wedge (\neg a4)$).  
+The entailment relation is that of usual propositional logic.  %SURE? RIDOUX ASK
+These formulas are
+written \sh{a}, \sh{!a}, \sh{a1|a2|a3}, and \sh{(a1|a2)\&(a3)\&(!a4)}
+in the concrete syntax.  The slash is also read as a conjunction.  
+
+%can be used only for query and not for descrive,as seen the core query differs from the core descr
+%why ?
+%or is provided in query and not in descr cos nosense (if give aORb then cd a or cd b will not give)
+%  because a |= aORb is false
+%same for not cos if create => give it all the attr => bordel + bad queries,
+% where to say that x have not y, simply not add this prop :)
+% we implement not via closed world
+%more on this choice in section Discussion (vf ferre)
+%in fact sometimes useful but must be local cos global negation have to be restricted
+% to be useful, not as substraction
+% but as logic can be extended via deduction => can have special not in description
+% that have a different meaning but can be good (cf security)
+
+Note that
+
+\mbox{$ext(f\wedge g)=ext(f)\cap ext(g)$}, 
+
+\mbox{$ext(f\vee g)=ext(f)\cup ext(g)$}, 
+
+\mbox{$ext(\neg f)=complement(ext(f))$}.
+%interet ? voir que calculer |= est pas complique ?
+
+%this determines what are the object under, and navig use this extension to determine
+% subdirs that refine this set
+% and command ls will be made of files from this set, and some properties
+%  as described later.
+
+%hence the true formula at the beginning
+%The root directory, or \sh{/}, is equivalent to formula $\mathit{true}$. 
+%So, doing \sh{ls} at the root will list the names of all the files in the
+%system, because anything entails $\mathit{true}$.
+
+
+%cd parts, switch world
+%Views are designated with formulas that serve as paths.  Each
+%directory contains a unique \concept{view file}, which contains the
+%set of lines satisfying the path.
+%%It amounts to do a kind of grep on the viewed file, filtering the irrelevant lines.
+%In a directory~$p$, the view file contains \mbox{$\{ c(o) \mid
+%o\in{\cal O}, d(o)\models p\}$}.  E.g.,~in the context of \sh{foo.c},
+%line 2 belongs to the view file of directory \sh{function:f} because
+%\mbox{$function{:}f\wedge var{:}y\models function{:}f$}.  The $c(o)$
+%are always displayed in the order of the viewed file.
+
+
+\subsection{Using navigation}
+
+The extension of query can be very large (typically at the root of the filesystem),
+so the need for a navigation capability.
+Sub-directories of a directory are determined by the most general formulas whose
+extension strictly intersects the directory extension.  This gives a
+logical ground for considering navigation as computing {\em relevant
+hints} to help refining a query.
+
+%< In a hierarchical file
+%< system, one can have thousands of files under \sh{/local}, but those
+%< files are classified in subdirectories (e.g.,~\sh{bin}, \sh{doc}) which
+%< helps in reducing the size of an answer to \sh{ls} in \sh{/local}.
+%< 
+%< So, instead of \sh{ls} listing the whole extension of a formula, 
+%< it will return the remaining {\em relevant} property names needed to
+%< refine the query further, which we call {\em increments}.  
+
+Command \sh{ls} lists sub-directories, but also files that cannot
+be distinguished any further by relevant properties. In LFS,
+the files located in a
+\sh{PWD} $p$ are the files whose description satisfies $p$, but does
+not satisfy any of its subdirectories. 
+%<=> are in the extension of this directory
+%and not in the extension of any subdirectory, which mean those who are 
+%completely qualified by the current directory.
+
+%In the preceding example, if
+%one of the files had just the properties mentioned in $p$ and
+%$a_1$, and nothing more (i.e.,~not $a_2$), then it would be listed.
+
+More formally, let ${\cal P}$ be the set of all property names,
+let $\mathit{ext}(f) = \{ o \in{\cal O} \mid d(o)\models f \}$
+(the extension of~$f$), then the answer to \sh{ls} in a \sh{PWD} $pwd$ is
+divided in two parts, the sub-directories $\mathit{Dirs}$, and the files
+$\mathit{Files}$, such that 
+\\
+\mbox{~}\hspace{0.05in}
+$\mathit{Dirs} = \mathit{max}_{\models}(\{ p\in{\cal P} \mid \emptyset\subset \mathit{ext}(p \wedge pwd) \subset \mathit{ext}(pwd)\})$, 
+\\
+and 
+\\
+\mbox{~}\hspace{0.05in}
+$\mathit{Files} = \mathit{ext}(pwd) - \bigcup_{p\in\mathit{Dirs}(pwd)} \mathit{ext}(p)$
+%$\{ o\in{\cal O} \mid d(o)\models p, \neg\exists f\in \mathit{Dirs} \mid d(o) \models f\wedge p\}$
+\\
+where 
+\\
+\mbox{~}\hspace{0.05in}
+$\mathit{max}_{\models}({\cal P}) = \{ p \in{\cal P} \mid \neg\exists p' \in{\cal P}, 
+p' \neq p, p \models p' \}$,
+\\\noindent
+
+Sub-directories in $\mathit{Dirs}$ are also called {\em increments}.
+
+%ex usenix de resolution
+
+%why set of prop ?
+% want have simple ls
+%  (no list in ls the full descr, but more its different part (no need trait))
+%  cos ls pollution would not like to see a&b&c ... directory
+%  if not set => would need a way to extract the subset we are interested in ls
+%   => will be complicated
+
+\section{Manipulate}
+
+%when not inside => reapply transducer, no pb
+%when inside
+% but naive scheme will not work => need mark
+
+%mv cp rm ... have been described.
+%for the contents it is copy/cut/paste 
+
+% as in windows: same logical op: copy/cut/paste
+%  same facet => talk on mv/modify
+
+% why set of prop ?
+% but want use mv (remove) so would complexify (no need minus in functor), 
+
+%TODO   reversible transducer (comme ca encore + coherent l'ens, + carre, + transparent)
+
+\subsection{Files}
+
+% rm file => suppr o from O, 
+% rm p => suppr from P and from d
+
+%Concretely, if one executes
+%\sh{mv p1/f1 p2/f2},
+%the effect is to change the name of \sh{f1}
+%into \sh{f2}, and to change \mbox{its} description, deleting attributes of \sh{p1} and adding those of
+%\sh{p2}.  
+
+%extrinsic prop => mv/...
+%intrinsic prop => cut/copy/paste, only way to change is change content
+
+% mv dir ? this works the same way for it
+%  TODO more on mv dir
+
+% en fait plus complique, car avec la taxo, t'as pe pas ete assez precis
+%  via le pwd
+
+\subsection{File contents}
+%\section{Updating}
+
+%on file contents the op are cut/copy/paste
+% when file mode => reapply => pendant du mv for extrinsic
+% when otjhe mode, as hide some parts and want
+%  to be able to modify original file => need marks
+
+%TODO?
+%Note that the resulted view may not be well formed according
+%to a compiler anymore. We dont see this as a problem as the viewed
+%file, him, is still well formed.
+
+As we want to be able to update views, LFS needs to remember what has
+been filtered out for back-propagating an update to the viewed
+file. We also need to make the missing parts explicit in the view
+file.  Indeed, it must be visible if a new line is added before or
+after a missing part.  For instance, assuming a schematic view
+\verb/a ... b/, where \verb/.../ represents the missing part,
+\verb/a c ... b/ could not be distinguished from \verb/a ... c b/ if
+the position of the missing part were not shown.  So, LFS inserts
+special marks in the view file everywhere parts have been filtered
+out.  In order to not pollute too much the file with marks, only one
+mark is generated for consecutive missing parts.
+%advanced:  marks? either intervalle, either ref to intervalle(better, why expose), either just mark
+%   what is best ?
+In order to designate missing parts (e.g.,~to move them), a unique
+number is associated to each mark.  We will also see in
+section~\ref{S:EXTENSIONS} another use for this number.
+%details:
+%   under latex \%.. under perl \#, if token then other marks
+%  pb escaping ?
+
+So, a view file is composed of a set of lines satisfying the query,
+and a set of marks, internally referring to lines in the viewed file.
+Updating a view file involves an update of the viewed file and of the
+properties of each part of file.  The updated viewed file is composed
+of a new set of lines, which are the lines that are hidden by
+a mark in the updated view file, and the visible lines in the updated
+view file.  The properties of each line are updated by re-applying the
+transducers on this updated viewed file.  
+
+
+%\section{Shell commands semantics}
+%cf annexis, small brother :)
+%formally ?
+
+%c(o), d(o)
+
+%It first checks that \sh{x} is a simple atom (neither a disjunction, a conjunction, nor a negation)
+
+
+%---
+%advanced orga (secu, meta), retrieve(prolog, variations), manip(group, hypertext)
+%this is the core of LFS (and it is quite big), extensions concerning security, reflexivity,
+% advance query capability are presented separately to not overload the reader
+% cf chapter X and X. 
+% section X present too extensions but that dont improve the expressivity
+% but improve the efficiency (of both LFS and the programmer :) )
+%  as section X (synchro point) and section X X
+
+%this works too for latex file, ... ex of use, every format
+% orga of docs, ...  see section X for more example
+
+
+%\chapter{Security}
+
+\chapter{Advanced features}
+
+%Section~\ref{S:PRINCIPLES} exposed the core of \mbox{LFS}. In reality this
+%is only a framework, in which more features can be introduced.  We
+%present in this section %a part of the 
+%features that have actually been introduced in the prototype LFS.
+
+
+\section{\sh{cd .strict, cd .relaxed}}
+
+We use transducers to automatically add intrinsic valued attributes to
+a file, but this has a negative side-effect on the result of \sh{ls}.
+Every file now has system attributes, and so the file organization is
+as showed in figure~\ref{fig:bighierarchy}.
+
+\begin{figure} 
+\centerline { \psfig{figure=figs/security-system.eps, width=\widthfig}}           
+\caption{A typical hierarchy of concepts for LFS}
+\label{fig:bighierarchy}
+\end{figure}
+ 
+It means that the first \sh{ls} from the root lists all the $size:x$,
+$modification:y$, \ldots, subdirectories.  Indeed, it does not answer
+with the more general concepts, like $system$, $size:$, \ldots, because those
+concepts do not refine the current query, since every file is in the
+extension of those concepts.
+
+So, we decided to relax the condition for being an increment in order
+to exhibit really relevant increments, with a more general property.
+The \sh{ls} increment semantics becomes 
+
+$Dirs = max_{\models}(\{ f \mid f \in F, \neg(pwd \models
+f), \emptyset \subset ext(f \wedge pwd) \subseteq ext(pwd) \})$.  
+
+\noindent
+The main novelty is that the rightmost inequality is no longer strict.
+With this scheme, the \sh{ls} command at the root directory lists only
+the coarse categories.  The $\neg (pwd \models f)$ constraint avoids
+navigating indefinitely in the same directory.
+
+
+The two semantics are proposed to the user.  
+%The \tab{inode\_table}structure has a field that contains a tag indicating the chosen
+%semantics.  This tag is propagated to all the increments of the directory.  
+It can be changed by the user doing either \sh{cd .relaxed}, or \sh{cd .strict}.
+
+
+\section{Directory views}
+
+LFS encourages to give very rich descriptions to individual files,
+according to several different points of view.  This leads to long
+descriptions.  E.g.,~in an experiment with BibTeX entries, every entry
+was described by an average of 70 attributes.  The danger is that most
+of these attributes are simply noise when a file is considered from a
+single point of view.  So, we like to better control this noise.
+
+A new feature, \concept{directory view}, allows one to constrain the set of
+increments that the algorithm may list.  
+%as in [ferre], but we change it a little to accomodate the reality (ls x = cd x;ls)
+The user declares a directory view by
+adding the special symbol \sh{\^} (caret) to the end of a property
+name.  This indicates that future \sh{ls} operations may list only
+increments that are sub-concepts of the mentionned property.  For instance, a user
+who searches a music file may do \sh{cd music\^}, to indicate that
+only sub-concepts of $music$, like $author$ and $genre$, are of
+interest for him.  Other concepts, like $size$, are simply ignored.
+
+In summary, the \sh{PWD} selects the kind of objects that are searched
+for, and directory views select the kind of increments that can be
+used in navigation.
+
+%The \tab{inode\_table} structure is again augmented with a field that
+%indicates the current selection.  This tag is propagated to all the
+%increments of the directory, and it can be changed in the
+%\fun{lookup} operation if the name string matches the pattern
+%\tab{.*\^}. The \fun{ls} algorithm is modified to start from the
+%current selection in place of starting from the top node.
+
+
+\subsection{\sh{cd $prop$\^}}
+\subsection{\sh{cd $prop_1$\^~|~$prop_2$\^}}
+\subsection{\sh{cd !~$prop_1$\^}}
+
+\section{\sh{cd .ext, cd .int}} 
+
+
+Under hierarchical file systems, one gets the list of all the files
+under a directory (i.e.,~its extension) by using command \sh{ls -r}. 
+This command recursively goes though all the sub-directories of a
+hierarchy.  Under LFS, a recursive traversal is impracticable because
+too many paths lead to the same place.  In particular, if a path of
+$n$ names leads to some place, then the $n!$ permutations lead to the
+same place.
+
+%However, computing an extension is almost free in our system because
+%they are represented in the extension table.  
+To be able to get the
+extension of a query, we extend again the query language with a special
+keyword: \sh{.ext}.  So, a user doing \sh{cd .ext; ls} will get the
+extension of the current directory.
+
+%We use the same techniques as before, adding a special tag in the
+%inode indicating when we are in ``extension mode''.
+
+
+
+%.goint
+
+\section{\sh{cd .best}}
+
+\section{\sh{cd .ca}}
+%(good for migrating, more on this later)
+
+\section{\sh{cd .children, cd .parents}}
+%old = .classic for .children
+%can see when empty dir. pratique.
+
+\section{\sh{cd .compat}}
+
+%(need props-misc)
+%  again cool for migrating, more on this later)
+
+\section{\sh{cd glimpse:$s$, cd all:$s$, cd agrep:$s$, cd google:$s$}}
+% now also all:  contain:
+% filecontain: propcontain: ?
+
+%take car that if use stree:, then huge memory consumption. of course swap
+% do his job, but still (work on making this suffix tree on disk, persistent)
+
+%note that not so heavy to compute from scratch, and not needed to be pervasives cos
+% less crucial data structures, so letting the swap do our job is not a so bad idea.
+% reusing some os features and having for free some features in appli is good
+
+
+\section{Relations}
+
+In the current organisation, LFS force the user to choose a kind of schema 
+for his information as we have 2 separate worlds, the world of objects
+with files, and the world of properties. 
+For instance to organise his music files, a user will consider songs as objects,
+and artists as properties, which makes it easy to search for songs by selecting artist.
+But this separation is too restrictive, indeed 
+what if a user would like now to manage information about artists ?
+A user could gather some information about them,
+and classify artist by their spoken langage, their country.
+Then the user would like no more to search for songs, but to search for artists, 
+so considering artists as objects of the search, no more as properties of the search.
+
+Of course a user can create the property \sh{artist:beattles}, and
+create an independant file \sh{beattles.info} and classify this file, for instance
+giving it the \sh{country:england} property.
+But as the property and the file have no connection between them, it forbids
+interesting queries such as requesting music files made by artist who are english.
+
+A user would like to manage under LFS multiple kind of information, 
+music files, some information about the artist of those music files, some information
+about the country of those artist, and being able to make cooperate those multiple information.
+We would like to consider the artist both as an object and a property.
+
+Relationnal databases solve this problem by not having separate world, an object can play 
+the role of a property, and a propery the role of an object. Databases manage
+multiple tables, one table may gather information about artists, another about songs, and
+the expressivity of databases come from the ability to make \concept{links} between those tables,
+for instance a field in the artist table referencing an entity in the song table.
+What makes an entity an object or a property is the point of view of the user when
+he issues a query.
+We will use the same link and ability to change his point of view techniques under LFS.
+
+
+\subsection{\sh{ln $obj_1$ <$role$:is>$obj_2$, ln $obj_1$ <$role$:of>$obj_2$}}
+\subsection{\sh{cd $role$:is==$name$, cd $role$:of==$name$}}
+\subsection{\sh{cd $role$:is===$query$, $role$:of===$query$}}
+\subsection{\sh{cd $role$:is=>=, cd $role$:of=>=}}
+
+%\section{Others}
+
+% inode:xxx
+% date:today
+
+
+% RCS stuff, can get inode number via nlink (do ls -l)
+% can also get back a delete, look in lost+found 
+
+\chapter{Import/Export}
+
+%export.lfs import.lfs
+
+\section{Migrating from classical filesystems to LFS}
+
+%importing a tar
+
+%  basicenv.sh
+%  .compat/.relaxed,  why ?
+%  no pb error msg
+%  cd .ca
+%  Diff 
+%  standardise4pad (until fuse fix)
+
+\section{Migrating from LFS to classical filesystems}
+
+%making a tar (but lose)
+%how not lose ? cant :) but keep intrinsic at least
+
+%cf tar discussio in mail
+
+
+
+
+%STYLE
+% props-misc
+%  put en vrac,  then add in domain
+% can check stuff 
+%  - cf !type:/ext:^  to see missing ext handled
+%  - !domain/props-misc  to see if can add some classification
+% sure?: try do in majcaps 
+
+% try give only one extrinsic (or multiple,  but a la .ca after => can do Diff)
+
+
+\chapter{The art of LFS}
+
+\chapter{Extending LFS}
+
+%plugins interface
+
+%plugins example
+
+% opti with is_value
+% opti with multi synchro
+
+%include tips.txt ?
+
+%note = can also put plugins in core,  even simpler if coded in ml
+%  but deconseille
+
+%can even extend more LFS, by adding some hooks
+
+
+\chapter{Troubleshootings}
+%alt:\chapter{Known limitations and escapes}
+
+%dup: bugs.txt, faq.txt
+
+%in case of pbs
+
+%bugs
+% cant mvdir that del a prop
+% cant rmdir a formula dir
+
+%pb of need .goint
+
+
+%options of mount.lfs
+
+%other scripts (backup, ...)
+
+
+
+\chapter*{Conclusion}
+\addcontentsline{toc}{chapter}{Conclusion}
+
+
+%\section*{Availibility}%\addcontentsline{toc}{chapter}{Availibility}
+%A prototype LFS and more information on this project can be
+%down-loaded at the following URL:
+%\\
+%\mbox{~}\hspace{0.5in}{\tt http://lfs.irisa.fr/}
+
+
+
+\appendix
+
+
+\chapter{Specification} 
+\label{annexe:spec}
+
+
+This section present the formal specification of LFS.
+It describes the semantics of shell commands such as \sh{cd} or \sh{ls} under LFS.
+
+This specification is not described in the mathematics language but
+in a computer language, more precisly in O'Caml.
+So, this specification is executable.
+This provides a first mean to ensure the correctness of the implementation of LFS
+by comparing automatically the results 
+returned by the specification and the implementation on 
+small tests.
+
+The text of this code has been pre-processed to replace the name
+of some functions by the corresponding mathematical symbol, like
+$\cup$ for \sh{union\_set}.
+%It helps to 
+%Cela permet de renforcer la ressemblance entre ce code et les formules
+%qui figurent dans la thèse.
+
+\pagebreak
+
+\section{Abstraction} 
+\label{annexe:full-lfs}
+\noindent{}\\
+\noindent{}\textsf{type} property = \textsc{Prop} \textsf{of}  {\em \textsl{string}}\\
+\index{property}
+\noindent{}      \\
+\noindent{}\textsf{type}  object  =  $\langle$\\
+\index{object}
+\noindent{}\mbox{~}\hspace{1.48148148148148em}id:          {\em identity}; \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}content:     {\em content}; \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}description: {\em property} {\em \textsl{\textsl{set}}};\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$\rangle$\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{and}  identity  =  {\em \textsl{int}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{and}  content   =  {\em \textsl{string}}\\
+\noindent{}\\
+\noindent{}\textsf{type}  context  =  $\langle$ \\
+\index{context}
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$\cal P$: {\em property} {\em \textsl{\textsl{set}}}; \\
+\index{$\cal P$}\index{P@$\cal P$}
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$\cal O$: {\em object} {\em \textsl{\textsl{set}}}; \\
+\index{$\cal O$}\index{O@$\cal O$}
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$\cal L$: {\em logic};\\
+\index{$\cal L$}\index{L@$\cal L$}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$\rangle$\\
+\noindent{}\textsf{and}  logic     =  ({\em property} $\rightarrow{}$ {\em property} $\rightarrow{}$ {\em \textsl{bool}})  {\footnotesize \textit{(* {\em mean}: {\em a} $\models$ {\em b} ? *)}}\\
+\index{logic}
+\index{interface!logic deduction engine}
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(*----------------------------------------------------------------------------------*)}}\\
+\noindent{}\textsf{type}  formula  =  \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{Single} \textsf{of}  {\em property}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{And} \textsf{of}  {\em formula} $\times$ {\em formula}  \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{Or}  \textsf{of}  {\em formula} $\times$ {\em formula} \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{Not} \textsf{of}  {\em formula} \\
+\index{formula}
+\index{conjonction}
+\index{disjonction}
+\index{negation}
+\noindent{}\\
+\noindent{}\textsf{let} \textsf{rec} (ext:  {\em formula} $\rightarrow{}$ {\em context} $\rightarrow{}$ {\em object} {\em \textsl{\textsl{set}}}) = \textsf{fun} f ctx $\rightarrow{}$\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} ($\models$) = ctx.$\cal L$ \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{match} f \textsf{with}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{Single} q $\rightarrow{}$ $\{$o $\in{}$ ctx.$\cal O$ $|$ $\exists$ d $\in{}$ o.description (d $\models$ q) $\}$\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{And} (f1, f2) $\rightarrow{}$ (ext f1 ctx) $\cap{}$ (ext f2 ctx) \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{Or}  (f1, f2) $\rightarrow{}$ (ext f1 ctx) $\cup{}$ (ext f2 ctx) \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{Not} f $\rightarrow{}$        (ctx.$\cal O$)    $\setminus{}$ (ext f  ctx)\\
+\index{ext@$\textit{ext}$}
+\noindent{}\\
+\noindent{}\textsf{let} ($\textnormal{max}_{\models}$:  {\em logic} $\rightarrow{}$ {\em property} {\em \textsl{\textsl{set}}} $\rightarrow{}$ {\em property} {\em \textsl{\textsl{set}}}) = \textsf{fun} ($\models$) $\cal P$ $\rightarrow{}$ \\
+%patch: max buggé
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$\{$p $\in{}$ $\cal P$ $|$ $\neg\exists$ p2 $\in{}$ $\cal P$ (p2 $\not=$ p $\wedge$ p  $\models$ p2)  $\}$\\
+\noindent{}\\
+\noindent{}\textsf{let} (dirs:  {\em formula} $\rightarrow{}$ {\em context} $\rightarrow{}$ {\em property} {\em \textsl{\textsl{set}}}) = \textsf{fun} f ctx $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$\textnormal{max}_{\models}$ (ctx.$\cal L$) ($\{$p $\in{}$ ctx.$\cal P$ $|$ $\emptyset$ $\subset{}$ ext (\textsc{And} (f, \textsc{Single} p)) ctx $\subset{}$ ext f ctx  $\}$)\\
+%patch: max buggé
+\index{Dirs@$\textit{Dirs}$}
+\noindent{}    \\
+\noindent{}\textsf{let} (objects:  {\em formula} $\rightarrow{}$ {\em context} $\rightarrow{}$ {\em object} {\em \textsl{\textsl{set}}}) = \textsf{fun} f ctx $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}(ext f ctx) $\setminus{}$ ( $\bigcup_{p \in (\mathrm{dirs}~\mathrm{f}~\mathrm{ctx})}$ (ext (\textsc{And} (f, \textsc{Single} p)) ctx))\\
+\index{Files@$\textit{Files}$}
+\noindent{}  \\
+\section{Concretization} 
+\noindent{}\\
+\noindent{}\\
+\subsection{Concrete objects} 
+\noindent{}\\
+\noindent{}\textsf{type}  file  =  $\langle$ \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}filename: {\em filename}; \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}extrinsic: {\em property} {\em \textsl{\textsl{set}}}; \\
+\index{property!extrinsic}
+\noindent{}\mbox{~}\hspace{1.48148148148148em}intrinsic: {\em property} {\em \textsl{\textsl{set}}}; \\
+\index{property!intrinsic}
+\noindent{}\mbox{~}\hspace{1.48148148148148em}fcontent: {\em filecontent};\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$\rangle$\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{and}  filename  =  {\em \textsl{string}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{and}  filecontent  =  {\em content}\\
+\noindent{}\\
+\index{file}
+\noindent{}\textsf{type}  idfile  =  {\em identity}\\
+\noindent{}\\
+\noindent{}\textsf{type}  transducer  =  ({\em filecontent} $\rightarrow{}$ {\em property} {\em \textsl{\textsl{set}}})\\
+\index{transducer}
+\index{interface!transducer}
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(*----------------------------------------------------------------------------------*)}}\\
+\noindent{}\textsf{type}  part  =  $\langle$ \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}fromfile: {\em idfile};\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}pnumber: {\em \textsl{int}};\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}pdescription: {\em property} {\em \textsl{\textsl{set}}};\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}pcontent: {\em partcontent};\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$\rangle$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{and}  partcontent  =  {\em \textsl{string}}\\
+\noindent{}\\
+\noindent{}\textsf{type}  idpart  =  {\em identity}\\
+\noindent{}      \\
+\noindent{}\textsf{type}  adv\_transducer  =  ({\em partcontent} {\em \textsl{list}} $\rightarrow{}$ ({\em property} {\em \textsl{\textsl{set}}}) {\em \textsl{list}}) \\
+\index{advanced transducer}
+\index{interface!advanced transducer}
+\index{parts (of file)}\index{file!parts of file}
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\subsection{Concrete context} 
+\index{context}
+\noindent{}\\
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(* the identities are used to make link between the real world and the *)}}\\
+%patch: and      en sf
+\noindent{}{\footnotesize \textit{(* abstraction world (the context), and to avoid some redundancies in the structure *)}}\\
+%patch: and,in   en sf
+\noindent{}{\footnotesize \textit{(*   (for instance parts structure refer to files) *)}}\\
+\noindent{}\textsf{type}  world  =  $\langle$\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}properties: {\em property} {\em \textsl{\textsl{set}}};\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}axioms: ({\em property}, {\em property} {\em \textsl{\textsl{set}}}) {\em \textsl{\textsl{assoc}}}; {\footnotesize \textit{(* a $\models$ b $\wedge$ c $\wedge$ d *)}}\\
+%patch: /\ -> wedge
+\noindent{}    \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}files: ({\em idfile}, {\em file}) {\em \textsl{\textsl{assoc}}};\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}parts: ({\em idpart}, {\em part}) {\em \textsl{\textsl{assoc}}}; \\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}filesparts:  {\em idfile} {\em \textsl{\textsl{set}}};\\
+\noindent{}    \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}plugins: ({\em idfile}, {\em plugin}) {\em \textsl{\textsl{assoc}}};\\
+\noindent{}    \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}pwd\_history: ({\em formula} $\times$ {\em whichmode}) {\em \textsl{stack}};\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$\rangle$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{and}  whichmode  =  \textsc{Files} $|$ \textsc{Parts}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{and}  plugin     =  \\
+\noindent{}\mbox{~}\hspace{3.33333333333333em}$|$ \textsc{Trans} \textsf{of}  {\em transducer} \\
+\noindent{}\mbox{~}\hspace{3.33333333333333em}$|$ \textsc{AdvTrans} \textsf{of}  {\em adv\_transducer} \\
+\noindent{}\mbox{~}\hspace{3.33333333333333em}$|$ \textsc{Logic} \textsf{of}  {\em logic}\\
+\noindent{}\\
+\noindent{}\textsf{let} root = \textsc{Prop} \texttt{"true"}\\
+\index{true@$\textit{true}$}
+\index{root}
+\index{PWD}
+\noindent{}\\
+\noindent{}\textsf{let} default\_world = $\langle$\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}properties = $\{$ root $\}$ ;\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}axioms     = $\emptyset$;\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}files = $\emptyset$;\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}parts = $\emptyset$; filesparts = $\emptyset$;\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}plugins = $\emptyset$;\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}pwd\_history = \textsl{push} ((\textsc{Single} root), \textsc{Files}) $\emptyset$\\
+\noindent{}$\rangle$ \\
+\noindent{}\\
+\noindent{}\textsf{let} (is\_files\_mode:  {\em world} $\rightarrow{}$ {\em \textsl{bool}}) = \textsf{fun} w $\rightarrow{}$ (w.pwd\_history $\rhd$ \textsl{top} $\rhd$ \textsl{snd}) = \textsc{Files}\\
+\noindent{}\\
+\noindent{}\textsf{let} (new\_object:  {\em unit} $\rightarrow{}$ {\em identity}) = \textsf{fun} () $\rightarrow{}$ \textsl{counter} ()\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\subsection{Concrete logic} 
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(* valued attribute (vattr) are important \textsf{in} \textsc{LFS}, used to provide advanced logic *)}}\\
+\noindent{}{\footnotesize \textit{(*   here we define some accessor to a vattr *)}}\\
+\noindent{}\textsf{let} regexp\_attr =  \texttt{"\^{}$[$a-zA-\textsc{Z\_}$]$+:"}\\
+\index{property!attribute}
+\index{property!valued attribute}
+\index{\sh{:}}
+\noindent{}\\
+\noindent{}\textsf{let} (is\_attr:   {\em property} $\rightarrow{}$ {\em \textsl{bool}}) = \textsf{fun} (\textsc{Prop} s) $\rightarrow{}$ s $\approx$ (regexp\_attr \^{} \texttt{"\$"})\\
+\noindent{}\textsf{let} (is\_vattr:  {\em property} $\rightarrow{}$ {\em \textsl{bool}}) = \textsf{fun} (\textsc{Prop} s) $\rightarrow{}$ s $\approx$ (regexp\_attr \^{} \texttt{".+\$"})\\
+\noindent{}\\
+\noindent{}\textsf{let} (value\_vattr:  {\em property} $\rightarrow{}$ {\em property}) = \textsf{fun} (\textsc{Prop} s) $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsc{Prop} (\textsl{regexp\_match} s (regexp\_attr \^{} \texttt{"(.+)\$"}))\\
+\noindent{}\\
+\noindent{}\textsf{let} (attr\_vattr:  {\em property} $\rightarrow{}$ {\em property}) = \textsf{fun} (\textsc{Prop} s) $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsc{Prop} (\textsl{regexp\_match} s (\texttt{"("} \^{} regexp\_attr \^{} \texttt{")"}))\\
+\noindent{}\\
+\noindent{}\textsf{let} \_ = \textsf{\textsl{example}} (is\_attr  (\textsc{Prop} \texttt{"toto:"}))\\
+\noindent{}\textsf{let} \_ = \textsf{\textsl{example}} (is\_vattr (\textsc{Prop} \texttt{"toto:tata"}))\\
+\noindent{}\textsf{let} \_ = \textsf{\textsl{example}} (value\_vattr (\textsc{Prop} \texttt{"toto:tata"}) = (\textsc{Prop} \texttt{"tata"}))\\
+\noindent{}\textsf{let} \_ = \textsf{\textsl{example}} (attr\_vattr  (\textsc{Prop} \texttt{"toto:tata"}) = (\textsc{Prop} \texttt{"toto:"}))\\
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(*----------------------------------------------------------------------------------*)}}\\
+\index{logic deduction engine}
+\noindent{}\textsf{let} (find\_alogic:  {\em world} $\rightarrow{}$ {\em property} $\rightarrow{}$ {\em logic}) = \textsf{fun} w attr $\rightarrow{}$\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} plugins = $\{$(id, file) $\in{}$ w.files $|$ $\{$ \textsc{Prop} \texttt{"logic"}; attr $\}$  $\subseteq{}$ file.extrinsic $\}$ \textsf{in}\\
+\index{property!special!\sh{logic:}}
+\index{special property|see{property}}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} (is\_attr attr) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} ($\parallel$ plugins $\parallel$ $\leq$ 1) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{if} plugins = $\emptyset$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{then} (=) {\footnotesize \textit{(* default logic \textsf{when} no plugins, flat attr *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{else}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} (id, file) = \textsl{top\_set} plugins \textsf{in}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{match} (\textsl{\textsl{assoc}} id w.plugins) \textsf{with}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$|$	\textsc{Logic} ($\models$) $\rightarrow{}$ ($\models$)\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$|$	\_ $\rightarrow{}$ \textsl{failwith} \texttt{"not a logic plugin"}\\
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(*----------------------------------------------------------------------------------*)}}\\
+\noindent{}\textsf{let} (valid\_prop:  {\em world} $\rightarrow{}$ {\em property} $\rightarrow{}$ {\em \textsl{bool}}) = \textsf{fun} w p $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}(\textsf{if} is\_vattr p \textsf{then} attr\_vattr p \textsf{else} p) $\in{}$ w.properties\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\section{From concrete to abstract} 
+\noindent{}\\
+\noindent{}\textsf{let} (context:  {\em world} $\rightarrow{}$ {\em context}) = \textsf{fun} w $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$\langle$ \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$\cal P$ = w.properties; \\
+\index{$\cal O$}\index{O@$\cal O$}
+\index{$\cal P$}\index{P@$\cal P$}
+\index{$\cal L$}\index{L@$\cal L$}
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$\cal L$ = \\
+\index{$\models$}
+\noindent{}\mbox{~}\hspace{3.7037037037037em}(\textsf{let} \textsf{rec} ($\models$) = \textsf{fun} p1 p2 $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}\textsf{match} (p1, p2) \textsf{with}\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}$|$ (x, \textsc{Prop} \texttt{"true"})   $\rightarrow{}$ \textsl{true}  {\footnotesize \textit{(* x $\models$ \textsl{true} *)}}\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}$|$ (\textsc{Prop} \texttt{"true"}, x)   $\rightarrow{}$ \textsl{false} {\footnotesize \textit{(* \textsl{true} $\models$ x only \textsf{when} x = \textsl{true} *)}}\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}$|$ (x, y) \textsf{when} x = y  $\rightarrow{}$ \textsl{true}  {\footnotesize \textit{(* x $\models$ x *)}}\\
+\noindent{}	       \\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}{\footnotesize \textit{(* attr:x $\models$ attr:y \textsf{if} x $\models$ y \textsf{with} dedicated logic engine *)}}\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}$|$ (ax, ay) \textsf{when} (is\_vattr ax $\wedge$ is\_vattr ay) $\wedge$ (attr\_vattr ax = attr\_vattr ay) $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{5.92592592592593em}\textsf{let} ($\models$) = find\_alogic w (attr\_vattr ax) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{5.92592592592593em}(value\_vattr ax) $\models$ (value\_vattr ay)\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{4.81481481481481em}{\footnotesize \textit{(* x $\models$ z \textsf{if} there is an axiom x $\models$ ... $\wedge$ y $\wedge$ ... \textsf{and} y $\models$ z *)}}\\
+%patch: /\ wedge
+\noindent{}\mbox{~}\hspace{4.44444444444444em}$|$ (x, z) \textsf{when} x $\in{}$ (\textsl{keys} w.axioms) $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{6.2962962962963em}$\exists$ y $\in{}$ \textsl{\textsl{assoc}} x w.axioms (y $\models$ z)\\
+\index{axiom}
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}{\footnotesize \textit{(* attr:x $\models$ attr: is an axiom so attr:x $\models$ y \textsf{if} attr: $\models$ y *)}}\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}$|$ (ax, y) \textsf{when} is\_vattr ax $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{5.92592592592593em}(attr\_vattr ax) $\models$ y\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}$|$ \_ $\rightarrow{}$ \textsl{failwith} \texttt{"internal error"}\\
+\noindent{}\mbox{~}\hspace{3.7037037037037em}\textsf{in} ($\models$)\\
+\noindent{}\mbox{~}\hspace{3.7037037037037em});\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$\cal O$ = \\
+\noindent{}\mbox{~}\hspace{3.7037037037037em}\textsf{if} is\_files\_mode w\\
+\noindent{}\mbox{~}\hspace{3.7037037037037em}\textsf{then} w.files $\rhd$ \textsl{map} (\textsf{fun} (idf, f) $\rightarrow{}$ $\langle$\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}id = idf; \\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}content = f.fcontent; \\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}description = f.intrinsic $\cup{}$ f.extrinsic;\\
+\noindent{}\mbox{~}\hspace{3.7037037037037em}$\rangle$)\\
+\noindent{}\mbox{~}\hspace{3.7037037037037em}\textsf{else} w.parts $\rhd$ \textsl{map} (\textsf{fun} (idp, p) $\rightarrow{}$ $\langle$\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}id = idp;\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}content = p.pcontent;\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}description = p.pdescription;\\
+\noindent{}\mbox{~}\hspace{3.7037037037037em}$\rangle$)\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$\rangle$\\
+\section{Transducers} 
+\noindent{}\\
+\noindent{}\textsf{let} transducer\_system filename = \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}(\textsf{fun} content $\rightarrow{}$ \textsl{\textsl{set}} $[$ \textsc{Prop} (\texttt{"name:"} \^{} (\textsl{fileprefix} filename)); \\
+\noindent{}\mbox{~}\hspace{8.88888888888889em}\textsc{Prop} (\texttt{"ext:"} \^{}  (\textsl{filesuffix} filename));\\
+\noindent{}\mbox{~}\hspace{8.88888888888889em}\textsc{Prop} (\texttt{"size:"} \^{} (\textsl{slength} content $\rhd$ \textsl{i\_to\_s}))\\
+\noindent{}\mbox{~}\hspace{8.14814814814815em}$]$ )\\
+\index{property!system}
+\noindent{}\\
+\noindent{}\\
+\noindent{}\textsf{let} adv\_transducer\_system = \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}(\textsf{fun} contents $\rightarrow{}$ \textsl{index\_list} contents $\rhd$ \textsl{map} (\textsf{fun} (c, n) $\rightarrow{}$ $\{$ \textsc{Prop} (\texttt{"part:"} \^{} (\textsl{i\_to\_s} n)) $\}$ ))\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(*----------------------------------------------------------------------------------*)}}\\
+\noindent{}\textsf{let} (find\_trans:  {\em world} $\rightarrow{}$ {\em property} $\rightarrow{}$ {\em \textsl{string}} $\rightarrow{}$ {\em plugin} {\em \textsl{\textsl{set}}}) = \textsf{fun} w prop suffix $\rightarrow{}$\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$\{$(id, file) $\in{}$ w.files $|$ $\{$ prop; \textsc{Prop} (\texttt{"ext:"} \^{} suffix) $\}$  $\subseteq{}$ file.extrinsic $\}$\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$\rhd$ \textsl{map}    (\textsf{fun} (id, file) $\rightarrow{}$ \textsl{\textsl{assoc}} id w.plugins)\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\textsf{let} (transducer:  {\em world} $\rightarrow{}$ {\em filename} $\rightarrow{}$ {\em transducer}) = \textsf{fun} w filename $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} transducers = \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$\{$ transducer\_system filename $\}$  $\cup{}$\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}(find\_trans w (\textsc{Prop} \texttt{"transducer"}) (\textsl{filesuffix} filename) \\
+\index{property!special!\sh{transducer:}}
+\noindent{}\mbox{~}\hspace{2.59259259259259em}$\rhd$ \textsl{map} (\textsf{function} (\textsc{Trans} t) $\rightarrow{}$ t $|$ \_ $\rightarrow{}$ \textsl{failwith} \texttt{"not a transducer plugin"})) \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{fun} content $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$\bigcup_{trans \in (\mathrm{transducers})}$ (trans content) $\rhd$ \textsl{filter} (valid\_prop w)\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\textsf{let} (adv\_transducer:  {\em world} $\rightarrow{}$ {\em filename} $\rightarrow{}$ {\em adv\_transducer}) = \textsf{fun} w filename $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} transducers = \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$\{$ adv\_transducer\_system $\}$  $\cup{}$\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}(find\_trans w (\textsc{Prop} \texttt{"adv\_transducer"}) (\textsl{filesuffix} filename) \\
+\index{property!special!\sh{adv\_transducer:}}
+\noindent{}\mbox{~}\hspace{1.85185185185185em}$\rhd$ \textsl{map} (\textsf{function} (\textsc{AdvTrans} t) $\rightarrow{}$ t $|$ \_ $\rightarrow{}$ \textsl{failwith} \texttt{"not an advanced transducer plugin"})) \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{fun} parts $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}transducers $\rhd$ \textsl{fold} (\textsf{fun} props trans $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{let} newprops = trans parts \textsf{in}\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsl{zip} props newprops $\rhd$ \textsl{map} (\textsf{fun} (s1, s2) $\rightarrow{}$ (s1 $\cup{}$ (s2 $\rhd$ \textsl{filter} (valid\_prop w))))\\
+\noindent{}\mbox{~}\hspace{1.85185185185185em}) (parts $\rhd$ \textsl{map} (\textsf{fun} part $\rightarrow{}$ $\emptyset$))\\
+\noindent{}  \\
+\noindent{}\\
+\noindent{}\textsf{let} (index\_parts:  {\em world} $\rightarrow{}$ {\em idfile} {\em \textsl{\textsl{set}}} $\rightarrow{}$ ({\em idpart}, {\em part}) {\em \textsl{\textsl{assoc}}}) = \textsf{fun} w idfiles $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}idfiles $\rhd$ \textsl{fold} \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}(\textsf{fun} acc id $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{let} file = \textsl{\textsl{assoc}} id w.files \textsf{in}\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{let} parts = \textsl{lines} file.fcontent \textsf{in} {\footnotesize \textit{(* or tokens *)}}\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{let} part\_prop = parts $\rhd$ (adv\_transducer w file.filename) $\rhd$ \textsl{zip} parts $\rhd$ \textsl{index\_list} \textsf{in}\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}part\_prop $\rhd$ \textsl{fold} (\textsf{fun} acc ((partcontent, props), partnumber) $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{2.96296296296296em}\textsl{insert\_assoc} (new\_object (),\\
+\noindent{}\mbox{~}\hspace{8.14814814814815em}$\langle$ fromfile = id;\\
+\noindent{}\mbox{~}\hspace{8.88888888888889em}pnumber = partnumber;\\
+\noindent{}\mbox{~}\hspace{8.88888888888889em}pdescription = props;\\
+\noindent{}\mbox{~}\hspace{8.88888888888889em}pcontent = partcontent;\\
+\noindent{}\mbox{~}\hspace{8.14814814814815em}$\rangle$) acc\\
+\noindent{}\mbox{~}\hspace{2.59259259259259em}) acc\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}) $\emptyset$\\
+\section{The shell} 
+\index{shell}
+\noindent{}\\
+\noindent{}\textsf{type} path\_element = \textsc{Slash} $|$ \textsc{DotDot} $|$ \textsc{Element} \textsf{of}  {\em formula}\\
+\noindent{}\textsf{type}  path  =  {\em path\_element} {\em \textsl{list}}\\
+\index{path}
+\index{\sh{..}}
+\index{\sh{/}!root}
+\index{slash}
+\noindent{}\\
+\noindent{}\textsf{let} (w: world \textsl{ref}) = \textsl{ref} default\_world\\
+\noindent{}\\
+\noindent{}\textsf{let} (pwd:  {\em unit} $\rightarrow{}$ {\em formula}) = \textsf{fun} () $\rightarrow{}$ \textsl{fst} (\textsl{top} !w.pwd\_history)\\
+\index{commands!\sh{pwd}}
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(*----------------------------------------------------------------------------------*)}}\\
+\noindent{}{\footnotesize \textit{(* many commands mention valued attributes which do $\lnot{}$ have to be created first, kind *)}}\\
+\noindent{}{\footnotesize \textit{(* \textsf{of}  {\em sugar}, {\em but} {\em they} {\em must} {\em nevertheless} {\em as} {\em \textsf{with}} {\em mkdir} {\em be} {\em added} {\em to} {\em the} {\em property} {\em \textsl{\textsl{set}}} *)}}\\
+\noindent{}\\
+\noindent{}\textsf{let} (check\_and\_add\_properties:  {\em property} {\em \textsl{\textsl{set}}} $\rightarrow{}$ {\em unit}) = \textsf{fun} ps $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = ps $\rhd$ \textsl{iter} (\textsf{fun} p $\rightarrow{}$ \textsf{assert} (valid\_prop !w p)) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}w := $\langle$!w \textsf{with} properties = !w.properties $\cup{}$ ps $\rangle$\\
+\noindent{}\\
+\noindent{}\textsf{let} \textsf{rec} (properties\_of\_formula:  {\em formula} $\rightarrow{}$ {\em property} {\em \textsl{\textsl{set}}}) = \textsf{function}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{Single} x $\rightarrow{}$ $\{$ x $\}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ (\textsc{And} (f1, f2) $|$ \textsc{Or} (f1, f2)) $\rightarrow{}$ (properties\_of\_formula f1) $\cup{}$ (properties\_of\_formula f2)\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{Not} f $\rightarrow{}$ properties\_of\_formula f\\
+\noindent{}\\
+\noindent{}\textsf{let} \textsf{rec} (is\_conjunction:  {\em formula} $\rightarrow{}$ {\em \textsl{bool}}) = \textsf{function}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{Single} \_ $\rightarrow{}$ \textsl{true}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{And} (f1, f2) $\rightarrow{}$ is\_conjunction f1 $\wedge$ is\_conjunction f2\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ ((\textsc{Or}  \_)$|$(\textsc{Not} \_)) $\rightarrow{}$ \textsl{false} \\
+\noindent{}\\
+\subsection{\sh{cd/ls}} 
+\noindent{}\\
+\noindent{}\textsf{let} (cd:  {\em path\_element} $\rightarrow{}$ {\em unit}) = \textsf{function} \\
+\index{commands!\sh{cd}}
+\index{commands!\sh{cd}@\sh{cd parts}}
+%\index{propriété!spéciale!\sh{parts}}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{Slash} $\rightarrow{}$  w := $\langle$!w \textsf{with} pwd\_history = \textsl{push} ((\textsc{Single} root), \textsc{Files}) $\emptyset$$\rangle$\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{DotDot} $\rightarrow{}$ w := $\langle$!w \textsf{with} pwd\_history = \textsl{pop} !w.pwd\_history$\rangle$\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{Element} (\textsc{Single} (\textsc{Prop} \texttt{"parts"})) $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{let} \_ = \textsf{assert} (is\_files\_mode !w) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{let} files\_here = ext (pwd ()) (context !w) \\
+\noindent{}\mbox{~}\hspace{8.88888888888889em}$\rhd$ \textsl{map} (\textsf{fun} obj $\rightarrow{}$ obj.id) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}(w := $\langle$!w \textsf{with}\\
+\noindent{}\mbox{~}\hspace{5.18518518518519em}pwd\_history = \textsl{push} ((\textsc{Single} root), \textsc{Parts}) !w.pwd\_history;\\
+\noindent{}\mbox{~}\hspace{5.18518518518519em}filesparts = files\_here;\\
+\noindent{}\mbox{~}\hspace{5.18518518518519em}parts = index\_parts !w files\_here;\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}$\rangle$;\\
+\noindent{}\mbox{~}\hspace{2.59259259259259em}check\_and\_add\_properties ($\bigcup_{(id, p) \in (!\mathrm{w}.\mathrm{parts})}$ (p.pdescription))\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em})\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \textsc{Element} f $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}(w := $\langle$!w \textsf{with} pwd\_history = \\
+\noindent{}\mbox{~}\hspace{4.81481481481481em}\textsf{let} (oldf, whichmode) = \textsl{top} !w.pwd\_history \textsf{in} \\
+\noindent{}\mbox{~}\hspace{4.81481481481481em}\textsl{push} (\textsc{And} (f, oldf), whichmode) !w.pwd\_history;\\
+\noindent{}\mbox{~}\hspace{4.07407407407407em}$\rangle$;\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}check\_and\_add\_properties (properties\_of\_formula f)\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em})\\
+\noindent{}\\
+\noindent{}\textsf{let} (dopath:  {\em path} $\rightarrow{}$ ({\em unit} $\rightarrow{}$ '{\em a}) $\rightarrow{}$ '{\em a}) = \textsf{fun} path op $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} old\_pwd = !w.pwd\_history \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = path $\rhd$ \textsl{iter} (\textsf{fun} p $\rightarrow{}$ cd p) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} x = op () \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}(w := $\langle$!w \textsf{with} pwd\_history = old\_pwd$\rangle$; x)\\
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(*----------------------------------------------------------------------------------*)}}\\
+\noindent{}\textsf{let} (ls:  {\em unit} $\rightarrow{}$ ({\em property} {\em \textsl{\textsl{set}}} $\times$ {\em idfile} {\em \textsl{\textsl{set}}})) = \textsf{fun} () $\rightarrow{}$\\
+\index{commands!\sh{ls}}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} pwd = pwd () \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} ctx = context !w \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}(dirs pwd ctx,\\
+\noindent{}\mbox{~}\hspace{1.11111111111111em}\textsf{if} is\_files\_mode !w\\
+\noindent{}\mbox{~}\hspace{1.11111111111111em}\textsf{then} objects pwd ctx $\rhd$ \textsl{map} (\textsf{fun} o $\rightarrow{}$ o.id)\\
+\noindent{}\mbox{~}\hspace{1.11111111111111em}\textsf{else}  $\bigcup_{o \in (\mathrm{ext}~\mathrm{pwd}~\mathrm{ctx})}$ ($\{$ (\textsl{\textsl{assoc}} o.id !w.parts).fromfile $\}$ )\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}) \\
+\noindent{}\\
+\noindent{}\textsf{let} ls\_filenames()  = ls() $\rhd$ \textsl{snd} $\rhd$ \textsl{map}  (\textsf{fun} id $\rightarrow{}$ (\textsl{\textsl{assoc}} id !w.files).filename)\\
+\noindent{}\textsf{let} ls\_id\_of\_name s = ls() $\rhd$ \textsl{snd} $\rhd$ \textsl{find} (\textsf{fun} id $\rightarrow{}$ (\textsl{\textsl{assoc}} id !w.files).filename = s)\\
+\subsection{\sh{mkdir/mkfile}} 
+\noindent{}\\
+\noindent{}\textsf{let} (mkdir:  {\em \textsl{string}} $\rightarrow{}$ {\em unit}) = \textsf{fun} name $\rightarrow{}$ \\
+\index{commands!\sh{mkdir}}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} pwd = pwd () \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} ps = properties\_of\_formula pwd \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} ($\lnot{}$ ((\textsc{Prop} name) $\in{}$ !w.properties)) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} ($\lnot{}$ (name = \texttt{"parts"})) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} (is\_conjunction pwd) \textsf{in} {\footnotesize \textit{(* \textsc{TODO} check simple atom ?, check no special sym *)}}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}w := $\langle$!w \textsf{with} \\
+\noindent{}\mbox{~}\hspace{3.33333333333333em}properties = $\{$ \textsc{Prop} name $\}$  $\cup{}$ !w.properties;\\
+\noindent{}\mbox{~}\hspace{3.33333333333333em}axioms     = \textsl{insert\_assoc} (\textsc{Prop} name, ps) !w.axioms;\\
+\noindent{}\mbox{~}\hspace{2.59259259259259em}$\rangle$ \\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(*----------------------------------------------------------------------------------*)}}\\
+\noindent{}\textsf{let} (mkfile:  {\em filename} $\rightarrow{}$ {\em filecontent} $\rightarrow{}$ {\em plugin} {\em option} $\rightarrow{}$ {\em unit}) = \textsf{fun} name content plugin $\rightarrow{}$ \\
+\index{commands!\sh{mkfile (touch)}}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} pwd = pwd () \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} ps = properties\_of\_formula pwd \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} (is\_files\_mode !w) \textsf{in} {\footnotesize \textit{(* \textsc{TODO}? could *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} (is\_conjunction pwd) \textsf{in}             {\footnotesize \textit{(* \textsc{TODO}? or \textsl{filter} $\lnot{}$/or *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} (not (name $\in{}$ ls\_filenames() )) \textsf{in} {\footnotesize \textit{(* \textsc{TODO} need \textsf{assert} name $\lnot{}$ \textsf{in} P *)}}\\
+\noindent{}  \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} o = new\_object () \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} file = $\langle$ filename  = name;\\
+\noindent{}\mbox{~}\hspace{5.55555555555556em}fcontent  = content;\\
+\noindent{}\mbox{~}\hspace{5.55555555555556em}extrinsic = ps;\\
+\noindent{}\mbox{~}\hspace{5.55555555555556em}intrinsic = content $\rhd$ (transducer !w name)  \\
+\noindent{}\mbox{~}\hspace{4.81481481481481em}$\rangle$ \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}(w := $\langle$!w \textsf{with} files = \textsl{insert\_assoc} (o, file) !w.files $\rangle$;\\
+\noindent{}\mbox{~}\hspace{1.11111111111111em}(\textsf{match} plugin \textsf{with}\\
+\noindent{}\mbox{~}\hspace{1.11111111111111em}$|$ \textsc{Some} x    $\rightarrow{}$ w := $\langle$!w \textsf{with} plugins = \textsl{insert\_assoc} (o, x) !w.plugins $\rangle$\\
+\noindent{}\mbox{~}\hspace{1.11111111111111em}$|$ \_ $\rightarrow{}$ ());\\
+\noindent{}\mbox{~}\hspace{1.11111111111111em}check\_and\_add\_properties file.intrinsic\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em})\\
+\noindent{}    \\
+\noindent{}\\
+\noindent{}\\
+\subsection{\sh{rm/mv}} 
+\noindent{}\\
+\noindent{}\textsf{let} (rm:  {\em filename} $\rightarrow{}$ {\em unit}) = \textsf{fun} s $\rightarrow{}$ \\
+\index{commands!\sh{rm}}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} (is\_files\_mode !w) \textsf{in} {\footnotesize \textit{(* \textsc{TODO}? could *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} idfile = ls\_id\_of\_name s \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}w:= $\langle$!w \textsf{with} \\
+\noindent{}\mbox{~}\hspace{2.96296296296296em}files   = \textsl{del\_assoc} idfile !w.files;\\
+\noindent{}\mbox{~}\hspace{2.96296296296296em}plugins = \textsl{del\_assoc} idfile !w.plugins;\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}$\rangle$\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(*----------------------------------------------------------------------------------*)}}\\
+\noindent{}{\footnotesize \textit{(* \textsc{TODO} minp pb: cd a/b/b2/c  mv ../../   ca va lui ajouter b, alors que en fait *)}}\\
+\noindent{}{\footnotesize \textit{(*   mais bon l'utilisateur a qu'a faire gaffe (fleche forte/fleche faible) *)}}\\
+\noindent{}\textsf{let} (mv:  {\em filename} $\rightarrow{}$ {\em path} $\rightarrow{}$ {\em filename} $\rightarrow{}$ {\em unit}) = \textsf{fun} oldname newpath newname $\rightarrow{}$ \\
+\index{commands!\sh{mv}}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} (is\_files\_mode !w) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} idfile = ls\_id\_of\_name oldname \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} file = \textsl{\textsl{assoc}} idfile !w.files \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} oldpwd = pwd() \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} oldprops = properties\_of\_formula oldpwd \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}dopath newpath (\textsf{fun} () $\rightarrow{}$\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} newpwd = pwd() \textsf{in}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} newprops = properties\_of\_formula newpwd \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} \_ = \textsf{assert} (is\_files\_mode !w) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} \_ = \textsf{assert} ($\lnot{}$ (newname $\in{}$ ls\_filenames() )) \textsf{in} {\footnotesize \textit{(* \textsf{in} fact should erase content *)}}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} \_ = \textsf{assert} (is\_conjunction oldpwd) \textsf{in} \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} \_ = \textsf{assert} (is\_conjunction newpwd) \textsf{in} \\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}w:= $\langle$!w \textsf{with} files = !w.files $\rhd$ \textsl{replace\_assoc} \\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}(idfile, $\langle$file \textsf{with} \\
+\noindent{}\mbox{~}\hspace{8.51851851851852em}extrinsic = (file.extrinsic $\setminus{}$ oldprops) $\cup{}$ newprops;\\
+\noindent{}\mbox{~}\hspace{8.51851851851852em}filename = newname; {\footnotesize \textit{(* \textsc{TODO}: call transducer\_system *)}}\\
+\noindent{}\mbox{~}\hspace{7.77777777777778em}$\rangle$)$\rangle$\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em})\\
+\noindent{}\\
+\noindent{}\\
+\subsection{\sh{rmdir/mvdir}}
+\noindent{}\\
+\noindent{}\textsf{let} (rmdir:  {\em \textsl{string}} $\rightarrow{}$ {\em unit}) = \textsf{fun} s $\rightarrow{}$\\
+\index{commands!\sh{rm}@\sh{rmdir}}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} p = \textsc{Prop} s \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} (p $\in{}$ !w.properties) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} (is\_files\_mode !w) \textsf{in} {\footnotesize \textit{(* \textsc{TODO}? could *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}{\footnotesize \textit{(* \textsc{TODO} check have no child or adjust axioms *)}}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}w:= $\langle$!w \textsf{with} \\
+\noindent{}\mbox{~}\hspace{2.96296296296296em}properties = !w.properties $\setminus{}$ $\{$ p $\}$ ;\\
+\noindent{}\mbox{~}\hspace{2.96296296296296em}axioms = \textsl{del\_assoc} p !w.axioms;\\
+\noindent{}\mbox{~}\hspace{2.96296296296296em}files = !w.files $\rhd$ \textsl{map} (\textsf{fun} (id, file) $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{3.7037037037037em}(id, $\langle$file \textsf{with} \\
+\noindent{}\mbox{~}\hspace{6.2962962962963em}extrinsic = file.extrinsic $\setminus{}$ $\{$ p $\}$ ;\\
+\noindent{}\mbox{~}\hspace{6.2962962962963em}intrinsic = file.intrinsic $\setminus{}$ $\{$ p $\}$ ;\\
+\noindent{}\mbox{~}\hspace{5.55555555555556em}$\rangle$ ))\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}$\rangle$	\\
+\noindent{}{\footnotesize \textit{(*----------------------------------------------------------------------------------*)}}\\
+\noindent{}\textsf{let} (mvdir:  {\em \textsl{string}} $\rightarrow{}$ {\em path} $\rightarrow{}$ {\em \textsl{string}} $\rightarrow{}$ {\em unit}) = \textsf{fun} oldname newpath newname $\rightarrow{}$ \\
+\index{commands!\sh{mv}}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} oldp = \textsc{Prop} oldname \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} newp = \textsc{Prop} newname \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert} (is\_files\_mode !w) \textsf{in} {\footnotesize \textit{(* \textsc{TODO}? could *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{assert}      (oldp $\in{}$ !w.properties) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \_ = \textsf{if} newp $\not=$ oldp \textsf{then} \textsf{assert} ($\lnot{}$ (newp $\in{}$ !w.properties)) \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} oldpwd = pwd() \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} oldprops = properties\_of\_formula oldpwd \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}dopath newpath (\textsf{fun} () $\rightarrow{}$\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} newpwd = pwd() \textsf{in}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} newprops = properties\_of\_formula newpwd \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} \_ = \textsf{assert} (is\_files\_mode !w) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} \_ = \textsf{assert} (is\_conjunction oldpwd) \textsf{in} \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} \_ = \textsf{assert} (is\_conjunction newpwd) \textsf{in} \\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} newaxioms = ((\textsl{\textsl{assoc}} oldp !w.axioms) $\setminus{}$ oldprops) $\cup{}$ newprops \textsf{in}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} ($\models$) = (context !w).$\cal L$ \textsf{in}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{let} \_ = \textsf{assert} ($\neg\exists$ p $\in{}$ newaxioms (p $\models$ oldp) ) \textsf{in} {\footnotesize \textit{(* avoid cycle *)}}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}{\footnotesize \textit{(* \textsc{TODO} change name *)}}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}w := $\langle$!w \textsf{with} axioms = !w.axioms $\rhd$ \textsl{replace\_assoc} (oldp, newaxioms) $\rangle$ \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em})\\
+\noindent{}\\
+\subsection{\sh{read/write}}
+\noindent{}\\
+\noindent{}\textsf{let} mark\_string mark = (\texttt{".........:"} \^{} (\textsl{i\_to\_s} mark))\\
+\index{mark of absence}
+\noindent{}\\
+\noindent{}\textsf{let} (view:  {\em formula} $\rightarrow{}$ {\em idfile} $\rightarrow{}$ ({\em filecontent} $\times$ (({\em \textsl{int}}, {\em idpart} {\em \textsl{list}}) {\em \textsl{\textsl{assoc}}}))) = \textsf{fun} pwd idfile $\rightarrow{}$\\
+\index{view}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} parts\_pwd = ext pwd (context !w) \\
+\noindent{}\mbox{~}\hspace{7.40740740740741em}$\rhd$ \textsl{map} (\textsf{fun} obj $\rightarrow{}$ obj.id) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} all\_parts = $\{$(id, part) $\in{}$ !w.parts $|$ part.fromfile = idfile $\}$\\
+\noindent{}\mbox{~}\hspace{10em}$\rhd$ \textsl{sort} (\textsf{fun} (id1, p1) (id2, p2) $\rightarrow{}$ p1.pnumber $\leq$> p2.pnumber) \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} content = \textsl{ref} \texttt{""} \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} marks = \textsl{ref} $\emptyset$ \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} mark = \textsl{ref} 1 \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} pending = \textsl{ref} $\emptyset$ \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}all\_parts $\rhd$ \textsl{iter} (\textsf{fun} (id, part) $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{if} id $\in{}$ parts\_pwd\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{then}\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{if} !pending = $\emptyset$\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{then} (content := !content \^{} part.pcontent)\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{else} (content := !content \^{} (mark\_string !mark) \^{} \texttt{"\symbol{92}n"} \^{} part.pcontent;\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}marks $\rhd$ \textsl{insert\_assoc} (!mark, !pending);\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}mark := !mark + 1;\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}pending := $\emptyset$;)\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{else} pending := !pending $\cup{}$ $\{$ id $\}$ \\
+\noindent{}\mbox{~}\hspace{1.11111111111111em});\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{if} !pending = $\emptyset$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{then} (!content, !marks) \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{else} (!content \^{} (mark\_string !mark), \textsl{insert\_assoc} (!mark, !pending) !marks)\\
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(*----------------------------------------------------------------------------------*)}}\\
+\noindent{}\textsf{let} (read:  {\em filename} $\rightarrow{}$ {\em filecontent}) = \textsf{fun} name $\rightarrow{}$ \\
+\index{commands!\sh{read (cat)}}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} idfile = ls\_id\_of\_name name \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} file = \textsl{\textsl{assoc}} idfile !w.files \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{if} is\_files\_mode !w\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{then} file.fcontent\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{else} view (pwd ()) idfile $\rhd$ \textsl{fst}\\
+\noindent{}\\
+\noindent{}{\footnotesize \textit{(*----------------------------------------------------------------------------------*)}}\\
+\noindent{}\textsf{let} (write:  {\em filename} $\rightarrow{}$ {\em filecontent} $\rightarrow{}$ {\em unit}) = \textsf{fun} name newcontent $\rightarrow{}$\\
+\index{commands!\sh{write (sed)}}
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} idfile = ls\_id\_of\_name name \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} file   = \textsl{\textsl{assoc}} idfile !w.files \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} finalcontent = \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{if} is\_files\_mode !w \textsf{then} newcontent\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{else} \\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{let} marks = view (pwd ()) idfile $\rhd$ \textsl{snd} \textsf{in}\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsl{lines} newcontent $\rhd$ \textsl{map} (\textsf{fun} s $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{2.96296296296296em}\textsf{if} s $\approx$ \texttt{".*\symbol{92}.\symbol{92}.\symbol{92}.\symbol{92}.:"} \\
+\noindent{}\mbox{~}\hspace{2.96296296296296em}\textsf{then} \textsf{let} mark = \textsl{regexp\_match} s \texttt{".*:($[$0-9$]$+)"} $\rhd$ \textsl{s\_to\_i} \textsf{in}\\
+\noindent{}\mbox{~}\hspace{3.7037037037037em}\textsl{\textsl{assoc}} mark marks $\rhd$ \textsl{map} (\textsf{fun} idpart $\rightarrow{}$ (\textsl{\textsl{assoc}} idpart !w.parts).pcontent) $\rhd$ \textsl{unwords}\\
+\noindent{}\mbox{~}\hspace{2.96296296296296em}\textsf{else} s\\
+\noindent{}\mbox{~}\hspace{2.96296296296296em}) $\rhd$  \textsl{unwords} \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} newfile = $\langle$file \textsf{with} \\
+\noindent{}\mbox{~}\hspace{6.66666666666667em}fcontent  = finalcontent;\\
+\noindent{}\mbox{~}\hspace{6.66666666666667em}intrinsic = finalcontent $\rhd$ (transducer !w file.filename);\\
+\noindent{}\mbox{~}\hspace{5.92592592592593em}$\rangle$ \textsf{in}\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}(w := $\langle$!w \textsf{with} files = !w.files $\rhd$ \textsl{replace\_assoc} (idfile, newfile)$\rangle$;\\
+\noindent{}\mbox{~}\hspace{1.11111111111111em}check\_and\_add\_properties newfile.intrinsic;\\
+\noindent{}\\
+\noindent{}\mbox{~}\hspace{1.11111111111111em}\textsf{if} $\lnot{}$ (is\_files\_mode !w) \textsf{then} \\
+\noindent{}\mbox{~}\hspace{1.85185185185185em}(w := $\langle$!w \textsf{with} parts = index\_parts !w !w.filesparts; $\rangle$;\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}check\_and\_add\_properties ($\bigcup_{(id, p) \in (!\mathrm{w}.\mathrm{parts})}$ (p.pdescription)));\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em})\\
+
+
+\chapter{Plug-in examples}
+\label{annexe:plugins}
+
+%  %idea: big range
+%  Nous présentons dans cette section le source de quelques \en{plug-ins} LFS.
+%  %less: permet de se faire premiere idee de la complexite de ces programmes. voir que pas tres dur 
+%   %less: (incite user a se dire qu'il peut faire les siens)
+%   %less: permet idee plus concrete sur geule d'un transducer, son interface 
+%   %less: voit un peu idiomes
+%  Nous nous sommes bornés à ne présenter qu'un seul source par type de \en{plug-ins}.
+%  %
+%  Ainsi, pour les moteurs de déduction logique nous ne présentons que le source O'Caml
+%  du moteur gérant la logique sur les entiers.
+%  Le prototype LFS actuel contient aussi des moteurs pour gérer des logiques
+%  sur des chaînes de caractères, des dates et durées, des types, et sur des propriétés
+%  de sécurité (voir Section~\vref{sec:logic-secu}).
+%  %less: et sur prop, ex ext:bottom
+%  %less: => caml, perl, lamnda-prolog
+%  Pour les transducteurs nous présentons le source Perl du transducteur de 
+%  fichiers MP3 (voir Section~\vref{sec:music-ex}).
+%  Pour les transducteurs avancés nous présentons le source O'Caml du transducteur
+%  de fichiers BibTeX (voir Section~\vref{sec:bibtex-ex}).
+%  Le prototype LFS contient d'autres transducteurs, notamment ceux mentionnés 
+%  Section~\ref{sec:donnees}, avec donc 
+%  des transducteurs pour gérer des pages \sh{man}, des e-mails, 
+%  et des transducteurs avancés pour gérer des fichiers C, Perl, LaTeX, et O'Caml.
+%  %less: => en caml ou perl
+%  \index{plugins@\en{plug-ins}}
+%  \index{langage de programmation!O'Caml}
+%  \index{langage de programmation!C}
+%  \index{langage de programmation!Perl}
+%  
+%  %less: bien sur gerer tous les fichiers,  peut assigner manuel :) mais bon serait mieux si plus 
+%    %less: (images, pdf, word/excel/ppt (cf macos demo),...).
+%  
+%  Le transducteur avancé pour O'Caml permet ainsi d'avoir différentes vues
+%  sur la spécification et l'implémentation de LFS présentées dans les deux
+%  annexes précédentes.
+%  Le transducteur avancé LaTeX permet d'avoir différentes vues sur cette thèse.
+
+\pagebreak
+
+\section{A logic deduction engine}
+\label{annexe:plugin-logic}
+
+
+\index{logic!integer (interval)}
+\index{logic deduction engine}
+\index{interface!logic deduction engine}
+\index{$\models$}
+
+\noindent{}{\footnotesize \textit{(* \textsc{INT} logic (syntax = $<$,$>$, $[$x..y$]$,  sugar for $\leq$, $\geq$ *)}}\\
+\noindent{}\textsf{type} property = \textsc{Prop} \textsf{of}  {\em \textsl{string}}\\
+\noindent{}\textsf{type}  logic     =  ({\em property} $\rightarrow{}$ {\em property} $\rightarrow{}$ {\em \textsl{bool}})  {\footnotesize \textit{(* {\em mean}: {\em a} $\models$ {\em b} ? *)}} \\
+\noindent{}\\
+\noindent{}\textsf{type} interval = \textsc{Val} \textsf{of}  {\em \textsl{int}} $|$ \textsc{Sup} {\em \textsf{of}} {\em \textsl{int}} $|$ \textsc{Inf} {\em \textsf{of}} {\em \textsl{int}} $|$ \textsc{In} {\em \textsf{of}} ({\em \textsl{int}} $\times$ {\em \textsl{int}})\\
+\noindent{}\\
+\noindent{}\textsf{let} parse\_interval = \textsf{fun} s $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{match} s \textsf{with}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ s \textsf{when} s $\approx$ \texttt{"\^{}$[$0-9$]$+\$"}  $\rightarrow{}$ \textsc{Val} (s\_to\_i s)\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ s \textsf{when} s $\approx$ \texttt{"\^{}>($[$0-9$]$+)\$"} $\rightarrow{}$ \textsc{Sup} (s\_to\_i (matched1 s))\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ s \textsf{when} s $\approx$ \texttt{"\^{}<($[$0-9$]$+)\$"} $\rightarrow{}$ \textsc{Inf} (s\_to\_i (matched1 s))\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ s \textsf{when} s $\approx$ \texttt{"\^{}\symbol{92}$[$($[$0-9$]$+)\symbol{92}.\symbol{92}.($[$0-9$]$+)\symbol{92}$]$\$"} $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{let} (x1, x2) = matched2 s $\rhd$ pair s\_to\_i \textsf{in}\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{let} \_ = \textsf{assert}(x1 $<$ x2) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsc{In} (x1, x2)\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}{\footnotesize \textit{(* sugar *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ s \textsf{when} s $\approx$ \texttt{"\^{}>=($[$0-9$]$+)\$"} $\rightarrow{}$ \textsc{Sup} (s\_to\_i (matched1 s) $-$ 1)\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ s \textsf{when} s $\approx$ \texttt{"\^{}<=($[$0-9$]$+)\$"} $\rightarrow{}$ \textsc{Inf} (s\_to\_i (matched1 s) $+$ 1)\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \_ $\rightarrow{}$ \textsl{failwith} \texttt{"parsing error on interval"}\\
+\noindent{}\\
+\noindent{}\textsf{let} (interval\_logic:  {\em logic}) = \textsf{fun} (\textsc{Prop} s1) (\textsc{Prop} s2) $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} (x1, x2) = (parse\_interval s1, parse\_interval s2) \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}(\textsf{match} (x1, x2) \textsf{with}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ (\textsc{Val} x, \textsc{Val} y) $\rightarrow{}$ x $=$ y                            {\footnotesize \textit{(* 2 $\models$ 2 *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ (\textsc{Val} x, \textsc{Sup} y) $\rightarrow{}$ x $>$ y                            {\footnotesize \textit{(* 2 $\models$ $>$1 *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ (\textsc{Val} x, \textsc{Inf} y) $\rightarrow{}$ x $<$ y                            {\footnotesize \textit{(* 2 $\models$ $<$3 *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ (\textsc{Val} x, \textsc{In} (y, z)) $\rightarrow{}$ x $\leq$ z $\wedge$ x $\geq$ y             {\footnotesize \textit{(* 2 $\models$ $[$0..3$]$ *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ (\textsc{Sup} x, \textsc{Sup} y) $\rightarrow{}$ x $\geq$ y                           {\footnotesize \textit{(* $>$3 $\models$ $>$2 *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ (\textsc{Inf} x, \textsc{Inf} y) $\rightarrow{}$ x $\leq$ y                           {\footnotesize \textit{(* $<$2 $\models$ $<$3 *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ (\textsc{In} (x1,y1), \textsc{In} (x2, y2)) $\rightarrow{}$ x1 $\geq$ x2 $\wedge$ y1 $\leq$ y2  {\footnotesize \textit{(* $[$2..3$]$ $\models$ $[$0..4$]$ *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ (\textsc{In} (x,y), \textsc{Sup} z) $\rightarrow{}$ x $>$ z                         {\footnotesize \textit{(* $[$1..4$]$ $\models$ $>$0 *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ (\textsc{In} (x,y), \textsc{Inf} z) $\rightarrow{}$ y $<$ z                         {\footnotesize \textit{(* $[$1..4$]$ $\models$ $<$5 *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \_ $\rightarrow{}$ \textsl{false})\\
+\noindent{}{\footnotesize \textit{(* make ml solver stdin(argv)/stdout compliant *)}}\\
+\noindent{}\textsf{let} (interact\_logic:  {\em logic} $\rightarrow{}$ {\em unit}) = \textsf{fun} ($\models$)  $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{match} (\textsc{Array}.to\_list \textsc{Sys}.argv ) \textsf{with}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ $[$\_;x;y$]$ $\rightarrow{}$ \textsf{if} (\textsc{Prop} x) $\models$ (\textsc{Prop} y) \\
+\noindent{}\mbox{~}\hspace{5.55555555555556em}\textsf{then} print\_endline \texttt{"yes"} \\
+\noindent{}\mbox{~}\hspace{5.55555555555556em}\textsf{else} print\_endline \texttt{"no"}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \_::xs $\rightarrow{}$ \textsl{failwith} (\texttt{"give me 2 formulas, not "} \^{} (i\_to\_s (length xs)) \^{} \texttt{"\symbol{92}n"}\\
+\noindent{}\mbox{~}\hspace{8.51851851851852em}\texttt{"I was given:\symbol{92}n"} \^{} (xs $\rhd$ join \texttt{"\symbol{92}n"}) \^{} \texttt{"\symbol{92}n"})\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}$|$ \_ $\rightarrow{}$ raise \textsc{Impossible}\\
+\noindent{}\\
+\noindent{}\textsf{let} main = interact\_logic interval\_logic
+
+
+
+\pagebreak
+\section{A transducer}
+\label{annexe:plugin-trans}
+
+
+\index{transducer}
+\index{interface!transducer}
+\index{MP3}
+
+%less: good interface ?
+
+
+\begin{verbatim}
+#!/usr/bin/perl
+#################
+# MP3 transducer
+#################
+
+use MP3::Info;
+use MP3::Tag;
+
+my $path = $ARGV[0];
+ 
+my $tag = MP3::Tag->new($path);
+if($tag) {
+    $tag->get_tags();
+    if (exists $tag->{ID3v1}) {
+	my $last = $tag->{ID3v1};
+	push @aux, 
+	  ("title:"  .  $last->song, 
+	   "artist:" .  $last->artist,
+	   "album:"  .  $last->album,
+	   "comment:" . $last->comment,
+	   "year:"   .  $last->year,
+	   "genre:" .   $last->genre,
+	  );
+    } else {
+	my $tag = get_mp3tag($path);
+	if($tag) { map { my $e = $_; push @aux, (lc $e . ":$tag->{$e}") } 
+                         qw(TITLE ARTIST ALBUM YEAR COMMENT GENRE) }
+    }
+}
+
+my $tag2 = get_mp3info($path);
+if($tag2) { map { my $e = $_; push @aux, (lc $e . ":$tag2->{$e}") } 
+    qw(TIME BITRATE FREQUENCY)	
+}
+
+print (join "/", @aux); print "\n";
+
+\end{verbatim}
+
+%$
+
+\pagebreak
+\section{An advanced transducer}
+\label{annexe:plugin-adv_trans}
+
+\index{advanced transducer}
+\index{interface!advanced transducer}
+
+\noindent{}{\footnotesize \textit{(* \textsc{BibTeX} advanced transducer *)}}\\
+\noindent{}\textsf{type} property = \textsc{Prop} \textsf{of}  {\em \textsl{string}}\\
+\noindent{}\textsf{type}  adv\_transducer  =  ({\em partcontent} {\em \textsl{list}} $\rightarrow{}$ ({\em property} {\em \textsl{set}}) {\em \textsl{list}}) \\
+\noindent{}\mbox{~}\hspace{2.22222222222222em}\textsf{and}  partcontent  =  {\em \textsl{string}}\\
+\noindent{}\\
+\noindent{}\textsf{let} bibtex\_adv\_transducer = \textsf{fun} xs $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} state = \textsl{ref} $\emptyset$ \textsf{in}     {\footnotesize \textit{(* \textsc{THE} \textsc{INTERNAL} \textsc{STATE} *)}}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \textsf{rec} aux = \textsf{function}\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$|$ $[$$]$ $\rightarrow{}$ $[$$]$\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}$|$ s::xs $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{2.96296296296296em}\textsf{let} props = \\
+\noindent{}\mbox{~}\hspace{3.7037037037037em}\textsf{if} s $\approx$ \texttt{"$[$ \symbol{92}t$]$*@(.*)$\langle$(.*),"} \textsf{then}  {\footnotesize \textit{(* @ symbol => we've got a new entry, such as @book$\langle$... *)}}\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}\textsf{let} (typ, \textsl{ref}) = matched2 s \textsf{in}\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}\textsf{let} xs' = take\_until (\textsf{fun} s $\rightarrow{}$ s $\approx$ \texttt{"$[$ \symbol{92}t$]$*$\rangle$"}) xs \textsf{in}\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}\textsf{let} props = $[$\textsc{Prop} (\texttt{"type:"} \^{} typ); \textsc{Prop} (\texttt{"ref:"} \^{} \textsl{ref})$]$ \textsf{in}\\
+%patch: enlever testsf devant type: 
+\noindent{}\mbox{~}\hspace{4.44444444444444em}\textsf{let} \_ = state :=\\
+\noindent{}\mbox{~}\hspace{5.18518518518519em}xs' $\rhd$ fold (\textsf{fun} a s $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{5.92592592592593em}(\\
+\noindent{}\mbox{~}\hspace{6.2962962962963em}\textsf{match} () \textsf{with}\\
+\noindent{}\mbox{~}\hspace{6.2962962962963em}$|$ \_ \textsf{when} s $\approx$ \texttt{"$[$ \symbol{92}t$]$*author$[$ \symbol{92}t$]$*=$[$ \symbol{92}t$]$*$\langle$(.*)$\rangle$,"} $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{7.77777777777778em}matched 1 s $\rhd$ split \texttt{"$[$ \symbol{92}t$]$*\textsf{and}$[$ \symbol{92}t$]$*"} $\rhd$ map (\textsf{fun} s $\rightarrow{}$ \textsc{Prop} (\texttt{"author:"} \^{} s))\\
+\noindent{}\mbox{~}\hspace{6.2962962962963em}$|$ \_ \textsf{when} s $\approx$ \texttt{"$[$ \symbol{92}t$]$*year$[$ \symbol{92}t$]$*=$[$ \symbol{92}t$]$*($[$0-9$]$+)"} $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{7.77777777777778em}$[$\textsc{Prop} (\texttt{"year:"} \^{} matched 1 s)$]$\\
+\noindent{}\mbox{~}\hspace{6.2962962962963em}$|$ \_ \textsf{when} s $\approx$ \texttt{"$[$ \symbol{92}t$]$*institution$[$ \symbol{92}t$]$*=$[$ \symbol{92}t$]$*(.*),"} $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{7.77777777777778em}$[$\textsc{Prop} (\texttt{"institution:"} \^{} matched 1 s)$]$\\
+\noindent{}\mbox{~}\hspace{6.2962962962963em}$|$ \_ \textsf{when} s $\approx$ \texttt{"$[$ \symbol{92}t$]$*title$[$ \symbol{92}t$]$*=$[$ \symbol{92}t$]$*$\langle$(.*)$\rangle$,"} $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{7.77777777777778em}$[$\textsc{Prop} (\texttt{"title:"} \^{} matched 1 s)$]$\\
+\noindent{}\mbox{~}\hspace{6.2962962962963em}$|$ \_ \textsf{when} s $\approx$ \texttt{"$[$ \symbol{92}t$]$*keywords$[$ \symbol{92}t$]$*=$[$ \symbol{92}t$]$*$\langle$(.*)$\rangle$,"} $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{7.77777777777778em}matched 1 s $\rhd$ split \texttt{"$[$ \symbol{92}t$]$*$[$,;$]$$[$ \symbol{92}t$]$*"} $\rhd$ map (\textsf{fun} s $\rightarrow{}$ \textsc{Prop} (\texttt{"domain:"} \^{} s))\\
+\noindent{}\mbox{~}\hspace{6.2962962962963em}$|$ \_ $\rightarrow{}$ $[$$]$\\
+\noindent{}\mbox{~}\hspace{5.92592592592593em}) ++ a\\
+\noindent{}\mbox{~}\hspace{9.62962962962963em}) props \textsf{in}\\
+\noindent{}\mbox{~}\hspace{4.44444444444444em}(\textsc{Prop} \texttt{"synchro"})::!state {\footnotesize \textit{(* \textsc{SYNCHRONISATION} \textsc{POINT}, a new bibtex entry => a new unit *)}}\\
+\noindent{}\mbox{~}\hspace{3.7037037037037em}\textsf{else} !state \textsf{in}\\
+\noindent{}\mbox{~}\hspace{2.96296296296296em}props::aux xs\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{in} aux xs\\
+\noindent{}{\footnotesize \textit{(* make ml adv\_transducer stdin(argv)/stdout compliant *)}}\\
+\noindent{}\textsf{let} (interact\_adv\_transducer:  {\em adv\_transducer} $\rightarrow{}$ {\em unit}) = \textsf{fun} advtrans $\rightarrow{}$ \\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}\textsf{let} \textsf{rec} aux () = \\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}try \textsf{let} x = read\_line () \textsf{in} x::aux()\\
+\noindent{}\mbox{~}\hspace{1.48148148148148em}\textsf{with} \textsc{End\_of\_file} $\rightarrow{}$ $[$$]$ \textsf{in}\\
+\noindent{}\mbox{~}\hspace{0.740740740740741em}aux () $\rhd$ advtrans $\rhd$ iter (\textsf{fun} ps $\rightarrow{}$ ps $\rhd$ map (\textsf{fun} (\textsc{Prop} s) $\rightarrow{}$ s) $\rhd$ join \texttt{"/"} $\rhd$ print\_endline)\\
+\noindent{}\\
+\noindent{}\textsf{let} main = interact\_adv\_transducer    bibtex\_adv\_transducer
+
+
+%\chapter*{Glossary}
+%\addcontentsline{toc}{chapter}{Glossary}
+%\printglossary
+%transducer  program that extract automatically properties from file contents
+% work for whole file  and parts of file
+
+
+\addcontentsline{toc}{chapter}{Index}
+\printindex
+
+
+%biblio?
+
+\end{document}
+
+
+
+%%% Local Variables: 
+%%% mode: latex
+%%% TeX-master: t
+%%% End: 
