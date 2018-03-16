@@ -8,3 +8,5 @@
 /lfs_path/pathparser.mli
 /lfs_path/pathparser.output
 /docs/user-manual/main.log
+/ocamlbdb/bdb.ml
+/ocamlbdb/bdb_stubs.c
