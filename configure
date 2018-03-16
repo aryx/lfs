@@ -10,8 +10,6 @@
 
 # TODO: -enable-gif, -enable-mp3, etc 
 
-my $bt = 0;
-
 ######################################################################
 # Side effects
 ######################################################################
@@ -61,7 +59,7 @@ my $error2 = 0; # not fatal
 
 $error += check_config
     ("echo \"1;;\\n\" | ocaml |",
-     "Objective(.*) 3.*",
+     "Objective(.*) [34].*",
      "OCaml (the wonderful language) is present.",
      "The program ocaml is missing or is not a good version. We need at least 3.08",
      );
@@ -296,16 +294,12 @@ MANDIR=$prefix/man
 SHAREDIR=$lfssrc
 
 # Features
-FEATURE_BACKTRACE=$bt
+FEATURE_XXX=0
 ";
 
-pr2 "Generating commons/features.ml";
-`cpp -DFEATURE_BACKTRACE=$bt commons/features.ml.in > commons/features.ml`;
+#pr2 "Generating commons/features.ml";
+#`cpp -DFEATURE_XXX=0 commons/features.ml.in > commons/features.ml`;
 
 pr2 "Modifying globals/config_lfs.ml";
 my $command = "perl -p -i -e 's#Not_found.\*#Not_found->\\\"$lfssrc\\\"#' globals/config_lfs.ml";
 `$command`;
-
-
-
-
